@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "Tests/Runnable2/r_tbfilename_t.py", line 4, in <module>
+    r_tbfilename.foo()
+  File "r_tbfilename.pyx", line 2, in r_tbfilename.foo
+    raise Exception
+Exception

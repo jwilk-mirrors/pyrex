@@ -1,0 +1,13 @@
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:3:19: Python object cannot be declared extern
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:4:16: Array element cannot be a Python object
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:5:12: Pointer base type cannot be a Python object
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:7:13: Variable type 'int []' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:8:11: Variable type 'Grail' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:9:10: Variable type 'void' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:11:15: Array element type 'int []' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:12:14: Array element type 'Grail' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:13:16: Array element type 'void' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:16:9: Variable type 'int []' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:19:1: Function argument cannot be void
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:18:7: Argument type 'Grail' is incomplete
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_badtypeuse.pyx:19:1: Invalid use of 'void'

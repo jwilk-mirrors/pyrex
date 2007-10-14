@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "Tests/Runnable2/r_traceback_t.py", line 5, in ?
+    r_traceback.tomato()
+  File "r_traceback.pyx", line 8, in r_traceback.tomato
+    grail()
+  File "r_traceback.pyx", line 5, in r_traceback.grail
+    spam()
+  File "r_traceback.pyx", line 2, in r_traceback.spam
+    raise Exception("Spam error")
+Exception: Spam error

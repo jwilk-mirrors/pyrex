@@ -1,0 +1,9 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:5:36: C struct/union member cannot be a Python object
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:7:5: 'Spam' already defined
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:15:6: Object of type 'Spam' has no attribute 'k'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:16:6: Cannot assign type 'float *[42]' to 'int'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:17:7: Cannot assign type 'int' to 'float *[42]'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:18:6: Object of type 'int' has no attribute 'i'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:19:2: Object of type 'int' has no attribute 'i'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:20:7: Cannot select attribute of incomplete type 'Grail'
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_cstruct.pyx:21:3: Cannot select attribute of incomplete type 'Grail'

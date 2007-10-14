@@ -1,0 +1,3 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_del.pyx:4:6: Cannot assign to or delete this
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_del.pyx:5:5: Deletion of non-Python object
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_del.pyx:7:5: Deletion of local or C global name not supported

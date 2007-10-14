@@ -1,0 +1,1 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_multass.pyx:4:27: Cannot assign type 'int *' to 'int'

@@ -1,0 +1,5 @@
+To be fixed:
+DONE * Comparison of pointers to non-generic Python objects
+?* Casting to generic function pointer - not a prototype
+DONE * Ignore docstrings in cdef functions.
+DONE * Set return value after calling __Pyx_WriteUnraisable

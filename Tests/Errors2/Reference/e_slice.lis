@@ -1,0 +1,3 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_slice.pyx:3:13: Cannot convert 'int *' to Python object
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_slice.pyx:4:14: Cannot convert 'int *' to Python object
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_slice.pyx:5:15: Cannot convert 'int *' to Python object

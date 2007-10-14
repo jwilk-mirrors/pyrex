@@ -1,0 +1,1 @@
+cdef readonly int i

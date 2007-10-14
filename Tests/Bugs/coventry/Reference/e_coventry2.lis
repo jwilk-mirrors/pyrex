@@ -1,0 +1,2 @@
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/coventry/e_coventry2.pyx:1:5: Declaration of 'C' as 'public' conflicts with previous declaration as 'private'
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/coventry/e_coventry2.pyx:1:5: Object struct name differs from previous declaration

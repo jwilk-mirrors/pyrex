@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Source Files and
+Compilation</title></head>
+<body>
+<h1>
+<hr style="width: 100%; height: 2px;">
+Source
+Files and Compilation
+<hr style="width: 100%; height: 2px;">
+</h1>
+Pyrex
+source file names consist of the name of the module followed by a <span style="font-family: monospace;">.pyx</span> extension,
+for example a module called <span style="font-family: monospace;">primes</span>
+would have a source file named <span style="font-family: monospace;">primes.pyx</span>.<br>
+<br>If your module is destined to live in a package, the source
+file name should include the <span style="font-style: italic;">full
+dotted name</span> that the module will eventually have. For
+example, a module called <span style="font-family: monospace;">primes</span>
+that will be installed in a package called <span style="font-family: monospace;">numbers</span> should
+have a source file called <span style="font-family: monospace;">numbers.primes.pyx</span>.
+This will ensure that the __name__ properties of the module and any
+classes defined in it are set correctly. If you don't do this, you may
+find that pickling doesn't work, among other problems. It also ensures
+that the Pyrex compiler has the right idea about the layout of the
+module namespace, which can be important when accessing extension types
+defined in other modules.<br>
+<br>Once you have written your .pyx file, there are a couple of
+ways of
+turning it into an extension module. One way is to compile it manually
+with the Pyrex compiler, e.g.<br>
+<br><div style="margin-left: 40px;"><span style="font-family: monospace;">pyrexc primes.pyx</span><br>
+</div><br>
+This will produce a file called <span style="font-family: monospace;">primes.c</span>,
+which then needs to be compiled with the C compiler using whatever
+options are appropriate on your platform for generating an extension
+module. There's a Makefile in the Demos directory (called <span style="font-family: monospace;">Makefile.nodistutils</span>)
+that shows how to do this for Linux.<br>
+<br>The other, and probably better, way is to use the distutils
+extension provided with Pyrex. See the <span style="font-family: monospace;">Setup.py</span>
+file in the Demos directory for an example of how to use it. This
+method has the advantage of being cross-platform -- the same setup file
+should work on any platform where distutils can compile an extension
+module.<br><br>---<br></body></html>

@@ -1,0 +1,2 @@
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:1:5: Function declared nogil has Python locals or temporaries
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:5:5: Function declared nogil has Python locals or temporaries

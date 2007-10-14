@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Limitations</title></head>
+<body><h1><hr width="100%">
+<a name="Limitations"></a>Limitations <hr width="100%"></h1><h2> <a name="Unsupported"></a>Unsupported
+Python features</h2>
+Pyrex is not quite a full superset of Python. The following
+restrictions apply: <blockquote> <li> Function
+definitions (whether using <b>def</b> or <b>cdef</b>)
+cannot be nested within other function definitions.<br> </li>
+&nbsp; <li> Class definitions can only appear at the top
+level of a module, not inside a function.<br> </li>
+&nbsp; <li> The<tt> import *</tt> form of import
+is not allowed anywhere (other forms of the import statement are fine,
+though).<br> </li> &nbsp; <li> Generators
+cannot be defined in Pyrex.<br> <br> </li> <li>
+The <tt>globals()</tt> and <tt>locals()</tt>
+functions cannot be used.</li> </blockquote> The above
+restrictions will most likely remain, since removing them would be
+difficult and they're not really needed for Pyrex's intended
+applications. <p>There are also some temporary limitations,
+which may eventually be lifted, including: </p> <blockquote>
+<li> Class and function definitions cannot be placed inside
+control structures.<br> </li> &nbsp; <li>
+In-place arithmetic operators (+=, etc) are not yet supported.<br>
+</li> &nbsp; <li> List comprehensions are not yet
+supported.<br> </li> &nbsp; <li> There is no
+support for Unicode.<br> </li> &nbsp; <li>
+Special methods of extension types cannot have functioning
+docstrings.<br> <br> </li> <li> The use of
+string literals as comments is not recommended at present, because
+Pyrex doesn't optimize them away, and won't even accept them in
+places where executable statements are not allowed.</li></blockquote><hr style="width: 100%; height: 2px;"><h2><a name="SemanticDifferences"></a>Semantic
+differences between Python and Pyrex</h2> <h3> Behaviour
+of class scopes</h3> In Python, referring to a method of a class
+inside the class definition, i.e. while the class is being defined,
+yields a plain function object, but in Pyrex it yields an unbound method<sup><font size="-2"><a href="#Footnote1">1</a></font></sup>.
+A consequence of this is that the
+usual idiom for using the classmethod and staticmethod functions, e.g. <blockquote>
+<pre>class Spam:</pre> <pre>&nbsp; def method(cls):<br>&nbsp;&nbsp;&nbsp; ...</pre><pre>&nbsp; method = classmethod(method)</pre>
+</blockquote>
+will not work in Pyrex. This can be worked around by defining the
+function <i>outside</i> the class, and then assigning the
+result of classmethod or staticmethod inside the class, i.e. <blockquote>
+<pre>def Spam_method(cls):<br>&nbsp; ...</pre> <pre>class Spam:</pre><pre>&nbsp; method = classmethod(Spam_method)</pre>
+</blockquote> <hr width="100%"><span style="font-weight: bold;">Footnotes</span><br><hr style="width: 100%; height: 2px;"><a name="Footnote1"></a>1.
+The reason for the different
+behaviour
+of class scopes is that Pyrex-defined Python functions are PyCFunction
+objects,
+not PyFunction objects, and are not recognised by the machinery that
+creates
+a bound or unbound method when a function is extracted from a class. To
+get
+around this, Pyrex wraps each method in an unbound method object itself
+before
+storing it in the class's dictionary.<br><br>--- </body></html>

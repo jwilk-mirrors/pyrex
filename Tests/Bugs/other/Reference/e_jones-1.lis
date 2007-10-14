@@ -1,0 +1,2 @@
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_jones-1.pyx:80:31: Object of type 'Small' has no attribute 'Topointer'
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_jones-1.pyx:89:28: Return with value in void function

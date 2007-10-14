@@ -1,0 +1,20 @@
+Name: Brian
+Airspeed: 42
+Extra args: ()
+Extra keywords: {}
+Name: Brian
+Airspeed: 42
+Extra args: ('African',)
+Extra keywords: {}
+Name: Brian
+Airspeed: 42
+Extra args: ()
+Extra keywords: {}
+Name: Brian
+Airspeed: 42
+Extra args: ()
+Extra keywords: {'coconuts': 3, 'species': 'African'}
+Name: Brian
+Airspeed: 42
+Extra args: ('African',)
+Extra keywords: {'coconuts': 3}

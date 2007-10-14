@@ -1,0 +1,3 @@
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/e_badfuncargtype.pyx:3:21: Function argument cannot be void
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/e_badfuncargtype.pyx:4:29: Function argument cannot be void
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/e_badfuncargtype.pyx:5:16: Argument type 'Spam' is incomplete

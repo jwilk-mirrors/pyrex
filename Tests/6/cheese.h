@@ -1,0 +1,1 @@
+struct runny_obj {	PyObject_HEAD	int a;};PyTypeObject runny_type;

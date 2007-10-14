@@ -1,0 +1,2 @@
+/Local/Projects/C/Pyrex/Source/Tests/9/e_withgil.pyx:1:13: Function with Python return type cannot be declared nogil
+/Local/Projects/C/Pyrex/Source/Tests/9/e_withgil.pyx:4:11: Function with Python argument cannot be declared nogil

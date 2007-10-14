@@ -1,0 +1,3 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors1/e_argdefault.pyx:1:17: C function argument cannot have default value
+/Local/Projects/C/Pyrex/Source/Tests/Errors1/e_argdefault.pyx:9:16: This argument cannot have a default value
+/Local/Projects/C/Pyrex/Source/Tests/Errors1/e_argdefault.pyx:4:23: Non-default argument following default argument

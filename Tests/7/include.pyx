@@ -1,0 +1,4 @@
+include "spam.pyi"
+
+f()
+

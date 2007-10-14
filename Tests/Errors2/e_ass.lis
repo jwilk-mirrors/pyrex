@@ -1,0 +1,2 @@
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_ass.pyx:5:16: Cannot assign type 'char *' to 'int'
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_ass.pyx:6:17: Cannot convert Python object to 'int *'

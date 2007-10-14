@@ -1,0 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Type Checking</title></head><body><h2><small>Type Checking</small></h2>When checking the types of parameters to an operator method, be aware that the Python functions <span style="font-family: monospace;">isinstance()</span> and <span style="font-family: monospace;">issubclass()</span>
+can be fooled by objects that redefine their __class__ attribute. This
+is all right in Python, but it's not acceptable for something that
+needs to access the C attributes of an object. It's better (as well as
+faster) to use the <span style="font-family: monospace;">PyObject_IsInstance()</span> and <span style="font-family: monospace;">PyObject_IsSubclass()</span> C API functions. You can gain access to them with the following declarations:<br><div style="margin-left: 40px;"><pre>cdef extern from "Python.h":<br>    int PyObject_IsInstance(object, object)<br>    int PyObject_IsSubclass(object, object)</pre></div></body></html>

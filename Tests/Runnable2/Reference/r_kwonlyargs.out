@@ -1,0 +1,123 @@
+Calling c(1, 2)
+Caught: function takes exactly 3 arguments (2 given)
+
+Calling c(1, 2, 3)
+a = 1 b = 2 c = 3
+Okay
+
+Calling c(1, 2, 3, 4)
+Caught: function takes exactly 3 arguments (4 given)
+
+--------------------
+
+Calling d(1)
+Caught: function takes at least 2 arguments (1 given)
+
+Calling d(1, 2)
+a = 1 b = 2 c = 88
+Okay
+
+Calling d(1, 2, 3)
+Caught: function takes at most 2 positional arguments (3 given)
+
+Calling d(1, 2, c = 3)
+a = 1 b = 2 c = 3
+Okay
+
+--------------------
+
+Calling e(1)
+Caught: function takes at least 2 arguments (1 given)
+
+Calling e(1, 2)
+a = 1 b = 2 c = 88 kwds = {}
+Okay
+
+Calling e(1, 2, 3)
+a = 1 b = 2 c = 3 kwds = {}
+Okay
+
+Calling e(1, 2, 3, 4)
+Caught: function takes at most 3 positional arguments (4 given)
+
+Calling e(1, b = 2, c = 3)
+a = 1 b = 2 c = 3 kwds = {}
+Okay
+
+Calling e(1, b = 2, c = 3, d = 4)
+a = 1 b = 2 c = 3 kwds = {'d': 4}
+Okay
+
+Calling e(1, b = 2, c = 3, d = 4, e = 5)
+a = 1 b = 2 c = 3 kwds = {'d': 4, 'e': 5}
+Okay
+
+--------------------
+
+Calling f(1)
+Caught: required keyword argument 'c' is missing
+
+Calling f(1, 2)
+Caught: required keyword argument 'c' is missing
+
+Calling f(1, 2, 3)
+Caught: function takes at most 2 positional arguments (3 given)
+
+Calling f(1, 2, c = 3)
+a = 1 b = 2 c = 3 d = 42
+Okay
+
+Calling f(1, 2, c = 3, d = 4)
+a = 1 b = 2 c = 3 d = 4
+Okay
+
+Calling f(1, 2, c = 3, d = 4, e = 5)
+Caught: 'e' is an invalid keyword argument for this function
+
+--------------------
+
+Calling g(1, 2)
+Caught: required keyword argument 'c' is missing
+
+Calling g(1, 2, 3)
+Caught: function takes at most 2 positional arguments (3 given)
+
+Calling g(1, 2, c = 3)
+Caught: required keyword argument 'f' is missing
+
+Calling g(1, 2, c = 3, f = 4)
+a = 1 b = 2 c = 3 d = 42 e = 17 f = 4 kwds = {}
+Okay
+
+Calling g(1, 2, c = 3, d = 4, e = 5, f = 6)
+a = 1 b = 2 c = 3 d = 4 e = 5 f = 6 kwds = {}
+Okay
+
+Calling g(1, 2, c = 3, f = 4, g = 5, h = 6)
+a = 1 b = 2 c = 3 d = 42 e = 17 f = 4 kwds = {'g': 5, 'h': 6}
+Okay
+
+--------------------
+
+Calling h(1, 2)
+Caught: required keyword argument 'c' is missing
+
+Calling h(1, 2, c = 3)
+Caught: required keyword argument 'f' is missing
+
+Calling h(1, 2, c = 3, f = 4)
+a = 1 b = 2 args = () c = 3 d = 42 e = 17 f = 4 kwds = {}
+Okay
+
+Calling h(1, 2, 3, 4, c = 5, f = 6)
+a = 1 b = 2 args = (3, 4) c = 5 d = 42 e = 17 f = 6 kwds = {}
+Okay
+
+Calling h(1, 2, c = 3, d = 4, e = 5, f = 6)
+a = 1 b = 2 args = () c = 3 d = 4 e = 5 f = 6 kwds = {}
+Okay
+
+Calling h(1, 2, c = 3, f = 4, g = 5, h = 6)
+a = 1 b = 2 args = () c = 3 d = 42 e = 17 f = 4 kwds = {'g': 5, 'h': 6}
+Okay
+

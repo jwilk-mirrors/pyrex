@@ -1,0 +1,2 @@
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/jiba/e_jiba1.pyx:3:6: C method 'describe' not previously declared in definition part of extension type
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/jiba/e_jiba1.pyx:11:6: C method 'describe' not previously declared in definition part of extension type

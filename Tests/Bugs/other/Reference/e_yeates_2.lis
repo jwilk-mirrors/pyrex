@@ -1,0 +1,2 @@
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_yeates_2.pyx:1:5: C class 'PyArrayObject' is declared but not defined
+/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_yeates_2.pyx:5:36: Cannot select attribute of incomplete type 'PyArrayObject'

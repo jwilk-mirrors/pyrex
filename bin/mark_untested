@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+
+try:
+	import Carbon
+except ImportError:
+	import sys
+	print >>sys.stderr, "This utility only applies to Macintosh platforms."
+	sys.exit(1)
+
+from Pyrex.Testing.Mac import FileMarking
+FileMarking.mark_args_untested()
+

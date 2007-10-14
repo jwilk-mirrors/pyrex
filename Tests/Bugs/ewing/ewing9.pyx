@@ -1,0 +1,2 @@
+cdef struct xmlDoc:
+	pass

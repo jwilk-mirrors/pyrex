@@ -1,0 +1,1 @@
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/rushing/e_rushing1.pyx:3:6: Special methods must be declared with 'def', not 'cdef'

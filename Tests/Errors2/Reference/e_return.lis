@@ -1,0 +1,3 @@
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_return.pyx:3:8: Return with value in void function
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_return.pyx:7:1: Return value required
+/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_return.pyx:8:8: Cannot assign type 'int *' to 'int'

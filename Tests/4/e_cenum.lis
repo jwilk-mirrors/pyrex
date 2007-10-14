@@ -1,0 +1,3 @@
+/Local/Projects/D/Pyrex/Source/Tests/4/e_cenum.pyx:7:7: Cannot assign type 'int' to 'Spam'
+/Local/Projects/D/Pyrex/Source/Tests/4/e_cenum.pyx:8:9: Cannot assign type 'int' to 'Spam'
+/Local/Projects/D/Pyrex/Source/Tests/4/e_cenum.pyx:9:9: Cannot assign type 'int' to 'Spam'
