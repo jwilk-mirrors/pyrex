@@ -42,7 +42,7 @@ class Extension(_Extension.Extension):
 			extra_compile_args = None,
 			extra_link_args = None,
 			export_symbols = None,
-			swig_opts = None,
+			#swig_opts = None,
 			depends = None,
 			language = None,
 			pyrex_include_dirs = None,
@@ -63,7 +63,7 @@ class Extension(_Extension.Extension):
 			extra_compile_args = extra_compile_args,
 			extra_link_args = extra_link_args,
 			export_symbols = export_symbols,
-			swig_opts = swig_opts,
+			#swig_opts = swig_opts,
 			depends = depends,
 			language = language,
 			**kw)
