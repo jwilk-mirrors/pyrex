@@ -696,7 +696,11 @@ class CFuncDefNode(FuncDefNode):
 			arg_decls.append("...")
 		if not arg_decls:
 			arg_decls = ["void"]
-		entity = "%s(%s)" % (self.entry.func_cname,
+		#entity = "%s%s(%s)" % (
+		#	type.calling_convention_prefix(),
+		#	self.entry.func_cname,
+		#	string.join(arg_decls, ","))
+		entity = type.function_header_code(self.entry.func_cname,
 			string.join(arg_decls, ","))
 		if self.visibility == 'public':
 			dll_linkage = "DL_EXPORT"
