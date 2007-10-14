@@ -16,6 +16,9 @@ Bug fixes:
 	
 	- Added support for the --force option to Pyrex.Distutils.
 		[Alexander Belchenko <bialix@ukr.net>]
+	
+	- Compile-time "==" operator did not work. [Simon King
+		<king@mathematik.uni-jena.de>]
 
 
 0.9.6.2
