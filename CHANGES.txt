@@ -1,6 +1,11 @@
 0.9.6.3
 -------
 
+Enhancements:
+
+	- C API now only uses a single name in the module namespace
+		instead of one for each exported C function. [Stefan Behnel]
+
 Bug fixes:
 
 	- Setup.py no longer uses an import to get the version number
@@ -11,14 +16,12 @@ Bug fixes:
 		declaration rather than the definition.
 	
 	- Calling convention specifier was being emitted in function
-		prototypes but not the corresponding definitions.
-		[Atsuo Ishimoto <ishimoto@gembook.org>]
+		prototypes but not the corresponding definitions. [Atsuo Ishimoto]
 	
 	- Added support for the --force option to Pyrex.Distutils.
-		[Alexander Belchenko <bialix@ukr.net>]
+		[Alexander Belchenko]
 	
-	- Compile-time "==" operator did not work. [Simon King
-		<king@mathematik.uni-jena.de>]
+	- Compile-time "==" operator did not work. [Simon King]
 
 
 0.9.6.2
