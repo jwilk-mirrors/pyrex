@@ -116,14 +116,17 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_api_code(self, env, result):
 		api_funcs = []
+		public_extension_types = []
+		has_api_extension_types = 0
 		for entry in env.cfunc_entries:
 			if entry.api:
 				api_funcs.append(entry)
-		public_extension_types = []
 		for entry in env.c_class_entries:
 			if entry.visibility == 'public':
 				public_extension_types.append(entry)
-		if api_funcs or public_extension_types:
+			if entry.api:
+				has_api_extension_types = 1
+		if api_funcs or has_api_extension_types:
 			result.api_file = replace_suffix(result.c_file, "_api.h")
 			h_code = Code.CCodeWriter(open_new_file(result.api_file))
 			name = self.api_name(env)

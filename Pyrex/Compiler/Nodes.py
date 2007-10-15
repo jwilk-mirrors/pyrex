@@ -690,6 +690,7 @@ class CFuncDefNode(FuncDefNode):
 	def generate_function_header(self, code, with_pymethdef):
 		arg_decls = []
 		type = self.type
+		visibility = self.entry.visibility
 		for arg in type.args:
 			arg_decls.append(arg.declaration_code())
 		if type.has_varargs:
@@ -698,13 +699,13 @@ class CFuncDefNode(FuncDefNode):
 			arg_decls = ["void"]
 		entity = type.function_header_code(self.entry.func_cname,
 			string.join(arg_decls, ","))
-		if self.visibility == 'public':
+		if visibility == 'public':
 			dll_linkage = "DL_EXPORT"
 		else:
 			dll_linkage = None
 		header = self.return_type.declaration_code(entity,
 			dll_linkage = dll_linkage)
-		if self.visibility <> 'private':
+		if visibility <> 'private':
 			storage_class = "%s " % Naming.extern_c_macro
 		else:
 			storage_class = "static "
@@ -1248,6 +1249,7 @@ class CClassDefNode(StatNode):
 	#
 	#  visibility         'private' or 'public' or 'extern'
 	#  typedef_flag       boolean
+	#  api                boolean
 	#  module_name        string or None    For import of extern type objects
 	#  class_name         string            Unqualified name of class
 	#  as_name            string or None    Name to declare as in this scope
@@ -1296,7 +1298,8 @@ class CClassDefNode(StatNode):
 			objstruct_cname = self.objstruct_name,
 			typeobj_cname = self.typeobj_name,
 			visibility = self.visibility,
-			typedef_flag = self.typedef_flag)
+			typedef_flag = self.typedef_flag,
+			api = self.api)
 		scope = self.entry.type.scope
 		if self.doc:
 			scope.doc = self.doc

@@ -6,10 +6,10 @@ External C Code <hr width="100%"></h1><ul><li>
 <a href="#ReferencingHeaders">Referencing C header files</a></li><li>
 <a href="#StructDeclStyles">Styles of struct/union/enum
 declaration</a></li><li> <a href="#AccessingAPI">Accessing
-Python/C API routines</a></li><li><a href="#SpecialTypes">Special Types</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6)</span></li><li><a href="#CallingConventions">Windows Calling Conventions</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6)</span></li><li>
+Python/C API routines</a></li><li><a href="#SpecialTypes">Special Types</a><span style="color: rgb(255, 0, 0);"> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></span></li><li><a href="#CallingConventions">Windows Calling Conventions</a><span style="color: rgb(255, 0, 0);"> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></span></li><li>
 <a href="#CNameSpecs">Resolving naming conflicts - C name
 specifications</a></li></ul><li><a href="#Using_Pyrex_Declarations_from_C">Using Pyrex
-declarations from C</a></li><ul><li> <a href="#PublicDecls">Public declarations</a></li></ul><ul><li><a href="#C_API_Declarations">C API declarations</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6)</span></li><li><a href="#Acquiring_and_Releasing_the_GIL">Acquiring and Releasing the GIL</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6)</span></li></ul></ul>
+declarations from C</a></li><ul><li> <a href="#PublicDecls">Public declarations</a></li></ul><ul><li><a href="#C_API_Declarations">C API declarations</a><span style="color: rgb(255, 0, 0);"> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></span></li><li><a href="#Multiple_public_and_api_declarations">Multiple public and API declarations</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6.3)</span></li><li><a href="#Acquiring_and_Releasing_the_GIL">Acquiring and Releasing the GIL</a><span style="color: rgb(255, 0, 0);"> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></span></li></ul></ul>
 One of the main uses of Pyrex is wrapping existing libraries of C code.
 This is achieved by using <a href="#ExternDecls">external
 declarations</a> to declare the C functions and variables from
@@ -229,21 +229,20 @@ the Pyrex module resides within a package, then the name of the .h file
 consists of the full dotted name of the module, e.g. a module called <span style="font-weight: bold;">foo.spam</span> would have
 a header file called <span style="font-weight: bold;">foo.spam.h</span>.
 <h3><a name="C_API_Declarations"></a>C API
-Declarations</h3><p>The other way of making functions
-available to C code is by declaring them with the <span style="font-family: monospace; font-weight: bold;">api</span>
-keyword. A header file called "<span style="font-weight: bold;"><span style="font-style: italic;">modulename</span>_api.h</span>"
-is produced containing declarations of the functions, and a function
+Declarations</h3><p>The other way of making declarations available to C code is to declare them with the <span style="font-family: monospace; font-weight: bold;">api</span>
+keyword. You can use this keyword with C functions and extension types. A header file called "<span style="font-weight: bold;"><span style="font-style: italic;">modulename</span>_api.h</span>"
+is produced containing declarations of the functions and extension types, and a function
 called <span style="font-weight: bold;">import_<span style="font-style: italic;">modulename</span>()</span>.</p><p>C
-code wanting to use the functions needs to include the header and call
+code wanting to use these functions or extension types needs to include the header and call
 the import_<span style="font-style: italic;">modulename</span>()
-function. The other functions can then be called as usual.</p><p>Any
+function. The other functions can then be called and the extension types used as usual.</p><p>Any
 <span style="font-family: monospace;">public</span>
-type declarations in the Pyrex module are also made available when you
+C type or extension type declarations in the Pyrex module are also made available when you
 include <span style="font-style: italic;">modulename</span>_api.h.</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="background-color: rgb(102, 204, 204);"><pre>delorean.pyx</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>marty.c</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(102, 204, 204);"><pre>cdef public struct Vehicle:<br> int speed<br> float power<br><br>cdef api void activate(Vehicle *v):<br> if v.speed &gt;= 88 \<br> and v.power &gt;= 1.21:<br> print "Time travel achieved"</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>#include "delorean_api.h"<br><br>Vehicle car;<br><br>int main(int argc, char *argv[]) {<br> import_delorean();<br> car.speed = atoi(argv[1]);<br> car.power = atof(argv[2]);&nbsp;<br> activate(&amp;car);<br>}</pre></td></tr></tbody></table><br>Note
 that any types defined in the Pyrex module that are used as argument or
 return types of the exported functions will need to be declared <span style="font-family: monospace;">public</span>,
 otherwise they won't be included in the generated header file, and you
-will get errors when you try to compile a C file that uses the header.<br><br>Using the <span style="font-family: monospace;">api</span> method does not require the C code using the functions to be linked
+will get errors when you try to compile a C file that uses the header.<br><br>Using the <span style="font-family: monospace;">api</span> method does not require the C code using the declarations to be linked
 with the extension module in any way, as the Python import machinery is
 used to make the connection dynamically. However, only functions can be
 accessed this way, not variables.<br><br>You can use both <span style="font-family: monospace;">public</span> and <span style="font-family: monospace;">api</span> on the same
@@ -259,7 +258,8 @@ name of the importing function contains the full name with dots
 replaced by double underscores.</li></ul>E.g. a module
 called <span style="font-weight: bold;">foo.spam</span>
 would have an API header file called <span style="font-weight: bold;">foo.spam_api.h</span> and
-an importing function called <span style="font-weight: bold;">import_foo__spam()</span>.<br><br><hr style="width: 100%; height: 2px;"><h2><a name="Acquiring_and_Releasing_the_GIL"></a>Acquiring and Releasing the GIL</h2>Pyrex
+an importing function called <span style="font-weight: bold;">import_foo__spam()</span>.<br><h3><a name="Multiple_public_and_api_declarations"></a>Multiple public and api declarations</h3>You can declare a whole group of items as <span style="font-style: italic;">public</span> and/or <span style="font-style: italic;">api</span> all at once by enclosing them in a cdef block, for example,<br><pre style="margin-left: 40px;">cdef public api:<br>    void order_spam(int tons)<br>    char *get_lunch(float tomato_size)<br></pre>This can be a useful thing to do in a <span style="font-family: monospace;">.pxd</span> file (see <a href="sharing.html">Sharing Declarations
+Between Pyrex Modules</a>) to make the module's public interface available by all three methods.<br><br><hr style="width: 100%; height: 2px;"><h2><a name="Acquiring_and_Releasing_the_GIL"></a>Acquiring and Releasing the GIL</h2>Pyrex
 provides facilities for releasing the Global Interpreter Lock (GIL)
 before calling C code, and for acquiring the GIL in functions that are
 to be called back from C code that is executed without the GIL.<br><h3>Releasing the GIL</h3>You can release the GIL around a section of code using the<span style="font-family: monospace; font-weight: bold;"> with nogil </span>statement:<br><pre style="margin-left: 40px;">with nogil:<br>   &lt;code to be executed with the GIL released&gt;<br></pre>Code in the body of the statement <span style="font-style: italic;">must not manipulate Python objects in any way</span>, and must not call anything that manipulates Python objects without first re-acquiring the GIL. <span style="font-weight: bold;">Pyrex currently does not check this.</span><br><h3>Acquiring the GIL</h3>A

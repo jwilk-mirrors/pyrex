@@ -5,7 +5,7 @@
 Basics <hr width="100%"></h1>
 <ul><li><a href="#PyFuncsVsCFuncs">Python functions vs. C functions</a></li><li>
 <a href="#PyObjParams">Python objects as parameters</a></li><li>
-<a href="#CVarAndTypeDecls">C variable and type definitions</a></li><li><a href="#AutomaticTypeConversions">Automatic type conversions</a></li><ul><li><a href="#PyToCStringCaveats">Caveats when using a Python
+<a href="#CVarAndTypeDecls">C variable and type definitions</a></li><li><a href="#Grouping_multiple_C_declarations">Grouping multiple C declarations</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6.3)</span></li><li><a href="#AutomaticTypeConversions">Automatic type conversions</a></li><ul><li><a href="#PyToCStringCaveats">Caveats when using a Python
 string in a C context</a></li></ul><li> <a href="#ScopeRules">Scope rules</a></li><li>
 <a href="#StatsAndExprs">Statements and expressions</a></li><ul><li>
 <a href="#ExprSyntaxDifferences">Differences between C and
@@ -14,7 +14,7 @@ expressions<br> </a></li><li> <a href="#ForFromLoop">Integer for-loops</a></li><
 <a href="#ExceptionValues">Error return values</a></li><ul><li>
 <a href="#CheckingReturnValues">Checking return values of
 non-Pyrex functions</a></li></ul><li> <a href="#IncludeStatement">The <tt>include</tt>
-statement</a></li><li><a href="#KeywordOnlyArguments">Keyword-only arguments</a><span style="color: rgb(255, 0, 0);"> (New in 0.9.6)</span></li><li><a href="#Built-in_Functions">Built-in functions</a> <span style="color: rgb(255, 0, 0);">(New in 0.9.6)</span></li><li><a href="#Conditional_Compilation">Conditional compilation</a>&nbsp;<span style="color: rgb(255, 0, 0);">(New in 0.9.6)</span></li><ul><li><a href="#Compile-Time_Definitions">Compile-time definitions</a></li><li><a href="#Conditional_Statements">Conditional statements</a><span style="color: rgb(255, 0, 0);"><br></span></li></ul></ul>This
+statement</a></li><li><a href="#KeywordOnlyArguments">Keyword-only arguments</a><span style="color: rgb(255, 0, 0);"> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></span></li><li><a href="#Built-in_Functions">Built-in functions</a> <span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></li><li><a href="#Conditional_Compilation">Conditional compilation</a>&nbsp;<span style="color: rgb(255, 102, 0);">(New in 0.9.6)</span></li><ul><li><a href="#Compile-Time_Definitions">Compile-time definitions</a></li><li><a href="#Conditional_Statements">Conditional statements</a><span style="color: rgb(255, 0, 0);"><br></span></li></ul></ul>This
 section describes the basic features of the Pyrex language. The
 facilities covered in this section allow you to create Python-callable
 functions that manipulate C data structures and convert between Python
@@ -80,7 +80,7 @@ write <blockquote> <pre>cdef Grail *gp</pre> </blockquote>
 and <i>not</i> <blockquote> <pre>cdef struct Grail *gp <font color="#ed181e"># WRONG</font></pre> </blockquote>
 There is also a <b>ctypedef</b> statement for giving names
 to types, e.g. <blockquote> <pre>ctypedef unsigned long ULong</pre>
-<pre>ctypedef int *IntPtr<br></pre></blockquote><h2><a name="AutomaticTypeConversions"></a>Automatic
+<pre>ctypedef int *IntPtr<br></pre></blockquote><h2><a name="Grouping_multiple_C_declarations"></a>Grouping multiple C declarations</h2>If you have a series of declarations that all begin with <span style="font-family: monospace;">cdef</span>, you can group them into a cdef block like this:<br><pre style="margin-left: 40px;">cdef:<br><br>    struct Spam:<br>        int tons<br><br>    int i<br>    float f<br>    Spam *p<br><br>    void f(Spam *s):<br>       print s.tons, "Tons of spam"<br>    </pre><h2><a name="AutomaticTypeConversions"></a>Automatic
 type conversions</h2>
 In most situations, automatic conversions will be performed for the
 basic numeric and string types when a Python object is used in a
