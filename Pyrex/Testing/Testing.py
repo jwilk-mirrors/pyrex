@@ -133,8 +133,8 @@ def run_compile_test(item, link = 0):
 		global mangled_module_name
 		module_name, _ = os.path.splitext(name)
 		mangled_module_name = "%d%s_" % (len(module_name), module_name)
-		produces_include_files = name[:2] == "i_"
-		produces_api_file = name[:2] == "a_"
+		produces_include_files = name.startswith("i_") or name.startswith("ia_")
+		produces_api_file = name.startswith("a_") or name.startswith("ia_")
 		is_error_test = (
 			name[:2] == "e_" or
 			name[:3] == "se_")

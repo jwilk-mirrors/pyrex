@@ -121,7 +121,7 @@ example; the same applies equally to union and enum declarations. </p>
 Pyrex code simply
 as <tt><font size="+1">Foo</font></tt>,
 not <tt><font size="+1">struct Foo</font></tt>.
-<br> &nbsp; </p><table cellpadding="5"> <tbody>
+  </p><table cellpadding="5"> <tbody>
 <tr bgcolor="#8cbc1c" valign="top"> <td bgcolor="#8cbc1c">&nbsp;</td> <td bgcolor="#ff9933" nowrap="nowrap"><b>C code</b></td>
 <td bgcolor="#66cccc" valign="top"><b>Possibilities
 for corresponding Pyrex code</b></td> <td bgcolor="#99cc33" valign="top"><b>Comments</b></td>
@@ -239,11 +239,14 @@ the import_<span style="font-style: italic;">modulename</span>()
 function. The other functions can then be called as usual.</p><p>Any
 <span style="font-family: monospace;">public</span>
 type declarations in the Pyrex module are also made available when you
-include <span style="font-style: italic;">modulename</span>_api.h.</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="background-color: rgb(102, 204, 204);"><pre>delorean.pyx</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>marty.c</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(102, 204, 204);"><pre>cdef public struct Vehicle:<br> int speed<br> float power<br><br>cdef api void activate(Vehicle *v):<br> if v.speed &gt;= 88 \<br> and v.power &gt;= 1.21:<br> print "Time travel achieved"</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>#include "delorean_api.h"<br><br>Vehicle car;<br><br>int main(int argc, char *argv[]) {<br> import_delorean();<br> car.speed = atoi(argv[1]);<br> car.power = atof(argv[2]);&nbsp;<br> activate(&amp;car);<br>}</pre></td></tr></tbody></table><br>This
-method does not require the C code using the functions to be linked
+include <span style="font-style: italic;">modulename</span>_api.h.</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="background-color: rgb(102, 204, 204);"><pre>delorean.pyx</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>marty.c</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(102, 204, 204);"><pre>cdef public struct Vehicle:<br> int speed<br> float power<br><br>cdef api void activate(Vehicle *v):<br> if v.speed &gt;= 88 \<br> and v.power &gt;= 1.21:<br> print "Time travel achieved"</pre></td><td style="background-color: rgb(255, 153, 0);"><pre>#include "delorean_api.h"<br><br>Vehicle car;<br><br>int main(int argc, char *argv[]) {<br> import_delorean();<br> car.speed = atoi(argv[1]);<br> car.power = atof(argv[2]);&nbsp;<br> activate(&amp;car);<br>}</pre></td></tr></tbody></table><br>Note
+that any types defined in the Pyrex module that are used as argument or
+return types of the exported functions will need to be declared <span style="font-family: monospace;">public</span>,
+otherwise they won't be included in the generated header file, and you
+will get errors when you try to compile a C file that uses the header.<br><br>Using the <span style="font-family: monospace;">api</span> method does not require the C code using the functions to be linked
 with the extension module in any way, as the Python import machinery is
 used to make the connection dynamically. However, only functions can be
-accessed this way, not variables.You can use both <span style="font-family: monospace;">public</span> and <span style="font-family: monospace;">api</span> on the same
+accessed this way, not variables.<br><br>You can use both <span style="font-family: monospace;">public</span> and <span style="font-family: monospace;">api</span> on the same
 function to make it available by both methods, e.g.<br><pre style="margin-left: 40px;">cdef public api void belt_and_braces():<br> ...<br></pre>However,
 note that you should include <span style="font-weight: bold;">either</span>
 <span style="font-style: italic;">modulename</span>.h
