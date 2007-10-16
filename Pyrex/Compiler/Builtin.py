@@ -6,7 +6,7 @@ from Symtab import BuiltinScope
 from TypeSlots import Signature
 
 builtin_function_table = [
-	# name,        args,   return,  C API func,           has py equiv = True
+	# name,        args,   return,  C API func,           py equiv = "*"
 	('abs',        "O",    "O",     "PyNumber_Absolute"),
 	#('chr',       "",     "",      ""),
 	#('cmp', "",   "",     "",      ""), # int PyObject_Cmp(PyObject *o1, PyObject *o2, int *result)
@@ -18,6 +18,7 @@ builtin_function_table = [
 	#('execfile',  "",     "",      ""),
 	#('filter',    "",     "",      ""),
 	('getattr',    "OO",   "O",     "PyObject_GetAttr"),
+	('getattr3',   "OOO",  "O",     "__Pyx_GetAttr3",       "getattr"),
 	('hasattr',    "OO",   "i",     "PyObject_HasAttr"),
 	('hash',       "O",    "i",     "PyObject_Hash"),
 	#('hex',       "",     "",      ""),
@@ -74,12 +75,35 @@ builtin_function_table = [
 #  type
 #  xrange
 
+getattr3_utility_code = ["""
+static PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *); /*proto*/
+""","""
+static PyObject *__Pyx_GetAttr3(PyObject *o, PyObject *n, PyObject *d) {
+	PyObject *r = PyObject_GetAttr(o, n);
+	if (!r) {
+		if (!PyErr_ExceptionMatches(PyExc_AttributeError))
+			goto bad;
+		PyErr_Clear();
+		r = d;
+		Py_INCREF(d);
+	}
+	return r;
+bad:
+	return 0;
+}
+"""]
+
+builtin_utility_code = {
+	'getattr3': getattr3_utility_code,
+}
+
 builtin_scope = BuiltinScope()
 
-def declare_builtin_func(name, args, ret, cname, py_equiv = 1):
+def declare_builtin_func(name, args, ret, cname, py_equiv = "*"):
 	sig = Signature(args, ret)
 	type = sig.function_type()
-	builtin_scope.declare_builtin_cfunction(name, type, cname, py_equiv)
+	utility = builtin_utility_code.get(name)
+	builtin_scope.declare_builtin_cfunction(name, type, cname, py_equiv, utility)
 
 def init_builtin_funcs():
 	for desc in builtin_function_table:

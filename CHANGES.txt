@@ -12,6 +12,8 @@ Enhancements:
 	- The 'api' keyword can now be used on extension types to cause
 		generation of an api.h file when there are no exported C functions.
 	
+	- Added a getattr3() builtin for the three-argument form of getattr.
+	
 Bug fixes:
 
 	- Setup.py no longer uses an import to get the version number
