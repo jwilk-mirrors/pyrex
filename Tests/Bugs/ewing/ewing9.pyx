@@ -1,2 +1,2 @@
 cdef struct xmlDoc:
-	pass
+	int i

@@ -1605,9 +1605,9 @@ def p_cdef_statement(s, level, visibility = 'private', api = 0):
 		#if api:
 		#	error(pos, "'api' not allowed with '%s'" % s.systring)
 		if s.systring == "enum":
-			return p_c_enum_definition(s, pos, visibility)
+			return p_c_enum_definition(s, pos, level, visibility)
 		else:
-			return p_c_struct_or_union_definition(s, pos, visibility)
+			return p_c_struct_or_union_definition(s, pos, level, visibility)
 	elif s.sy == 'pass':
 		node = p_pass_statement(s)
 		s.expect_newline('Expected a newline')
@@ -1634,7 +1634,7 @@ struct_union_or_enum = (
 	"struct", "union", "enum"
 )
 
-def p_c_enum_definition(s, pos, visibility, typedef_flag = 0):
+def p_c_enum_definition(s, pos, level, visibility, typedef_flag = 0):
 	# s.sy == ident 'enum'
 	s.next()
 	if s.sy == 'IDENT':
@@ -1657,7 +1657,8 @@ def p_c_enum_definition(s, pos, visibility, typedef_flag = 0):
 			p_c_enum_line(s, items)
 		s.expect_dedent()
 	return Nodes.CEnumDefNode(pos, name = name, cname = cname,
-		items = items, typedef_flag = typedef_flag, visibility = visibility)
+		items = items, typedef_flag = typedef_flag, visibility = visibility,
+		in_pxd = level == 'module_pxd')
 
 def p_c_enum_line(s, items):
 	if s.sy <> 'pass':
@@ -1682,7 +1683,7 @@ def p_c_enum_item(s, items):
 	items.append(Nodes.CEnumDefItemNode(pos, 
 		name = name, cname = cname, value = value))
 
-def p_c_struct_or_union_definition(s, pos, visibility, typedef_flag = 0):
+def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 	# s.sy == ident 'struct' or 'union'
 	kind = s.systring
 	s.next()
@@ -1707,7 +1708,8 @@ def p_c_struct_or_union_definition(s, pos, visibility, typedef_flag = 0):
 		s.expect_newline("Syntax error in struct or union definition")
 	return Nodes.CStructOrUnionDefNode(pos, 
 		name = name, cname = cname, kind = kind, attributes = attributes,
-		typedef_flag = typedef_flag, visibility = visibility)
+		typedef_flag = typedef_flag, visibility = visibility,
+		in_pxd = level == 'module_pxd')
 
 def p_visibility(s, prev_visibility):
 	pos = s.position()
@@ -1749,7 +1751,8 @@ def p_c_func_or_var_declaration(s, level, pos, visibility = 'private', api = 0):
 			visibility = visibility,
 			base_type = base_type, 
 			declarators = declarators,
-			in_pxd = level == 'module_pxd')
+			in_pxd = level == 'module_pxd',
+			api = api)
 	return result
 
 def p_ctypedef_statement(s, level, visibility = 'private', api = 0):
@@ -1762,15 +1765,17 @@ def p_ctypedef_statement(s, level, visibility = 'private', api = 0):
 			visibility = visibility, typedef_flag = 1, api = api)
 	elif s.sy == 'IDENT' and s.systring in ('struct', 'union', 'enum'):
 		if s.systring == 'enum':
-			return p_c_enum_definition(s, pos, visibility, typedef_flag = 1)
+			return p_c_enum_definition(s, pos, level, visibility, typedef_flag = 1)
 		else:
-			return p_c_struct_or_union_definition(s, pos, visibility, typedef_flag = 1)
+			return p_c_struct_or_union_definition(s, pos, level, visibility,
+				typedef_flag = 1)
 	else:
 		base_type = p_c_base_type(s)
 		declarator = p_c_declarator(s, is_type = 1, nonempty = 1)
 		s.expect_newline("Syntax error in ctypedef statement")
 		return Nodes.CTypeDefNode(pos,
-			base_type = base_type, declarator = declarator, visibility = visibility)
+			base_type = base_type, declarator = declarator, visibility = visibility,
+			in_pxd = level == 'module_pxd')
 
 def p_def_statement(s):
 	# s.sy == 'def'

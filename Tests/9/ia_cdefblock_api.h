@@ -3,9 +3,6 @@
 #include "Python.h"
 #include "ia_cdefblock.h"
 
-static PyTypeObject *__pyx_ptype_12ia_cdefblock_ExpBlarg;
-#define ExpBlargType (*__pyx_ptype_12ia_cdefblock_ExpBlarg)
-
 static PyTypeObject *__pyx_ptype_12ia_cdefblock_PubBlarg;
 #define PubBlargType (*__pyx_ptype_12ia_cdefblock_PubBlarg)
 
@@ -29,9 +26,9 @@ bad:
 
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_function
-#define __PYX_HAVE_API_FUNC_import_function
 
+#ifndef __PYX_HAVE_RT_ImportFunction
+#define __PYX_HAVE_RT_ImportFunction
 static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char *sig) {
 	PyObject *d = 0;
 	PyObject *cobj = 0;
@@ -65,12 +62,11 @@ bad:
 	Py_XDECREF(d);
 	return -1;
 }
-
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_type
-#define __PYX_HAVE_API_FUNC_import_type
 
+#ifndef __PYX_HAVE_RT_ImportType
+#define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, 
 	long size) 
 {
@@ -100,7 +96,6 @@ bad:
 	Py_XDECREF(result);
 	return 0;
 }
-
 #endif
 
 static int import_ia_cdefblock(void) {
@@ -110,7 +105,6 @@ static int import_ia_cdefblock(void) {
   if (__Pyx_ImportFunction(module, "api_f", (void**)&api_f, "void (void)") < 0) goto bad;
   if (__Pyx_ImportFunction(module, "pub_api_f", (void**)&pub_api_f, "void (void)") < 0) goto bad;
   Py_DECREF(module);
-  __pyx_ptype_12ia_cdefblock_ExpBlarg = __Pyx_ImportType("ia_cdefblock", "ExpBlarg", sizeof(struct ExpBlargObj)); if (!__pyx_ptype_12ia_cdefblock_ExpBlarg) goto bad;
   __pyx_ptype_12ia_cdefblock_PubBlarg = __Pyx_ImportType("ia_cdefblock", "PubBlarg", sizeof(struct PubBlargObj)); if (!__pyx_ptype_12ia_cdefblock_PubBlarg) goto bad;
   return 0;
   bad:

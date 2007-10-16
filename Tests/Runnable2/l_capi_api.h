@@ -21,14 +21,18 @@ bad:
 
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_function
-#define __PYX_HAVE_API_FUNC_import_function
 
+#ifndef __PYX_HAVE_RT_ImportFunction
+#define __PYX_HAVE_RT_ImportFunction
 static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char *sig) {
+	PyObject *d = 0;
 	PyObject *cobj = 0;
 	char *desc;
 	
-	cobj = PyObject_GetAttrString(module, funcname);
+	d = PyObject_GetAttrString(module, "__pyx_capi__");
+	if (!d)
+		goto bad;
+	cobj = PyDict_GetItemString(d, funcname);
 	if (!cobj) {
 		PyErr_Format(PyExc_ImportError,
 			"%s does not export expected C function %s",
@@ -46,12 +50,13 @@ static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char
 	}
 	*f = PyCObject_AsVoidPtr(cobj);
 	Py_DECREF(cobj);
+	Py_DECREF(d);
 	return 0;
 bad:
 	Py_XDECREF(cobj);
+	Py_XDECREF(d);
 	return -1;
 }
-
 #endif
 
 static int import_l_capi(void) {

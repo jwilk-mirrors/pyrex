@@ -6,10 +6,6 @@
 #define __PYX_EXTERN_C extern
 #endif
 
-struct ExpBlargObj {
-  PyObject_HEAD
-};
-
 struct PubFoo {
   int i;
 };
@@ -22,11 +18,9 @@ struct PubBlargObj {
 
 __PYX_EXTERN_C DL_IMPORT(int) pub_v;
 
-__PYX_EXTERN_C DL_IMPORT(void) exp_f(void);
 __PYX_EXTERN_C DL_IMPORT(void) pub_f(void);
 __PYX_EXTERN_C DL_IMPORT(void) pub_api_f(void);
 
-__PYX_EXTERN_C DL_IMPORT(PyTypeObject) ExpBlargType;
 __PYX_EXTERN_C DL_IMPORT(PyTypeObject) PubBlargType;
 
 #endif

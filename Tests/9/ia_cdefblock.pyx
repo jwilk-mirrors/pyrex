@@ -31,9 +31,3 @@ cdef public api:
 
 	void pub_api_f():
 		pass
-
-cdef void exp_f():
-	pass
-
-cdef class ExpBlarg:
-	pass

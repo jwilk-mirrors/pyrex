@@ -11,11 +11,6 @@ struct Foo {
   int b;
 };
 
-typedef struct {
-  int c;
-  int d;
-} __pyx_t_6a_capi_Blarg;
-
 typedef struct Foo Zax;
 
 struct C_Obj {

@@ -66,8 +66,8 @@ static int import_ia_etree(void) {
   module = __Pyx_ImportModule("ia_etree");
   if (!module) goto bad;
   Py_DECREF(module);
-  __pyx_ptype_8ia_etree__Document = __Pyx_ImportType("ia_etree", "_Document", sizeof(struct LxmlDocument)); if (!__pyx_ptype_8ia_etree__Document) goto bad
-  __pyx_ptype_8ia_etree__Element = __Pyx_ImportType("ia_etree", "_Element", sizeof(struct LxmlElement)); if (!__pyx_ptype_8ia_etree__Element) goto bad
+  __pyx_ptype_8ia_etree__Document = __Pyx_ImportType("ia_etree", "_Document", sizeof(struct LxmlDocument)); if (!__pyx_ptype_8ia_etree__Document) goto bad;
+  __pyx_ptype_8ia_etree__Element = __Pyx_ImportType("ia_etree", "_Element", sizeof(struct LxmlElement)); if (!__pyx_ptype_8ia_etree__Element) goto bad;
   return 0;
   bad:
   Py_XDECREF(module);
