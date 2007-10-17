@@ -2,11 +2,11 @@
 #   Pyrex setup file
 #
 
+import distutils
 from distutils.core import setup
 from distutils.sysconfig import get_python_lib
 import os, sys
-#from Pyrex.Compiler.Version import version
-execfile(distutils.util.convert_path('Pyrex/Compiler/Version.py')
+execfile(distutils.util.convert_path('Pyrex/Compiler/Version.py'))
 
 compiler_dir = os.path.join(get_python_lib(prefix=''), 'Pyrex', 'Compiler')
 
