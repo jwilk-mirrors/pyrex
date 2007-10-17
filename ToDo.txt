@@ -154,3 +154,5 @@ Track GIL state.
 Private fields of extension types in a separate struct.
 
 Private vtable entries in a separate struct.
+
+Built-in constants (exceptions, etc.)
