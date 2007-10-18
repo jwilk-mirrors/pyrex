@@ -1,3 +1,16 @@
+0.9.6.4
+-------
+
+Bug fixes:
+
+	- Errors in setup.py corrected.
+	
+Enhancements:
+
+	- Functions declared with_gil and external functions declared nogil
+		are now allowed to have Python arguments and return types.
+
+
 0.9.6.3
 -------
 

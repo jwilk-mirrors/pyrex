@@ -243,9 +243,10 @@ class CFuncDeclaratorNode(CDeclaratorNode):
 			# Catch attempted C-style func(void) decl
 			if type.is_void:
 				error(arg_node.pos, "Function argument cannot be void")
-			if type.is_pyobject and self.nogil:
-				error(self.pos,
-					"Function with Python argument cannot be declared nogil")
+#			if self.nogil and not self.with_gil:
+#				if type.is_pyobject:
+#					error(self.pos,
+#						"Function with Python argument cannot be declared nogil")
 			func_type_args.append(
 				PyrexTypes.CFuncTypeArg(name, type, arg_node.pos))
 			if arg_node.default:
@@ -264,9 +265,10 @@ class CFuncDeclaratorNode(CDeclaratorNode):
 					error(self.exception_value.pos,
 						"Exception value incompatible with function return type")
 			exc_check = self.exception_check
-		if return_type.is_pyobject and self.nogil:
-			error(self.pos,
-				"Function with Python return type cannot be declared nogil")
+#		if self.nogil and not self.with_gil:
+#			if return_type.is_pyobject:
+#				error(self.pos,
+#					"Function with Python return type cannot be declared nogil")
 		if return_type.is_array:
 			error(self.pos,
 				"Function cannot return an array")
@@ -684,8 +686,16 @@ class CFuncDefNode(FuncDefNode):
 			self.declare_argument(env, arg)
 			
 	def need_gil_acquisition(self, lenv):
-		with_gil = self.type.with_gil
-		if self.type.nogil and not with_gil:
+		type = self.type
+		with_gil = type.with_gil
+		if type.nogil and not with_gil:
+			for arg in type.args:
+				if arg.type.is_pyobject:
+					error(self.pos,
+						"Function with Python argument cannot be declared nogil")
+			if type.return_type.is_pyobject:
+				error(self.pos,
+					"Function with Python return type cannot be declared nogil")
 			for entry in lenv.var_entries + lenv.temp_entries:
 				if entry.type.is_pyobject:
 					error(self.pos, "Function declared nogil has Python locals or temporaries")
