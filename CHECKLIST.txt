@@ -1,0 +1,8 @@
+Release Checklist
+=================
+
+* Ensure all tests pass
+
+* Test Demos
+
+* Test setup.py
