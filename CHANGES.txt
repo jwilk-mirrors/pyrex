@@ -5,6 +5,9 @@ Bug fixes:
 
 	- Errors in setup.py corrected.
 	
+	- Incorrect error checking code generated for builtin functions
+		and type slots with return type Py_ssize_t. [Robert Bradshaw]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
@@ -67,10 +70,10 @@ Bug fixes:
 Bug fixes:
 
 	- Changed os.uname to platform.uname for portability.
-		[Alexander Belchenko <bialix@ukr.net>]
+		[Alexander Belchenko]
 	
 	- Fixed C compiler warning about incompatible types in 2.5.
-		[Alexander Belchenko <bialix@ukr.net>]
+		[Alexander Belchenko]
 	
 	- Also fixed a few other 2.5 problems.
 
@@ -87,18 +90,16 @@ New Features:
 		another via cimport, and a C API can be produced to allow them
 		to be used from C code without linking to the extension module.
 		See "Interfacing with External C Code" and "Sharing Declarations
-		between Pyrex Modules" in the Language Overview.
-		[Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de]
+		between Pyrex Modules" in the Language Overview. [Stefan Behnel]
 	
 	- Facilities added for releasing the GIL around a section of code
 		and acquiring it on entry to a C function. See "Acquiring and
 		Releasing the GIL under "Interfacing with External C Code" in
-		the Language Overview. [Ulisses Furquim <ulisses.silva@openbossa.org>,
-		Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de]
+		the Language Overview. [Ulisses Furquim, Stefan Behnel]
 	
 	- Some conditional compilation facilities have been added. See
 		"Conditional Compilation" under "Language Basics" in the
-		Language Overview. [Sam Rushing <sam-pyrex@rushing.nightmare.com>]
+		Language Overview. [Sam Rushing]
 
 Language Changes:
 
@@ -128,11 +129,10 @@ Enhancements:
 
 	-	A C type explicitly declared as 'signed' is represented as
 		such in the generated code, to acommodate platforms where
-		'char' is unsigned by default. [Francesc Altet 
-		<faltet@carabos.com>]
+		'char' is unsigned by default. [Francesc Altet]
 	
 	- Python function can now have an argument of type "unsigned
-		char". [Alexander Belchenko <bialix@ukr.net>]
+		char". [Alexander Belchenko]
 	
 	- A new Pyrex.Distutils implementation has been added, which
 		exports an Extension type supporting the following options:
@@ -143,30 +143,28 @@ Enhancements:
 			pyrex_c_in_temp - bool - put generated C files in temp dir
 			pyrex_gen_pxi - bool - generate .pxi file for public declarations
 		
-		[Contributed by Billie G. Allie <bill.allie@defiant.mug.org>]
+		[Contributed by Billie G. Allie]
 	
 	- Assert statements can be compiled out by arranging for
 		PYREX_WITHOUT_ASSERTIONS to be #defined at C compilation time.
-		[Contributed by Stefan Behnel
-		<behnel_ml@gkec.informatik.tu-darmstadt.de]
+		[Contributed by Stefan Behnel]
 	
 	- Support for __index__ slot added to extension types.
-		[William Stein <wstein@gmail.com]
+		[William Stein]
 	
 	- Exception types now properly checked according to pre or post
 		2.5 rules as appropriate.
 	
-	- Py_ssize_t support added. [Stefan Behnel <stefan_ml@behnel.de>]
+	- Py_ssize_t support added. [Stefan Behnel]
 	
 	- Windows __stdcall and __cdecl qualifiers now supported.
-		[Suggested by Eric Devolder <eric.devolder@gmail.com>]
+		[Suggested by Eric Devolder]
 	
-	- Keyword-only argument support added. [Suggested by Stefan
-		Behnel <stefan_ml@behnel.de>]
+	- Keyword-only argument support added. [Suggested by Stefan Behnel]
 	
 	- An 'include' statement can now appear anywhere that another kind
 		of statement or declaration can appear, instead of being restricted
-		to the top level. [Caio Marcelo <cmarcelo@gmail.com>]
+		to the top level. [Caio Marcelo]
 	
 	- Unnecessary PyErr_Occurred() call to check result of
 		PyString_AsString() no longer made.
@@ -187,18 +185,16 @@ Bug fixes:
 	- If an external ctypedef type was used as the type of an
 		argument to a Python function, a declaration was generated
 		using the underlying type rather than the typedef name.
-		[Francesc Altet <faltet@carabos.com>]
+		[Francesc Altet]
 	
 	- Some problems with int/enum and pointer/array compatibility
-		fixed. [Eric Huss <e-huss@netmeridian.com>, Stefan Behnel
-		<stefan_ml@behnel.de>, Jiba <jibalamy@free.fr>]
+		fixed. [Eric Huss, Stefan Behnel, Jiba]
 	
 	- Eliminated C compiler warning when comparing an extension
 		type reference to None using 'is' or 'is not'
 	
 	- Eliminated C compiler warnings about docstrings of C functions
-		and special methods being unused.
-		[Francesc Altet <faltet@carabos.com>]
+		and special methods being unused. [Francesc Altet]
 	
 	- When compiling with -O, raising an exception in a C function
 		that couldn't propagate exceptions produced a compiler
@@ -208,55 +204,51 @@ Bug fixes:
 		caused by C method table initialisation code.
 	
 	- Spurious initialisation was generated for unused local variable.
-		[Helmut Jarausch <jarausch@igpm.rwth-aachen.de>]
+		[Helmut Jarausch]
 	
 	- Declaration of a non-extern C function without definition
-		was not detected. [Lenard Lindstrom <len-l@telus.net>]
+		was not detected. [Lenard Lindstrom]
 	
 	- Applying ** directly to two C int types is now disallowed due
 		to ambiguity (it's not clear whether to use C pow() or convert
-		to Python ints). [Didier Deshommes <dfdeshom@gmail.com>]
+		to Python ints). [Didier Deshommes]
 
 	- Traverse and clear code was being inadvertently generated for
 		the __weakref__ slot of a weakly-referenceable extension type.
-		[Peter Johnson <peter@tortall.net>]
+		[Peter Johnson]
 	
 	- Statements other than def inside a property declaration were
-		crashing the compiler. [Sven Berkvens <sven@berkvens.net>]
+		crashing the compiler. [Sven Berkvens]
 	
 	- Defining an extension type with different visibility from its
 		declaration in a .pxd file crashed the compiler.
-		[Alex Coventry <alex_c@MIT.EDU>]
+		[Alex Coventry]
 	
 	- Instantiating an exception type whose base class __new__ method
-		raises an exception caused a segfault. [Gustavo Sverzut Barbieri
-		<barbieri@gmail.com>]
+		raises an exception caused a segfault. [Gustavo Sverzut Barbieri]
 	
 	- The 'import pkg.module as name' form of import statement did not
-		work correctly. [Dan <dg@pnylab.com>]
+		work correctly. [Dan]
 	
-	- Fixed error-checking typo in __Pyx_GetStarArgs(). [Eric Huss
-		<e-huss@netmeridian.com>]
+	- Fixed error-checking typo in __Pyx_GetStarArgs(). [Eric Huss]
 	
-	- Trailing comma now allowed on argument list. [Jim Kleckner
-		<jek-gmane@kleckner.net>]
+	- Trailing comma now allowed on argument list. [Jim Kleckner]
 	
 	- Behaviour of reraise made to match Python more closely. 
-		[Eric Huss <e-huss@netmeridian.com>]
+		[Eric Huss]
 	
 	- An empty C variable declaration crashed the compiler.
 	
 	- Now includes math.h instead of generating own declaration
-		of pow(). [Leif Strand <leif@geodynamics.org>]
+		of pow(). [Leif Strand]
 	
-	- Missing import of sys in LinuxSystem.py added. [Scott
-		Jackson <scott.jackson@enthought.com>]
+	- Missing import of sys in LinuxSystem.py added. [Scott Jackson]
 	
 	- Typecasts using a ctypedef type were not using the ctypedef
-		name. [Alexander Belchenko <bialix@ukr.net>]
+		name. [Alexander Belchenko]
 	
 	- Workaround added to setup.py for a problem with bdist_wininst.
-		[Alexander Belchenko <bialix@ukr.net>]
+		[Alexander Belchenko]
 	
 	- Subtle error in parsing empty function declarators corrected.
 	
@@ -280,18 +272,16 @@ Bug fixes:
 Bug fixes:
 
 	- Comparing two values of the same enum type incorrectly
-		produced an error. [Anders Gustafsson <andersg@0x63.nu>]
+		produced an error. [Anders Gustafsson]
 	
 	- Compiler crash caused by assigning a Python value to
-		a variable of an enum type. [Peter Johnson <peter@tortall.net>]
+		a variable of an enum type. [Peter Johnson]
 	
 	- Comparison between pointer and array incorrectly produced
-		a type mismatch error.
-		[Helmut Jarausch <jarausch@igpm.rwth-aachen.de>]
+		a type mismatch error. [Helmut Jarausch]
 	
 	- Unused local Python variable had spurious init/cleanup code
-		generated for it, causing C compilation errors.
-		[Helmut Jarausch <jarausch@igpm.rwth-aachen.de>]
+		generated for it, causing C compilation errors. [Helmut Jarausch]
 	
 	- Updated list of packages in setup.py.
 
@@ -299,8 +289,7 @@ Modifications:
 
 	- NULL in Pyrex source now translated into NULL instead of 0
 		in C code, to allow for the possibility of calling something
-		not defined with a prototype in an external header.
-		[Adapted Cat <a.c.junker@gmail.com>]
+		not defined with a prototype in an external header. [Adapted Cat]
 
 
 0.9.5
@@ -310,30 +299,26 @@ Enhancements:
 
 	- Exception return values may now be specified by arbitrary
 		constant expressions of appropriate type, not just literals.
-		[Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de>]
+		[Stefan Behnel]
 	
 	- Redundant type check now omitted when passing a literal None
-		to a function expecting an extension type.
-		[Patch by Sam Rushing <sam-pyrex@rushing.nightmare.com>]
+		to a function expecting an extension type. [Patch by Sam Rushing]
 		
 	- New-style classes now allowed as exceptions for compatibility
 		with Python 2.5 (inheritance from BaseException not currently
-		checked).
-		[Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de>]
+		checked). [Stefan Behnel]
 	
 	- Sequence unpacking is now done using the iterator protocol
 		instead of indexing.
 	
 	- Allocation of an empty tuple is avoided when making a
-		Python call with no arguments.
-		[Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de>]
+		Python call with no arguments. [Stefan Behnel]
 	
 	- Most warnings about unused variables and labels have been
 		eliminated.
 	
 	- Support for running the test suite on Linux added but not
-		yet fully tested. [Based in part on patch by Eric Wald
-		<eswald@gmail.com>].
+		yet fully tested. [Based in part on patch by Eric Wald].
 	
 	- Makefile included for compiling the patched Carbon File module
 		used by the MacOSX test code.
@@ -351,45 +336,39 @@ Modifications:
 Bug fixes:
 
 	- Exception raised during argument conversion could cause crash
-		due to uninitialised local variables.
-		[Konrad Hinsen <konrad.hinsen@laposte.net>]
+		due to uninitialised local variables. [Konrad Hinsen]
 	
 	- Assignment to a C attribute of an extension type from a
 		different type could generate C code with a pointer type
-		mismatch. [Atsuo Ishimoto <ishimoto@gembook.org>]
+		mismatch. [Atsuo Ishimoto]
 	
 	- Backslash in a string literal before a non-special character
-		was not handled correctly. [Yuan Mang <mangyuan@gmail.com>]
+		was not handled correctly. [Yuan Mang]
 	
 	- Temporary vars used by del statement not being properly
-		released, sometimes leading to double decrefs.
-		[Jiba <jibalamy@free.fr>]
+		released, sometimes leading to double decrefs. [Jiba]
 	
 	- A return statement whose expression raises an exception
 		inside a try-except that catches the exception could cause
-		a crash. [Anders Gustafsson <andersg@0x63.nu>]
+		a crash. [Anders Gustafsson]
 	
 	- Fixed type compatibility checking problem between pointers
-		and arrays. [Lenard Lindstrom <len-l@telus.net>]
+		and arrays. [Lenard Lindstrom]
 
 	- Circular imports between modules defining extension types
-		caused unresolvable import order conflicts.
-		[Mike Wyatt <mwyatt@wi.rr.com>]
+		caused unresolvable import order conflicts. [Mike Wyatt]
 	
 	- Cimporting multiple submodules from the same package caused
-		a redefined name error for the top level name.
-		[Martin Albrecht <malb@informatik.uni-bremen.de>]
+		a redefined name error for the top level name. [Martin Albrecht]
 	
 	- Incorrect reference counting when assigning to an element of an
-		array that is a C attribute of an extension type.
-		[Igor Khavkine <igor.kh@gmail.com>]
+		array that is a C attribute of an extension type. [Igor Khavkine]
 	
 	- Weak-referenceable extension types were not implemented
-		properly. [Chris Perkins <chrisperkins99@gmail.com>,
-		Peter Johnson <pete@cvs.tortall.net>]
+		properly. [Chris Perkins, Peter Johnson]
 	
 	- Crash if C variable declared readonly outside an extension
-		type definition. [Eric Huss <e-huss@netmeridian.com>]
+		type definition. [Eric Huss]
 
 Doc updates:
 
@@ -407,7 +386,7 @@ Doc updates:
 Bug fixes:
 
 	- Fixed indentation problem in Pyrex.Distutils.build_ext.
-		[Oliver Grisel <ogrisel@nuxeo.com>]
+		[Oliver Grisel]
 
 
 0.9.4
@@ -432,14 +411,13 @@ Improvements:
 	
 	- Support for public extension type C attributes of type
 		long long and unsigned long long added (but not tested).
-		[Sam Rushing <sam@rushing.nightmare.com>]
+		[Sam Rushing]
 	
 	- Distutils include directories now passed to Pyrex compiler.
-		[Konrad Hinsen <khinsen@cea.fr>]
+		[Konrad Hinsen]
 	
 	- Integer constants with an "L" suffix are now allowed
-		and are converted to Python long integers.
-		[Rainer Deyke <rainerd@eldwood.com>]
+		and are converted to Python long integers. [Rainer Deyke]
 	
 	- A broken .c file is no longer left behind if there are
 		compilation errors.
@@ -454,74 +432,71 @@ Bug fixes:
 	- Fixed problems with conversion from Python integers to
 		C unsigned longs. Now use PyInt_AsUnsignedLongMask and
 		PyInt_AsUnsignedLongLongMask instead of the PyLong_*
-		functions (which only work on Python longs).
-		[Wim Vree <wim@vree.be>]
+		functions (which only work on Python longs). [Wim Vree]
 	
 	- C unsigned ints now converted to/from Python longs intead
-		of Python ints to avoid overflow problems.
-		[Heiko Wundram <me+pyrex@modelnine.org>]
+		of Python ints to avoid overflow problems. [Heiko Wundram]
 	
 	- Correct PyArg_ParseTuple format characters now used for
-		unsigned types. [Jeff Bowden <jlb@houseofdistraction.com>]
+		unsigned types. [Jeff Bowden]
 	
 	- Nonzero return value from a base class tp_traverse call
 		is handled.
 	
 	- Taking sizeof an incomplete type caused a crash while
-		producing an error message. [Drew Perttula <dperttula@pdi.com>]
+		producing an error message. [Drew Perttula]
 	
 	- If a module cimported itself, definitions of global variables
-		were generated twice. [Parzival Herzog <parzp@shaw.ca>]
+		were generated twice. [Parzival Herzog]
 	
 	- Distutils extension updated to handle changed signature of
-		swig_sources(). [David M. Cooke <cookedm@physics.mcmaster.ca>]
+		swig_sources(). [David M. Cooke]
 	
 	- Incorrect C code generated for a raw string containing a double
-		quote preceded by a backslash. [Thomas Drake <bistroy@mac.com>]
+		quote preceded by a backslash. [Thomas Drake]
 	
 	- Declaration of public C function with an exception value written
-		to generated .pxi file without the except clause.
-		[Robby Dermody <robbyd@u20.org>]
+		to generated .pxi file without the except clause. [Robby Dermody]
 	
 	- __delitem__ method of an extension type with no __setitem__
-		did not get called. [Richard Boulton <richard@tartarus.org>]
+		did not get called. [Richard Boulton]
 	
 	- A spurious Py_INCREF was generated when a return statement
-		required a type test. [Jonathan Doda <jdoda@sympatico.ca>]
+		required a type test. [Jonathan Doda]
 	
 	- Casting a value to a function pointer and then immediately
 		calling it generated a cast to a function instead of a cast
-		to a function pointer. [Simon Burton <simon@arrowtheory.com>]
+		to a function pointer. [Simon Burton]
 	
 	- Py_TPFLAGS_HAVE_GC was not being set on an extension type that
 		inherited from an external extension type that used GC but did
 		not itself have any PyObject* attributes.
-		[Michael Hordijk <hoffbrinkle@hotmail.com>]
+		[Michael Hordijk]
 	
 	- A return statement inside a for statement leaked a reference
 		to the loop's iterator.
-		[Jürgen Kartnaller <j.kartnaller@robotech.at>]
+		[Jürgen Kartnaller]
 	
 	- Full module name now appears in __module__ attribute of classes
 		and extension types, provided a correct dotted name is used
-		for the .pyx file. [Giovanni Bajo <rasky@develer.com>]
+		for the .pyx file. [Giovanni Bajo]
 
 	- Public extension type with no C attributes produced an
-		invalid .pxi file. [Simon Burton <simon@arrowtheory.com>]
+		invalid .pxi file. [Simon Burton]
 	
 	- Using a dict constructor as the second operand of a boolean
 		expression crashed the Pyrex compiler.
-		[Stefan Behnel <behnel_ml@gkec.informatik.tu-darmstadt.de>]
+		[Stefan Behnel]
 	
 	- A C declaration list ending with a comma resulted in invalid
-		C code being generated. [Alex Coventry <alex_c@mit.edu>]
+		C code being generated. [Alex Coventry]
 	
 	- A raw string containing two consecutive backslashes produced
-		incorrect C code. [Helmut Jarausch <jarausch@igpm.rwth-aachen.de>]
+		incorrect C code. [Helmut Jarausch]
 	
 	- An error is reported if you attempt to declare a special
 		method of an extension type using 'cdef' instead of 'def'.
-		[Sam Rushing <srushing@ironport.com>]
+		[Sam Rushing]
 
 0.9.3
 -----
@@ -534,8 +509,7 @@ Enhancements:
 		header file exactly.
 
 	- Conversion to/from unsigned long now done with
-		PyLong_AsUnsignedLong and PyLong_FromUnsignedLong.
-		[Dug Song <dugsong@monkey.org>]
+		PyLong_AsUnsignedLong and PyLong_FromUnsignedLong. [Dug Song]
 	
 	- A struct, union or enum definition in a 'cdef extern from'
 		block may now be left empty (using 'pass'). This can be useful
@@ -543,31 +517,24 @@ Enhancements:
 		to refer to any of its members.
 	
 	- More flexible about ordering of qualifiers such as 'long' and
-		'unsigned'.
-		["John (J5) Palmieri" <johnp@redhat.com>]
+		'unsigned'. ["John (J5) Palmieri"]
 
 
 Bug fixes:
 
 	- Non-interned string literals used in a Python class
-		definition did not work.
-		[Atsuo Ishimoto <ishimoto@gembook.org>]
-		[Andreas Kostyrka <andreas@kostyrka.org>]
+		definition did not work. [Atsuo Ishimoto, Andreas Kostyrka]
 	
 	- Return types of the buffer interface functions for extension
-		types have been corrected.
-		[Dug Song <dugsong@monkey.org>]
+		types have been corrected. [Dug Song]
 	
-	- Added 'static' to declarations of string literals.
-		[Phil Frost <indigo@bitglue.com>]
+	- Added 'static' to declarations of string literals. [Phil Frost]
 	
 	- Float literals are now copied directly to the C code as written,
-		to avoid problems with loss of precision.
-		[Mario Pernici <Mario.Pernici@mi.infn.it>]
+		to avoid problems with loss of precision. [Mario Pernici]
 	
 	- Inheriting from an extension type with C methods defined in
-		another Pyrex module did not work.
-		[Itamar Shtull-Trauring <itamar@itamarst.org>]
+		another Pyrex module did not work. [Itamar Shtull-Trauring]
 
 0.9.2.1
 -------
@@ -621,15 +588,12 @@ Bug fixes:
 Enhancements:
 
 	- A C method can now call an inherited C method by the usual
-		Python technique.
-		[Jiba <jiba@tuxfamily.org>]
+		Python technique. [Jiba]
 	
-	- The __modname__ of a Python class is now set correctly.
-		[Paul Prescod <paul@prescod.net>]
+	- The __modname__ of a Python class is now set correctly. [Paul Prescod]
 	
 	- A MANIFEST.in file has been added to the distribution to
-		facilitate building rpms.
-		[contributed by Konrad Hinsen <hinsen@cnrs-orleans.fr>]
+		facilitate building rpms. [contributed by Konrad Hinsen]
 
 Bug fixes:
 
@@ -637,88 +601,71 @@ Bug fixes:
     to PY_LONG_LONG that occurred between Python 2.2 and 2.3.
 
 	- Header files referenced in cimported modules were not being included.
-		[Tom Popovich <tompopovich@aol.com>]
+		[Tom Popovich]
 	
 	- References to C functions and variables in a cimported module were
-		not being recognised if made from within a local scope.
-		[Tom Popovich <tompopovich@aol.com>]
+		not being recognised if made from within a local scope. [Tom Popovich]
 	
 	- Spurious declarations in code generated for a "finally" block.
-		[Brandon Long <blong@fiction.net>]
+		[Brandon Long]
 	
 	- Attempting to return a value from a __contains__ method didn't work.
-		[Andreas Kostyrka <andreas@mtg.co.at>]
+		[Andreas Kostyrka]
 	
 	- Incorrect code generated for an extension type with C methods
-		inheriting from a base type with no C methods.
-		[Robin Becker <robin@reportlab.com>]
+		inheriting from a base type with no C methods. [Robin Becker]
 	
 	- Failure to report an error if a C method was defined in the
 		implementation part of an extension type that was not declared
 		in the corresponding definition part. Documentation also updated
-		to explain that this is necessary.
-		[Jiba <jiba@tuxfamily.org>]
+		to explain that this is necessary. [Jiba]
 	
 	- Made it an error to forward-declare an extension type with
 		a different base class specification from its subsequent
-		definition.
-		[Jiba <jiba@tuxfamily.org>]
+		definition. [Jiba]
 	
 	- C attributes of an extension type were not being propagated
-		through more than one level of inheritance.
-		[Jiba <jiba@tuxfamily.org>]
+		through more than one level of inheritance. [Jiba]
 	
 	- If a garbage collection occurred early enough in the __new__
 		method of an extension type with Python-valued C attributes,
 		a crash could occur in its tp_traverse function.
-		[reported by Jiba <jiba@tuxfamily.org>]
-		[fix suggested by Paul Prescod <paul@prescod.net>]
+		[reported by Jiba, fix suggested by Paul Prescod]
 	
 	- An empty vtable struct is no longer generated for extension
-		types with no C methods.
-		[Robin Becker <robin@reportlab.com>]
+		types with no C methods. [Robin Becker]
 	
 	- Memory was leaked in the sq_item function of an extension
-		type with a __getitem__ method.
-		[Atsuo Ishimoto <ishimoto@gembook.org>]
+		type with a __getitem__ method. [Atsuo Ishimoto]
 	
 	- Code generated to work around a bug in some versions of Python
 		2.2 which fails to initialise the tp_free slot correctly in
-		some circumstances.
-		[Matthias Baas <baas@ira.uka.de>]
+		some circumstances. [Matthias Baas]
 	
 	- Compiler crash when defining an extension type with a base
-		class specified by a dotted name.
-		[Alain Pointdexter <alainpoint@yahoo.fr>]
+		class specified by a dotted name. [Alain Pointdexter]
 	
 	- Referencing an extension type defined in a cimported module
-		at run time did not work correctly.
-		[Alain Pointdexter <alainpoint@yahoo.fr>]
+		at run time did not work correctly. [Alain Pointdexter]
 	
 	- Incorrect object struct code generated for an extension type
-		whose base class was defined in a .pxd file.
-		[Alain Pointdexter <alainpoint@yahoo.fr>]
+		whose base class was defined in a .pxd file. [Alain Pointdexter]
 	
 	- Redeclaring a type that wasn't previously an extension type
-		as an extension type caused a compiler crash.
-		[Scott Robinson <scott@tranzoa.com>]
+		as an extension type caused a compiler crash. [Scott Robinson]
 	
 	- Incorrect code was generated for return statements in a
-		special method with no return value.
-		[Gary Bishop <gb@cs.unc.edu>]
+		special method with no return value. [Gary Bishop]
 	
-	- Single-line def statement did not work.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+	- Single-line def statement did not work. [Francois Pinard]
 	
 Modifications:
 	
 	- Only the last pathname component of the .pyx file is reported in
-		backtraces now.
-		[Bryan Weingarten <bryan.weingarten@pobox.com>]
+		backtraces now. [Bryan Weingarten]
 	
 	- Documentation corrected to remove the erroneous statement that
-		extension classes can have a __del__ method.
-		[Bryan Weingarten <bryan.weingarten@pobox.com>]
+		extension classes can have a __del__ method. [Bryan Weingarten]
 	
 	- Note added to documentation explaining that it is not possible
 		for an extension type's __new__ method to explicitly call the
@@ -758,31 +705,26 @@ Bug fixes:
 	
 	- Changed the way the included filename table is declared from
 		char *[] to char **, to stop MSVC from complaining about it
-		having an unknown size.
-		[Alexander A Naanou <alex_nanou@pochta.ru>]
+		having an unknown size. [Alexander A Naanou]
 	
 	- Second argument of assert statement was not being coerced
-		to a Python value.
-		[Francois Pinard   http://www.iro.umontreal.ca/~pinard]
+		to a Python value. [Francois Pinard]
 	
 	- Return statement without value wasn't accepted in some
 		extension type special methods when it should have been.
-		[Francois Pinard   http://www.iro.umontreal.ca/~pinard]
+		[Francois Pinard]
 
 	- Attempting to call a non-function C value crashed the
-		compiler.
-		[John J Lee <jjl@pobox.com>]
+		compiler. [John J Lee]
 	
 	- Functions declared as "except *" were not returning exceptions.
-		[John J Lee <jjl@pobox.com>]
+		[John J Lee]
 		
 	- A syntax warning from Plex about assignment to None has
-		been eliminated.
-		[Gordon Williams <g_will@cyberus.ca>]
+		been eliminated. [Gordon Williams]
 	
 	- Public function declaration with empty argument list was
-		producing (void) in .pxi file.
-		[Michael P. Dubner <dubnerm@mindless.com>]
+		producing (void) in .pxi file. [Michael P. Dubner]
 	
 	- Incorrect error signalling code was being generated in the
 		__hash__ special method of an extension type.
@@ -795,11 +737,11 @@ Bug fixes:
 
 	- Names of structs, unions and enums in external header
 		files were getting mangled when they shouldn't have been.
-		[Norman Shelley <Norman.Shelley@motorola.com>]
+		[Norman Shelley]
 	
 	- Modified distutils extension so that it will stop before
 		compiling the C file if the Pyrex compiler reports errors.
-		[John J Lee <jjl@pobox.com>]
+		[John J Lee]
 		
 
 0.8
@@ -841,26 +783,23 @@ Minor improvements:
 		declare that a name is a module-level name rather than a
 		builtin. This can be used to access module attributes such
 		as __name__ that would otherwise be assumed to be builtins.
-		[Pat Maupin <pmaupin@speakeasy.net>]
+		[Pat Maupin]
 	
 	- The 'assert' statement now accepts a second argument.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+		[Francois Pinard]
 
 Bug fixes:
 
 	- When using Python 2.3, "True" or "False" could sometimes
-		turn up in generated code instead of "1" or "0".
-		[Adam Hixson <chixson@ou.edu>]
+		turn up in generated code instead of "1" or "0". [Adam Hixson]
 	
 	- Function return value not always converted to or from a
 		Python object when it should have been.
 	
 	- Certain kinds of error in a function call expression
-		could crash the compiler.
-		["Edward C. Jones" <edcjones@erols.com>]
+		could crash the compiler. ["Edward C. Jones"]
 	
-	- Fixed memory leak in functions with * or ** args.
-		[Alexander A Naanou <alex_nanou@pochtamt.ru>]
+	- Fixed memory leak in functions with * or ** args. [Alexander A Naanou]
 
 
 0.7.1
@@ -879,14 +818,12 @@ Bug fixes:
 	
 	- Incorrect casting code was generated when a generic
 		object argument of a special method was declared as
-		being of an extension type.
-		[Phillip J. Eby <pje@telecommunity.com>]
+		being of an extension type. [Phillip J. Eby]
 	
 	- A blank line that couldn't be interpreted wholly as
 		a valid indentation sequence caused a syntax error.
 		In particular, a formfeed character on an otherwise
-		blank line wasn't accepted. 
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+		blank line wasn't accepted. [Francois Pinard]
 
 	- Parallel assignments were incorrectly optimised.
 	
@@ -979,15 +916,14 @@ New features:
 		attributes are visible to other Pyrex and C code.
 	
 	- Try-except statements can now have an 'else' clause.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+		[Francois Pinard]
 	
 	- Multiple simple statements can be placed on one line
 		separated by semicolons.
 	
 	- A suite consisting of a simple statement list can now
 		be placed on the same line after the colon in most
-		cases.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+		cases. [Francois Pinard]
 
 	- The automatic coercion of a C string to a C char has
 		been removed (it proved to be too error-prone).
@@ -998,40 +934,37 @@ New features:
 		now allows for the possibility of the 2nd or 3rd
 		arguments being NULL. Also the __set__ method has been
 		split into two methods, __set__ and __delete__.
-		[Phillip J. Eby <pje@telecommunity.com>]
+		[Phillip J. Eby]
 	
 Bug fixes:
 
 	- Values unpacked into a non-Python destination variable
-		were not being converted before assignment.
-		[Gareth Watts <gareth@omnipotent.net>]
+		were not being converted before assignment. [Gareth Watts]
 
 	- Hex constants greater than 0x7fffffff caused compiler
-		to crash. [Gareth Watts <gareth@omnipotent.net>]
+		to crash. [Gareth Watts]
 	
 	- Type slots are no longer statically initialised with
 		extern function pointers, to avoid problems with
 		some compilers. The hack in the distutils extension
 		to work around this by compiling as C++ has been
-		disabled. [Phillip J. Eby <pje@telecommunity.com>]
+		disabled. [Phillip J. Eby]
 	
 	- Fixed several more instances of the error-reporting
 		routine being called with arguments in the wrong
 		order. Hoping I've *finally* got all of them now...
 	
 	- Nested for-from loops used the same control variable.
-		[Sebastien de Menten <sdementen@hotmail.com>]
+		[Sebastien de Menten]
 	
-	- Fixed some other error message related bugs.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+	- Fixed some other error message related bugs. [Francois Pinard]
 	
-	- Assigning to slice didn't work.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+	- Assigning to slice didn't work. [Francois Pinard]
 	
 	- Temp variables were being declared as extension
 		types and then being assigned PyObject *'s. All
 		Python temp vars are now declared as PyObject *.
-		[Francois Pinard <pinard@iro.umontreal.ca>]
+		[Francois Pinard]
 
 0.5
 ---
@@ -1040,17 +973,14 @@ Bug fixes:
 
 	- Algorithm for allocating temp variables redesigned
 		to fix various errors concerning temp
-		variable re-use.
-		[Mark Rowe <bdash@gmx.net>]
+		variable re-use. [Mark Rowe]
 
 	- Memory leak occured sometimes when an implicit
 		type test was applied to the result of an 
-		expression.
-		[christoph.wiedemann@daimlerchrysler.com]
+		expression. [Christoph Wiedemann]
 	
 	- __set__ method of extension types had wrong
-		signature.
-		[Josh Littlefield <joshl@cisco.com>]
+		signature. [Josh Littlefield]
 		
 0.4.6
 -----
@@ -1058,8 +988,7 @@ Bug fixes:
 Bug fixes:
 
 	- Indexing multi-dimensional C arrays didn't
-		work.
-		[Gary Dietachmayer <gary.dietachmayer@dsto.defence.gov.au>]
+		work. [Gary Dietachmayer]
 
 
 0.4.5
@@ -1077,38 +1006,31 @@ Enhancements:
 
 	- Defining __len__/__getitem__ methods in an
 		extension class fills sq_length/sq_item slots
-		as well as mp_length/mp_subscript.
-		[Matthias Baas <baas@ira.uka.de>]
+		as well as mp_length/mp_subscript. [Matthias Baas]
 	
 	- The Distutils extension now allows .c files
 		to be incorporated along with .pyx files.
 		[Modification to Distutils extension contributed
-		by Darrell Gallion <dgallion1@yahoo.com>.]
+		by Darrell Gallion]
 
 Bug fixes:
 
 	- Float literals without a decimal point
-		work again now.
-		[Mike Rovner <mike@bindkey.com>]
-		[Peter Lepage <gpl@mail.lns.cornell.edu>]
+		work again now. [Mike Rovner, Peter Lepage]
 	
 	- Compiler crashed if exception value didn't
-		match function return type.
-		[Michael JasonSmith <mpj17@smtphost.canterbury.ac.nz>]
+		match function return type. [Michael JasonSmith]
 	
 	- The setup.py file should now install the
 		Lexicon.pickle file in the right place.
-		[Patch supplied by David M. Cooke 
-		<cookedm@arbutus.physics.mcmaster.ca>]
+		[Patch supplied by David M. Cooke]
 		
 	- Compiler crashed when compiling a C function that
 		returned an extension type.
-		[David M. Cooke 
-		<cookedm@arbutus.physics.mcmaster.ca>]
+		[David M. Cooke]
 	
 	- Anonymous enum types did not have C code
-		suppressed inside an extern-from block.
-		[Matthew Mueller <donut@azstarnet.com>]
+		suppressed inside an extern-from block. [Matthew Mueller]
 
 
 0.4.4
@@ -1122,40 +1044,33 @@ Enhancements:
 
 	- Syntax for float literals made more lenient
 		(no longer requires digits both before and
-		after the point).
-		[Peter Lepage <gpl@mail.lns.cornell.edu>]
+		after the point). [Peter Lepage]
 	
 	- Method calls can be made on string literals
-		(e.g. ",".join(x)).
-		[pedro_rodriguez@club-internet.fr]
+		(e.g. ",".join(x)). [Pedro Rodriguez]
 
 Bug fixes:
 
 	- Incorrect refcount code generated when a
 		Python function needing argument type tests
-		had local Python variables.
-		[Matthias Baas <baas@ira.uka.de>]
+		had local Python variables. [Matthias Baas]
 	
 	- 'self' parameter of __getitem__ method of
-		extension type had wrong implicit type.
-		[Peter Lepage <gpl@mail.lns.cornell.edu>]
+		extension type had wrong implicit type. [Peter Lepage]
 	
 	- Repaired breakage introduced by trying to
 		allow an empty parameter list to be written
 		as (void). No longer attempting to allow
-		this (too hard to parse correctly).
-		[Peter Lepage <gpl@mail.lns.cornell.edu>]
+		this (too hard to parse correctly). [Peter Lepage]
 	
 	- Found bug in Plex 1.1.2 which was the *real*
 		cause of the two-newlines-in-a-row problem.
 		Removed the Opt(Eol)+Str("\n") hacks in
 		the scanner which were working around this
-		before.
-		[pedro_rodriguez@club-internet.fr]
+		before. [Pedro Rodriguez]
 	
 	- __call__ special method of extension types
-		had wrong signature.
-		[Peter Lepage <gpl@mail.lns.cornell.edu>]
+		had wrong signature. [Peter Lepage]
 
 
 0.4.3
@@ -1178,8 +1093,7 @@ Bug fixes:
 
 	- Two newlines in a row in a triple quoted
 		string caused a parse error on some
-		platforms.
-		[Matthias Baas <baas@ira.uka.de>]
+		platforms. [Matthias Baas]
 	
 	- Fixed problem with break and continue in
 		the else-clause of a loop.
@@ -1235,8 +1149,7 @@ Bug fixes:
 		runtime support code for the "import" statement.
 		Hopefully this will prevent the crashes some
 		people have been experiencing when importing
-		builtin modules.
-		[Mathew Yeates <mathew@comma.jpl.nasa.gov>]
+		builtin modules. [Mathew Yeates]
 
 0.4.1
 -----
@@ -1328,8 +1241,7 @@ Bug fixes:
 
   - Error not reported properly when passing
     wrong number of args to certain special
-    methods of extension types.
-    [Mitch Chapman <mitchchapman@earthlink.net>]
+    methods of extension types. [Mitch Chapman]
   
   - Compile-time crash when defining an extension
     type with a __hash__ method.
@@ -1347,12 +1259,10 @@ Minor enhancements:
 Bug fixes:
 
   - Runtime crash when using * or ** args in
-    a method of an extension type fixed.
-		[Matthew Mueller <donut@azstarnet.com>]
+    a method of an extension type fixed. [Matthew Mueller]
 	
 	- Compiler crash when using default argument
-	  values in a method of a Python class.
-	  [Mike Rovner <mike@bindkey.com>]
+	  values in a method of a Python class. [Mike Rovner]
 
 Enhancements:
 
@@ -1360,20 +1270,17 @@ Enhancements:
     the extension module are now initialised dynamically,
     which should eliminate at least some of the
     "initialiser is not constant" problems experienced
-    on Windows.
-    [Marek Baczek <imbaczek@poczta.fm>]
+    on Windows. [Marek Baczek]
   
   - On Windows, __declspec(dllexport) is now used for
     the module init func declaration (or should be --
-    I haven't tested this).
-    [Marek Baczek <imbaczek@poczta.fm>]
+    I haven't tested this). [Marek Baczek]
   
   - The compiler shouldn't attempt to rewrite the
     Lexicon.pickle file unless the source has been
     changed (hashing is used now instead of comparing
     timestamps). So there should be no problem any more
     with installing Pyrex read-only.
-    [fawcett@uwindsor.ca]
 
 0.3.3
 -----
@@ -1382,28 +1289,21 @@ Bug fixes:
 
 * A void * can be assigned from any other
 pointer type.
-[piers@cs.su.oz.au]
-
 * File names in error messages no longer
 quoted (this was apparently confusing some
-editors).
-[donut@azstarnet.com]
+editors). [Matthew Mueller]
 
 * Reference to a struct member which is an
-array is coerced to a pointer.
-[donut@azstarnet.com]
+array is coerced to a pointer. [Matthew Mueller]
 
 * Default argument values did not work
-in methods of an extension type.
-[donut@azstarnet.com]
+in methods of an extension type. [Matthew Mueller]
 
 * Single or double quote characters in a
-triple-quoted string didn't work.
-[donut@azstarnet.com]
+triple-quoted string didn't work. [Matthew Mueller]
 
 * Using *args in a function definition
-sometimes caused a crash at runtime.
-[donut@azstarnet.com]
+sometimes caused a crash at runtime. [Matthew Mueller]
 
 * A hack is included which tries to make
 functions in Python.h which use 'const'
@@ -1415,8 +1315,7 @@ better solution.
 New features:
 
 * Comment containing Pyrex version number
-and date/time at top of generated C file.
-[baas@ira.uka.de]
+and date/time at top of generated C file. [Matthias Baas]
 
 
 0.3.2
@@ -1424,43 +1323,36 @@ and date/time at top of generated C file.
 
 Bug fixes:
 
-* The & operator works again.
-[matthias.oberlaender@daimlerchrysler.com]
-[baas@ira.uka.de]
+* The & operator works again. [Matthias Baas]
 
 * The & operator had incorrect precedence.
 
 * "SystemError: 'finally' pops bad exception"
 under some circumstances when raising an
-exception. [baas@ira.uka.de]
+exception. [Matthias Baas]
 
 * Calling a Python function sometimes leaked
 a reference.
 
 * Crash under some circumstances when casting
 a Python object reference to a C pointer type.
-[mpj17@cosc.canterbury.ac.nz]
+[Michael JasonSmith]
 
-* Crash when redeclaring a function.
-[baas@ira.uka.de]
+* Crash when redeclaring a function. [Matthias Baas]
 
 * Crash when using a string constant inside
-a Python class definition.
-[mike@bindkey.com]
+a Python class definition. [Mike Rovner]
 
-* 2-element slice indexing expressions.
-[mike@bindkey.com]
+* 2-element slice indexing expressions. [Mike Rovner]
 
 * Crash when encountering mixed tabs and
-spaces.
-[mike@bindkey.com]
+spaces. [Mike Rovner]
 
 New features:
 
 * A wider variety of constant expressions is
 now accepted for enum values, array
-dimensions, etc.
-[mike@bindkey.com]
+dimensions, etc. [Mike Rovner]
 
 
 0.3.1
