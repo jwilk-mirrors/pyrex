@@ -56,6 +56,7 @@ class Signature:
 		'i': "-1",
 		'l': "-1",
 		'r': "-1",
+		'Z': "-1",
 	}
 	
 	def __init__(self, arg_format, ret_format):

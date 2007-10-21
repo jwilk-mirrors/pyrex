@@ -127,7 +127,8 @@ static int __pyx_f_12builtinfuncs_f(void) {
   __pyx_1 = 0;
 
   /* "/Local/Projects/C/Pyrex/Source/Tests/9/builtinfuncs.pyx":15 */
-  __pyx_v_i = PyObject_Length(__pyx_v_x);
+  __pyx_5 = PyObject_Length(__pyx_v_x); if (__pyx_5 == -1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; goto __pyx_L1;}
+  __pyx_v_i = __pyx_5;
 
   /* "/Local/Projects/C/Pyrex/Source/Tests/9/builtinfuncs.pyx":16 */
   __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_open); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
