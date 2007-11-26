@@ -160,7 +160,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 						entry.name,
 						entry.cname,
 						sig))
-			h_code.putln("Py_DECREF(module);")
+			h_code.putln("Py_DECREF(module); module = 0;")
 			for entry in public_extension_types:
 				self.generate_type_import_call(entry.type, h_code, "goto bad;")
 			h_code.putln("return 0;")
@@ -1627,11 +1627,9 @@ static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char
 		goto bad;
 	}
 	*f = PyCObject_AsVoidPtr(cobj);
-	Py_DECREF(cobj);
 	Py_DECREF(d);
 	return 0;
 bad:
-	Py_XDECREF(cobj);
 	Py_XDECREF(d);
 	return -1;
 }

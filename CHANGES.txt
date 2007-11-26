@@ -23,6 +23,12 @@ Bug fixes:
 	
 	- Protect __stdcall and __cdecl from redefinition. [Jim Kleckner]
 	
+	- A temp var was not being set to NULL after api function import
+		code. [Stefan Behnel]
+	
+	- __Pyx_ImportFunction was incorrectly decrefing a borrowed
+		reference. [Stefan Behnel]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
