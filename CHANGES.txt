@@ -21,6 +21,8 @@ Bug fixes:
 	- Temp variables holding exception values were not being set to
 		NULL after use in an except clause. [Robert Bradshaw]
 	
+	- Protect __stdcall and __cdecl from redefinition. [Jim Kleckner]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
