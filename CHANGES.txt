@@ -16,7 +16,7 @@ Bug fixes:
 		[Robert Bradshaw]
 	
 	- __Pyx_ImportModule routine wasn't protected from multiple
-		definition when including _api.h files. [
+		definition when including _api.h files. [Stefan Behnel]
 	
 Enhancements:
 
