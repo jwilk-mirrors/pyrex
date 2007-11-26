@@ -18,6 +18,9 @@ Bug fixes:
 	- __Pyx_ImportModule routine wasn't protected from multiple
 		definition when including _api.h files. [Stefan Behnel]
 	
+	- Temp variables holding exception values were not being set to
+		NULL after use in an except clause. [Robert Bradshaw]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
