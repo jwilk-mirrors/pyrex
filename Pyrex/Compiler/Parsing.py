@@ -833,7 +833,7 @@ def p_import_statement(s):
 		stats.append(stat)
 	return Nodes.StatListNode(pos, stats = stats)
 
-def p_from_import_statement(s):
+def p_from_import_statement(s, level):
 	# s.sy == 'from'
 	pos = s.position()
 	s.next()
@@ -844,6 +844,8 @@ def p_from_import_statement(s):
 		s.next()
 	else:
 		s.error("Expected 'import' or 'cimport'")
+	if kind == 'cimport' and level not in ('module', 'module_pxd'):
+		s.error("cimport statement not allowed in this context")
 	if s.sy == '*':
 		s.error("'import *' not supported")
 	imported_names = [p_imported_name(s)]
@@ -1097,8 +1099,7 @@ def p_with_statement(s):
 	else:
 		s.error(pos, "Only 'with gil' and 'with nogil' implemented")
 	
-def p_simple_statement(s):
-	#print "p_simple_statement:", s.sy, s.systring ###
+def p_simple_statement(s, level):
 	if s.sy == 'global':
 		node = p_global_statement(s)
 	elif s.sy == 'print':
@@ -1113,10 +1114,14 @@ def p_simple_statement(s):
 		node = p_return_statement(s)
 	elif s.sy == 'raise':
 		node = p_raise_statement(s)
-	elif s.sy in ('import', 'cimport'):
+	elif s.sy == 'cimport':
+		if level not in ('module', 'module_pxd'):
+			s.error("cimport statement not allowed in this context")
+		node = p_import_statement(s)
+	elif s.sy == 'import':
 		node = p_import_statement(s)
 	elif s.sy == 'from':
-		node = p_from_import_statement(s)
+		node = p_from_import_statement(s, level)
 	elif s.sy == 'assert':
 		node = p_assert_statement(s)
 	elif s.sy == 'pass':
@@ -1125,18 +1130,17 @@ def p_simple_statement(s):
 		node = p_expression_or_assignment(s)
 	return node
 
-def p_simple_statement_list(s):
+def p_simple_statement_list(s, level):
 	# Parse a series of simple statements on one line
 	# separated by semicolons.
-	stat = p_simple_statement(s)
+	stat = p_simple_statement(s, level)
 	if s.sy == ';':
 		stats = [stat]
 		while s.sy == ';':
-			#print "p_simple_statement_list: maybe more to follow" ###
 			s.next()
 			if s.sy in ('NEWLINE', 'EOF'):
 				break
-			stats.append(p_simple_statement(s))
+			stats.append(p_simple_statement(s, level))
 		stat = Nodes.StatListNode(stats[0].pos, stats = stats)
 	s.expect_newline("Syntax error in simple statement list")
 	return stat
@@ -1240,7 +1244,7 @@ def p_statement(s, level, cdef_flag = 0, visibility = 'private', api = 0):
 				elif s.sy == 'with':
 					return p_with_statement(s)
 				else:
-					return p_simple_statement_list(s)
+					return p_simple_statement_list(s, level)
 
 def p_statement_list(s, level,
 		cdef_flag = 0, visibility = 'private', api = 0):
@@ -1276,7 +1280,7 @@ def p_suite(s, level = 'other', cdef_flag = 0,
 		if api:
 			error(s.pos, "'api' not allowed with this statement")
 		if level in ('module', 'class', 'function', 'other'):
-			body = p_simple_statement_list(s)
+			body = p_simple_statement_list(s, level)
 		else:
 			body = p_pass_statement(s)
 			s.expect_newline("Syntax error in declarations")

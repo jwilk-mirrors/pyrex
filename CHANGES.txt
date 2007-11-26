@@ -12,6 +12,9 @@ Bug fixes:
 		in sys.modules was replaced, the module was freed prematurely.
 		[Franck Pommerau]
 	
+	- A cimport statement inside a function crashed the compiler.
+		[Robert Bradshaw]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
