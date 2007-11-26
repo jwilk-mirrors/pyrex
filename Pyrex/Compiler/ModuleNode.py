@@ -1267,6 +1267,9 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				env.module_cname,
 				code.error_goto(self.pos)));
 		code.putln(
+			"Py_INCREF(%s);" %
+				env.module_cname)
+		code.putln(
 			'%s = PyImport_AddModule("__builtin__");' %
 				Naming.builtins_cname)
 		code.putln(

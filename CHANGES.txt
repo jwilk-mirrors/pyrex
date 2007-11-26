@@ -8,6 +8,10 @@ Bug fixes:
 	- Incorrect error checking code generated for builtin functions
 		and type slots with return type Py_ssize_t. [Robert Bradshaw]
 	
+	- A counted reference was not kept to the module, so if the entry
+		in sys.modules was replaced, the module was freed prematurely.
+		[Franck Pommerau]
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil
