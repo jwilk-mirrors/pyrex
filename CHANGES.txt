@@ -15,6 +15,9 @@ Bug fixes:
 	- A cimport statement inside a function crashed the compiler.
 		[Robert Bradshaw]
 	
+	- __Pyx_ImportModule routine wasn't protected from multiple
+		definition when including _api.h files. [
+	
 Enhancements:
 
 	- Functions declared with_gil and external functions declared nogil

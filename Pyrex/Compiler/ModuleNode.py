@@ -1501,6 +1501,8 @@ import_module_utility_code = [
 """
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 ""","""
+#ifndef __PYX_HAVE_RT_ImportModule
+#define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(char *name) {
 	PyObject *py_name = 0;
 	
@@ -1512,6 +1514,7 @@ bad:
 	Py_XDECREF(py_name);
 	return 0;
 }
+#endif
 """]
 
 #------------------------------------------------------------------------------------
