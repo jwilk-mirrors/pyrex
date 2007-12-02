@@ -6,3 +6,5 @@ Release Checklist
 * Test Demos
 
 * Test setup.py
+
+* Check version number in Makefile
