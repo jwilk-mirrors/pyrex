@@ -93,9 +93,9 @@ static PyObject *__pyx_f_11gustafsson1_test(PyObject *__pyx_self, PyObject *__py
     /*except:*/ {
       __Pyx_AddTraceback("gustafsson1.test");
       if (__Pyx_GetException(&__pyx_2, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
-      Py_DECREF(__pyx_2);
-      Py_DECREF(__pyx_3);
-      Py_DECREF(__pyx_4);
+      Py_DECREF(__pyx_2); __pyx_2 = 0;
+      Py_DECREF(__pyx_3); __pyx_3 = 0;
+      Py_DECREF(__pyx_4); __pyx_4 = 0;
       goto __pyx_L5;
     }
     __pyx_L5:;

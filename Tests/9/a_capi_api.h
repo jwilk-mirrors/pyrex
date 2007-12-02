@@ -12,6 +12,8 @@ static void (*h)(Zax *);
 #ifndef __PYX_HAVE_API_FUNC_import_module
 #define __PYX_HAVE_API_FUNC_import_module
 
+#ifndef __PYX_HAVE_RT_ImportModule
+#define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(char *name) {
 	PyObject *py_name = 0;
 	
@@ -23,6 +25,7 @@ bad:
 	Py_XDECREF(py_name);
 	return 0;
 }
+#endif
 
 #endif
 
@@ -54,11 +57,9 @@ static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char
 		goto bad;
 	}
 	*f = PyCObject_AsVoidPtr(cobj);
-	Py_DECREF(cobj);
 	Py_DECREF(d);
 	return 0;
 bad:
-	Py_XDECREF(cobj);
 	Py_XDECREF(d);
 	return -1;
 }
@@ -104,7 +105,7 @@ static int import_a_capi(void) {
   if (!module) goto bad;
   if (__Pyx_ImportFunction(module, "f", (void**)&f, "float (struct Foo *)") < 0) goto bad;
   if (__Pyx_ImportFunction(module, "h", (void**)&h, "void (Zax *)") < 0) goto bad;
-  Py_DECREF(module);
+  Py_DECREF(module); module = 0;
   __pyx_ptype_6a_capi_C = __Pyx_ImportType("a_capi", "C", sizeof(struct C_Obj)); if (!__pyx_ptype_6a_capi_C) goto bad;
   return 0;
   bad:

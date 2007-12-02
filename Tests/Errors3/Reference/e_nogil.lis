@@ -1,2 +1,4 @@
-/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:1:5: Function declared nogil has Python locals or temporaries
-/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:5:5: Function declared nogil has Python locals or temporaries
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:1:5: Function with Python argument cannot be declared nogil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:1:5: Function with Python return type cannot be declared nogil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:4:5: Function declared nogil has Python locals or temporaries
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:8:5: Function declared nogil has Python locals or temporaries

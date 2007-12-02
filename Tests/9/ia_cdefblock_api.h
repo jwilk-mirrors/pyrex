@@ -12,6 +12,8 @@ static void (*pub_api_f)(void);
 #ifndef __PYX_HAVE_API_FUNC_import_module
 #define __PYX_HAVE_API_FUNC_import_module
 
+#ifndef __PYX_HAVE_RT_ImportModule
+#define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(char *name) {
 	PyObject *py_name = 0;
 	
@@ -23,6 +25,7 @@ bad:
 	Py_XDECREF(py_name);
 	return 0;
 }
+#endif
 
 #endif
 
@@ -54,11 +57,9 @@ static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char
 		goto bad;
 	}
 	*f = PyCObject_AsVoidPtr(cobj);
-	Py_DECREF(cobj);
 	Py_DECREF(d);
 	return 0;
 bad:
-	Py_XDECREF(cobj);
 	Py_XDECREF(d);
 	return -1;
 }
@@ -104,7 +105,7 @@ static int import_ia_cdefblock(void) {
   if (!module) goto bad;
   if (__Pyx_ImportFunction(module, "api_f", (void**)&api_f, "void (void)") < 0) goto bad;
   if (__Pyx_ImportFunction(module, "pub_api_f", (void**)&pub_api_f, "void (void)") < 0) goto bad;
-  Py_DECREF(module);
+  Py_DECREF(module); module = 0;
   __pyx_ptype_12ia_cdefblock_PubBlarg = __Pyx_ImportType("ia_cdefblock", "PubBlarg", sizeof(struct PubBlargObj)); if (!__pyx_ptype_12ia_cdefblock_PubBlarg) goto bad;
   return 0;
   bad:

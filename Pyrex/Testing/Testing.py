@@ -407,74 +407,10 @@ def munge_c_line(line):
 	
 	# ------ End of standing hacks -----
 	
-	# HACK: Ignore preprocessor directives and preamble lines
-	
-	if line.startswith("#"):
-		line = ""
-	if "typedefintPy_ssize_t" in line:
-		line = ""
-	if "__PYX_EXTERN_Cdoublepow" in line:
+	# HACK: Ignore module incref
+	if line == "Py_INCREF(__pyx_m);":
 		line = ""
 	
-	# MINOR HACK: Ignore interned name declarations and table
-	
-	if line.startswith("staticPyObject*__pyx_n_"):
-		line = ""
-	if line.startswith("static__Pyx_InternTabEntry__pyx_intern_tab"):
-		line = ""
-	if line.startswith("{&__pyx_n_"):
-		line = ""
-	if line == "{0,0}":
-		line = ""
-	if line == "};":
-		line = ""
-	
-	# HACK: Ignore interned name init call
-	
-	if line.startswith("if(__Pyx_InternStrings"):
-		line = ""
-	
-	# HACK: Ignore all parentheses
-	
-	line = line.replace("(", "").replace(")", "")
-	
-	# HACK: Fix up PyString_AsString error value handling
-	
-	if "PyString_AsString" in line:
-		line = line.replace("PyErr_Occurred", "!__pyx_x")
-	
-	# HACK: Fix up Py_ssize_t
-	
-	line = line.replace("Py_ssize_t", "int")
-	line = line.replace("PyInt_AsSsize_t", "PyInt_AsLong")
-	line = line.replace("PyInt_FromSsize_t", "PyInt_FromLong")
-	line = line.replace("PY_SSIZE_T_MAX", "0x7fffffff")
-	
-	# HACK: Ignore nb_index slot
-	
-	if line == "0,/*nb_index*/":
-		line = ""
-	
-	# HACK: Ignore tp_new error checking code
-	
-	if line == "if!oreturn0;":
-		line = ""
-	
-	# HACK: Ignore tp_new self casting
-	
-	if line.startswith("struct__pyx_obj_") and line.endswith("*p;"):
-		line = ""
-	
-	if line.startswith("struct__pyx_obj_") and "*p=" in line:
-		line = ""
-	
-	if line.startswith("p=struct__pyx_obj_") and line.endswith("*o;"):
-		line = ""
-	
-	# HACK: Fix up __cinit__
-	
-	line = line.replace("__cinit__", "__new__")
-
 	# ---------- END HACKS ----------
 
 	return line
@@ -483,6 +419,11 @@ def munge_c_line(line):
 # whitespace but before removing embedded whitespace.
 
 ignore_lines = (
+  "#ifndef __stdcall"
+  "#define __stdcall"
+  "#endif"
+  "#ifndef __cdecl"
+  "#define __cdecl"
 )
 
 def show_munged_lines_difference(newlines, reflines):

@@ -12,6 +12,8 @@ static PyTypeObject *__pyx_ptype_8ia_etree__Element;
 #ifndef __PYX_HAVE_API_FUNC_import_module
 #define __PYX_HAVE_API_FUNC_import_module
 
+#ifndef __PYX_HAVE_RT_ImportModule
+#define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(char *name) {
 	PyObject *py_name = 0;
 	
@@ -23,6 +25,7 @@ bad:
 	Py_XDECREF(py_name);
 	return 0;
 }
+#endif
 
 #endif
 
@@ -64,7 +67,7 @@ static int import_ia_etree(void) {
   PyObject *module = 0;
   module = __Pyx_ImportModule("ia_etree");
   if (!module) goto bad;
-  Py_DECREF(module);
+  Py_DECREF(module); module = 0;
   __pyx_ptype_8ia_etree__Document = __Pyx_ImportType("ia_etree", "_Document", sizeof(struct LxmlDocument)); if (!__pyx_ptype_8ia_etree__Document) goto bad;
   __pyx_ptype_8ia_etree__Element = __Pyx_ImportType("ia_etree", "_Element", sizeof(struct LxmlElement)); if (!__pyx_ptype_8ia_etree__Element) goto bad;
   return 0;
