@@ -1,1 +1,1 @@
-/Local/Projects/C/Pyrex/Source/Tests/Errors1/se_multass.pyx:2:9: Unpacking sequence of wrong size (expected 2, got 3)
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/se_multass.pyx:2:9: Unpacking sequence of wrong size (expected 2, got 3)

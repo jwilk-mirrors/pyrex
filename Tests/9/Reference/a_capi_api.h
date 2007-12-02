@@ -6,8 +6,8 @@
 static PyTypeObject *__pyx_ptype_6a_capi_C;
 #define C_Type (*__pyx_ptype_6a_capi_C)
 
-static float ((*f)(struct Foo (*)));
-static void ((*h)(Zax (*)));
+static float (*f)(struct Foo *);
+static void (*h)(Zax *);
 
 #ifndef __PYX_HAVE_API_FUNC_import_module
 #define __PYX_HAVE_API_FUNC_import_module
@@ -25,6 +25,7 @@ bad:
 }
 
 #endif
+
 
 #ifndef __PYX_HAVE_RT_ImportFunction
 #define __PYX_HAVE_RT_ImportFunction
@@ -101,8 +102,8 @@ static int import_a_capi(void) {
   PyObject *module = 0;
   module = __Pyx_ImportModule("a_capi");
   if (!module) goto bad;
-  if (__Pyx_ImportFunction(module, "f", (void**)&f, "float (()(struct Foo (*)))") < 0) goto bad;
-  if (__Pyx_ImportFunction(module, "h", (void**)&h, "void (()(Zax (*)))") < 0) goto bad;
+  if (__Pyx_ImportFunction(module, "f", (void**)&f, "float (struct Foo *)") < 0) goto bad;
+  if (__Pyx_ImportFunction(module, "h", (void**)&h, "void (Zax *)") < 0) goto bad;
   Py_DECREF(module);
   __pyx_ptype_6a_capi_C = __Pyx_ImportType("a_capi", "C", sizeof(struct C_Obj)); if (!__pyx_ptype_6a_capi_C) goto bad;
   return 0;

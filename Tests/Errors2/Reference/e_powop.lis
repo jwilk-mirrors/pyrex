@@ -1,2 +1,2 @@
-/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_powop.pyx:4:13: Invalid operand types for '**' (char *; float)
-/Local/Projects/C/Pyrex/Source/Tests/Errors2/e_powop.pyx:5:13: Invalid operand types for '**' (float; char *)
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_powop.pyx:4:13: Invalid operand types for '**' (char *; float)
+/Local/Projects/D/Pyrex/Source/Tests/Errors2/e_powop.pyx:5:13: Invalid operand types for '**' (float; char *)

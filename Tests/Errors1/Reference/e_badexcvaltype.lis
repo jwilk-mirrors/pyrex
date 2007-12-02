@@ -1,1 +1,1 @@
-/Local/Projects/C/Pyrex/Source/Tests/Errors1/e_badexcvaltype.pyx:1:25: Exception value incompatible with function return type
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/e_badexcvaltype.pyx:1:25: Exception value incompatible with function return type

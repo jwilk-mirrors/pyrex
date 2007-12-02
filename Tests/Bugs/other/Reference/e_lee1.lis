@@ -1,2 +1,2 @@
-/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_lee1.pyx:6:14: 'foo' is not a constant, variable or function identifier
-/Local/Projects/C/Pyrex/Source/Tests/Bugs/other/e_lee1.pyx:6:18: Calling non-function type 'e_lee1.foo'
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/other/e_lee1.pyx:6:17: 'foo' is not a constant, variable or function identifier
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/other/e_lee1.pyx:6:18: Calling non-function type 'e_lee1.foo'

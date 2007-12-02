@@ -1,1 +1,1 @@
-/Local/Projects/C/Pyrex/Source/Tests/Errors1/e_tempcast.pyx:4:5: Casting temporary Python object to non-Python type
+/Local/Projects/D/Pyrex/Source/Tests/Errors1/e_tempcast.pyx:4:5: Casting temporary Python object to non-Python type

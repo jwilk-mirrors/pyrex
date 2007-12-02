@@ -1,1 +1,1 @@
-/Local/Projects/C/Pyrex/Source/Tests/Bugs/pinard/e_pinard2.pyx:2:4: Conflicting visibility options 'extern' and 'public'
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/pinard/e_pinard2.pyx:2:4: Conflicting visibility options 'extern' and 'public'

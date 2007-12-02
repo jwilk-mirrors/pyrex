@@ -1,3 +1,5 @@
+#ifndef __PYX_HAVE__i_public
+#define __PYX_HAVE__i_public
 #ifdef __cplusplus
 #define __PYX_EXTERN_C extern "C"
 #else
@@ -21,3 +23,5 @@ __PYX_EXTERN_C DL_IMPORT(PyTypeObject) sandwich_Type;
 #endif
 
 PyMODINIT_FUNC initi_public(void);
+
+#endif

@@ -26,9 +26,9 @@ bad:
 
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_function
-#define __PYX_HAVE_API_FUNC_import_function
 
+#ifndef __PYX_HAVE_RT_ImportFunction
+#define __PYX_HAVE_RT_ImportFunction
 static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char *sig) {
 	PyObject *d = 0;
 	PyObject *cobj = 0;
@@ -62,12 +62,11 @@ bad:
 	Py_XDECREF(d);
 	return -1;
 }
-
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_type
-#define __PYX_HAVE_API_FUNC_import_type
 
+#ifndef __PYX_HAVE_RT_ImportType
+#define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, 
 	long size) 
 {
@@ -97,7 +96,6 @@ bad:
 	Py_XDECREF(result);
 	return 0;
 }
-
 #endif
 
 static int import_ia_cdefblock(void) {

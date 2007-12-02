@@ -26,9 +26,9 @@ bad:
 
 #endif
 
-#ifndef __PYX_HAVE_API_FUNC_import_type
-#define __PYX_HAVE_API_FUNC_import_type
 
+#ifndef __PYX_HAVE_RT_ImportType
+#define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, 
 	long size) 
 {
@@ -58,7 +58,6 @@ bad:
 	Py_XDECREF(result);
 	return 0;
 }
-
 #endif
 
 static int import_ia_etree(void) {
