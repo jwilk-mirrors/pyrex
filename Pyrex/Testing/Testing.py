@@ -407,10 +407,6 @@ def munge_c_line(line):
 	
 	# ------ End of standing hacks -----
 	
-	# HACK: Ignore module incref
-	if line == "Py_INCREF(__pyx_m);":
-		line = ""
-	
 	# ---------- END HACKS ----------
 
 	return line

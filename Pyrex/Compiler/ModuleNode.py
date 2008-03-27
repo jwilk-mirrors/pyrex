@@ -346,17 +346,18 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_gcc33_hack(self, env, code):
 		# Workaround for spurious warning generation in gcc 3.3
-		code.putln("")
-		for entry in env.c_class_entries:
-			type = entry.type
-			if not type.typedef_flag:
-				name = type.objstruct_cname
-				if name.startswith("__pyx_"):
-					tail = name[6:]
-				else:
-					tail = name
-				code.putln("typedef struct %s __pyx_gcc33_%s;" % (
-					name, tail))
+		if 0:
+			code.putln("")
+			for entry in env.c_class_entries:
+				type = entry.type
+				if not type.typedef_flag:
+					name = type.objstruct_cname
+					if name.startswith("__pyx_"):
+						tail = name[6:]
+					else:
+						tail = name
+					code.putln("typedef struct %s __pyx_gcc33_%s;" % (
+						name, tail))
 	
 	def generate_typedef(self, entry, code):
 		base_type = entry.type.typedef_base_type

@@ -3,7 +3,8 @@
 #
 
 verbose = 0
-gcc_pendantic = True
+gcc_pendantic = False
+gcc_no_long_long = True
 gcc_warnings_are_errors = True
 gcc_all_warnings = True
 gcc_optimize = False
@@ -26,7 +27,9 @@ compiler_options = \
 	"-mno-fused-madd -fno-common -dynamic " \
 	.split()
 if gcc_pendantic:
-	compiler_options.extend(["-pedantic", "-Wno-long-long"])
+	compiler_options.append("-pedantic")
+if gcc_no_long_long:
+	compiler_options.append("-Wno-long-long")
 if gcc_warnings_are_errors:
 	compiler_options.append("-Werror")
 if gcc_all_warnings:
