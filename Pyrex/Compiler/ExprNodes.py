@@ -707,9 +707,11 @@ class NameNode(AtomicExprNode):
 	#  name            string    Python name of the variable
 	#
 	#  entry           Entry     Symbol table entry
+	#  type_entry      Entry     For extension type names, the original type entry
 	#  interned_cname  string
 	
 	is_name = 1
+	type_entry = None
 	
 	def compile_time_value(self, denv):
 		try:
@@ -795,10 +797,11 @@ class NameNode(AtomicExprNode):
 				self.interned_cname = env.intern(self.entry.name)
 
 	def check_identifier_kind(self):
-		#print "NameNode.check_identifier_kind:", self.entry.name ###
-		#print self.entry.__dict__ ###
+		#  Check that this is an appropriate kind of name for use in an expression.
+		#  Also finds the variable entry associated with an extension type.
 		entry = self.entry
-		#entry.used = 1
+		if entry.is_type and entry.type.is_extension_type:
+			self.type_entry = entry
 		if not (entry.is_const or entry.is_variable 
 			or entry.is_builtin or entry.is_cfunction):
 				if self.entry.as_variable:
@@ -1324,7 +1327,7 @@ class SimpleCallNode(ExprNode):
 	def analyse_types(self, env):
 		function = self.function
 		function.is_called = 1
-		self.function.analyse_types(env)
+		function.analyse_types(env)
 		if function.is_attribute and function.entry and function.entry.is_cmethod:
 			# Take ownership of the object from which the attribute
 			# was obtained, because we need to pass it as 'self'.
@@ -1338,7 +1341,12 @@ class SimpleCallNode(ExprNode):
 			else:
 				self.arg_tuple = None
 			self.args = None
-			self.type = py_object_type
+			if function.is_name and function.type_entry:
+				# We are calling an extension type constructor
+				self.type = function.type_entry.type
+				self.result_ctype = py_object_type
+			else:
+				self.type = py_object_type
 			self.is_temp = 1
 		else:
 			for arg in self.args:

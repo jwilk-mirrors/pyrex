@@ -21,7 +21,7 @@ class BaseType:
 
 class PyrexType(BaseType):
 	#
-	#  Base class for all Pyrex types.
+	#  Base class for all non-pseudo Pyrex types.
 	#
 	#  is_pyobject           boolean     Is a Python object type
 	#  is_extension_type     boolean     Is a Python extension type

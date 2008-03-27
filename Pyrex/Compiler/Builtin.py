@@ -54,6 +54,11 @@ builtin_function_table = [
 	#('issubtype',  "OO",   "i",     "PyType_IsSubtype",   False),
 ]
 
+builtin_type_table = [
+	# name,  objstruct,      typeobj
+	("list", "PyListObject", "PyList_Type"),
+]
+
 # Builtin types
 #  bool
 #  buffer
@@ -105,11 +110,19 @@ def declare_builtin_func(name, args, ret, cname, py_equiv = "*"):
 	utility = builtin_utility_code.get(name)
 	builtin_scope.declare_builtin_cfunction(name, type, cname, py_equiv, utility)
 
+def declare_builtin_type(name, objstruct, typeobj):
+	builtin_scope.declare_builtin_class(name, objstruct, typeobj)
+
 def init_builtin_funcs():
 	for desc in builtin_function_table:
 		declare_builtin_func(*desc)
 
+def init_builtin_types():
+	for desc in builtin_type_table:
+		declare_builtin_type(*desc)
+
 def init_builtins():
 	init_builtin_funcs()
+	init_builtin_types()
 
 init_builtins()

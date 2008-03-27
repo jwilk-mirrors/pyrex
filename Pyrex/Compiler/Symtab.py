@@ -373,6 +373,21 @@ class Scope:
 		self.cfunc_entries.append(entry)
 		return entry
 	
+	def attach_var_entry_to_c_class(self, entry):
+		# The name of an extension class has to serve as both a type name and a
+		# variable name holding the type object. It is represented in the symbol
+		# table by a type entry with a variable entry attached to it. For the
+		# variable entry, we use a read-only C global variable whose name is an
+		# expression that refers to the type object.
+		var_entry = Entry(name = entry.name,
+			type = py_object_type,
+			pos = entry.pos,
+			cname = "((PyObject*)%s)" % entry.type.typeptr_cname)
+		var_entry.is_variable = 1
+		var_entry.is_cglobal = 1
+		var_entry.is_readonly = 1
+		entry.as_variable = var_entry
+		
 	def find(self, name, pos):
 		# Look up name, report error if not found.
 		entry = self.lookup(name)
@@ -499,9 +514,12 @@ class Scope:
 
 class BuiltinScope(Scope):
 	#  The builtin namespace.
+	#
+	# type_names        {string : 1}       Set of type names (used during parsing)
 	
 	def __init__(self):
 		Scope.__init__(self, "__builtin__", None, None)
+		self.type_names = {}
 	
 	def declare_builtin(self, name, pos):
 		entry = self.declare(name, name, py_object_type, pos)
@@ -522,6 +540,19 @@ class BuiltinScope(Scope):
 			var_entry.is_builtin = 1
 			entry.as_variable = var_entry
 		return entry
+	
+	def declare_builtin_class(self, name, objstruct_cname, typeobj_cname):
+		type = PyExtensionType(name, typedef_flag = 1, base_type = None)
+		type.module_name = "__builtin__"
+		type.typeptr_cname = "(&%s)" % typeobj_cname
+		type.objstruct_cname = objstruct_cname
+		scope = CClassScope(name = name, outer_scope = self, visibility = "extern")
+		type.set_scope(scope)
+		entry = self.declare_type(name, type, pos = None, visibility = "extern",
+			defining = 0)
+		self.attach_var_entry_to_c_class(entry)
+		self.type_names[name] = 1
+		return entry
 
 
 class ModuleScope(Scope):
@@ -540,13 +571,13 @@ class ModuleScope(Scope):
 	# context              Context
 	# parent_module        Scope              Parent in the import namespace
 	# module_entries       {string : Entry}   For cimport statements
-	# type_names           {string : 1}       Set of type names (used during parsing)
 	# pxd_file_loaded      boolean            Corresponding .pxd file has been processed
 	# cimported_modules    [ModuleScope]      Modules imported with cimport
 	# intern_map           {string : string}  Mapping from Python names to interned strs
 	# interned_names       [string]           Interned names pending generation of declarations
 	# all_pystring_entries [Entry]            Python string consts from all scopes
 	# types_imported       {PyrexType : 1}    Set of types for which import code generated
+	# type_names           {string : 1}       Set of type names (used during parsing)
 
 	def __init__(self, name, parent_module, context):
 		self.parent_module = parent_module
@@ -565,7 +596,7 @@ class ModuleScope(Scope):
 		self.module_entries = {}
 		self.python_include_files = ["Python.h", "structmember.h"]
 		self.include_files = []
-		self.type_names = {}
+		self.type_names = self.outer_scope.type_names.copy()
 		self.pxd_file_loaded = 0
 		self.cimported_modules = []
 		self.intern_map = {}
@@ -841,22 +872,6 @@ class ModuleScope(Scope):
 				#print "ModuleScope.check_c_classes: allocating vtable cname for", self ###
 				type.vtable_cname = self.mangle(Naming.vtable_prefix, entry.name)
 	
-	def attach_var_entry_to_c_class(self, entry):
-		# The name of an extension class has to serve as both a type
-		# name and a variable name holding the type object. It is
-		# represented in the symbol table by a type entry with a
-		# variable entry attached to it. For the variable entry,
-		# we use a read-only C global variable whose name is an
-		# expression that refers to the type object.
-		var_entry = Entry(name = entry.name,
-			type = py_object_type,
-			pos = entry.pos,
-			cname = "((PyObject*)%s)" % entry.type.typeptr_cname)
-		var_entry.is_variable = 1
-		var_entry.is_cglobal = 1
-		var_entry.is_readonly = 1
-		entry.as_variable = var_entry
-		
 
 class LocalScope(Scope):
 
