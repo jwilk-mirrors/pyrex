@@ -1,6 +1,7 @@
 cdef int f() except -1:
 	cdef list l
-	cdef object z
+	cdef object x, y, z
+	z = list
 	l = list(x)
 	l = list(*y)
 	z = l.insert

@@ -147,8 +147,6 @@ Metaclasses for extension types?
 Make extension types use Py_TPFLAGS_HEAPTYPE so their __module__
 will get set dynamically?
 
-Recognise return type of calls to extension type constructors.
-
 Track GIL state.
 
 Private fields of extension types in a separate struct.
@@ -156,3 +154,7 @@ Private fields of extension types in a separate struct.
 Private vtable entries in a separate struct.
 
 Built-in constants (exceptions, etc.)
+
+Specialised constructors for builtin types.
+
+Special-case integer indexing and slicing.
