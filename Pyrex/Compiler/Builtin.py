@@ -8,6 +8,7 @@ from TypeSlots import Signature
 builtin_function_table = [
 	# name,        args,   return,  C API func,           py equiv = "*"
 	('abs',        "O",    "O",     "PyNumber_Absolute"),
+	('bool',       "O",    "i",     "PyObject_IsTrue"),
 	#('chr',       "",     "",      ""),
 	#('cmp', "",   "",     "",      ""), # int PyObject_Cmp(PyObject *o1, PyObject *o2, int *result)
 	#('compile',   "",     "",      ""), # PyObject* Py_CompileString(	char *str, char *filename, int start)
@@ -54,16 +55,33 @@ builtin_function_table = [
 	#('issubtype',  "OO",   "i",     "PyType_IsSubtype",   False),
 ]
 
+	# name,        args,   return,  C API func
+
+dict_methods = [
+	("clear",       "O",   "v",     "PyDict_Clear"),
+	("copy",        "O",   "O",     "PyDict_Copy"),
+	("items",       "O",   "O",     "PyDict_Items"),
+	("keys",        "O",   "O",     "PyDict_Keys"),
+	("values",      "O",   "O",     "PyDict_Values"),
+	("merge",       "OOi", "r",     "PyDict_Merge"),
+	("update",      "OO",  "r",     "PyDict_Update"),
+	("merge_pairs", "OOi", "r",     "PyDict_MergeFromSeq2"),
+]
+
 list_methods = [
-	("insert", "TiO", "r", "PyList_Insert"),
+	("insert",     "OiO",  "r",     "PyList_Insert"),
+	("append",     "OO",   "r",     "PyList_Append"),
+	("sort",       "O",    "r",     "PyList_Sort"),
+	("reverse",    "O",    "r",     "PyList_Reverse"),
+	("as_tuple",   "O",    "O",     "PyList_AsTuple"),
 ]
 
 builtin_type_table = [
 	# name,  objstruct,      typeobj,      methods
-#  bool
+#  bool - doing this as a function
 #  buffer
 #  classmethod
-#  dict
+	("dict", "PyDictObject", "PyDict_Type", dict_methods),
 #  enumerate
 #  file
 #  float

@@ -1328,11 +1328,15 @@ class SimpleCallNode(ExprNode):
 		function = self.function
 		function.is_called = 1
 		function.analyse_types(env)
-		if function.is_attribute and function.entry and function.entry.is_cmethod:
-			# Take ownership of the object from which the attribute
-			# was obtained, because we need to pass it as 'self'.
-			self.self = function.obj
-			function.obj = CloneNode(self.self)
+		#if function.is_attribute:
+		if 1:
+			func_entry = function.entry
+			if func_entry.is_cmethod or func_entry.is_builtin_method:
+				# Take ownership of the object from which the attribute
+				# was obtained, because we need to pass it as 'self'.
+				#print "SimpleCallNode: Snarfing self argument" ###
+				self.self = function.obj
+				function.obj = CloneNode(self.self)
 		func_type = self.function_type()
 		if func_type.is_pyobject:
 			if self.args:
@@ -1352,6 +1356,7 @@ class SimpleCallNode(ExprNode):
 			for arg in self.args:
 				arg.analyse_types(env)
 			if self.self and func_type.args:
+				#print "SimpleCallNode: Inserting self into argument list" ###
 				# Coerce 'self' to the type expected by the method.
 				expected_type = func_type.args[0].type
 				self.coerced_self = CloneNode(self.self).coerce_to(
@@ -1698,9 +1703,6 @@ class AttributeNode(ExprNode):
 		self.analyse_attribute(env)
 		if self.entry and self.entry.is_cmethod and not self.is_called:
 			error(self.pos, "C method can only be called")
-		## Reference to C array turns into pointer to first element.
-		#while self.type.is_array:
-		#	self.type = self.type.element_ptr_type()
 		if self.is_py_attr:
 			if not target:
 				self.is_temp = 1
@@ -1736,6 +1738,12 @@ class AttributeNode(ExprNode):
 				if entry.is_variable or entry.is_cmethod:
 					self.type = entry.type
 					self.member = entry.cname
+					return
+				if entry.is_builtin_method and self.is_called:
+					# Mutate into NameNode referring to C function
+					#print "AttributeNode: Mutating builtin method into NameNode" ###
+					self.type = entry.type
+					self.__class__ = NameNode
 					return
 				else:
 					# If it's not a variable or C method, it must be a Python

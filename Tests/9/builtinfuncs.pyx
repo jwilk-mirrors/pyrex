@@ -2,6 +2,7 @@ cdef int f() except -1:
 	cdef object x, y, z, w
 	cdef int i
 	x = abs(y)
+	i = bool(x)
 	delattr(x, 'spam')
 	x = dir(y)
 	x = divmod(y, z)
