@@ -76,8 +76,19 @@ list_methods = [
 	("as_tuple",   "O",    "O",     "PyList_AsTuple"),
 ]
 
+slice_methods = [
+	("indices",    "O",    "O",     "PySlice_Indices"),
+]
+
+slice_members = [
+	# name,        type,  access
+	("start",      "O",   "ro"),
+	("stop",       "O",   "ro"),
+	("step",       "O",   "ro"),
+]
+
 builtin_type_table = [
-	# name,  objstruct,      typeobj,      methods
+	# name,  objstruct,      typeobj,      methods,        members
 #  bool - doing this as a function
 #  buffer
 #  classmethod
@@ -90,7 +101,7 @@ builtin_type_table = [
 #  long
 #  object
 #  property
-#  slice
+	("slice", "PySliceObject", "PySlice_Type", slice_methods, slice_members),
 #  staticmethod
 #  super
 #  str
@@ -132,16 +143,25 @@ def declare_builtin_func(name, args, ret, cname, py_equiv = "*"):
 	utility = builtin_utility_code.get(name)
 	builtin_scope.declare_builtin_cfunction(name, type, cname, py_equiv, utility)
 
-def declare_builtin_type(name, objstruct, typeobj, methods):
-	entry = builtin_scope.declare_builtin_class(name, objstruct, typeobj)
-	type = entry.type
-	for desc in methods:
-		declare_builtin_method(type, *desc)
-
 def declare_builtin_method(self_type, name, args, ret, cname):
 	sig = Signature(args, ret)
 	meth_type = sig.function_type(self_type)
 	self_type.scope.declare_builtin_method(name, meth_type, cname)
+
+member_visibilities = {"ro": 'readonly', "rw": 'public'}
+
+def declare_builtin_member(self_type, name, typecode, rw, cname = None):
+	member_type = Signature.format_map[typecode]
+	visibility = member_visibilities[rw]
+	self_type.scope.declare_builtin_var(name, member_type, cname, visibility)
+
+def declare_builtin_type(name, objstruct, typeobj, methods, members = []):
+	entry = builtin_scope.declare_builtin_class(name, objstruct, typeobj)
+	type = entry.type
+	for desc in methods:
+		declare_builtin_method(type, *desc)
+	for desc in members:
+		declare_builtin_member(type, *desc)
 
 def init_builtin_funcs():
 	for desc in builtin_function_table:

@@ -1023,6 +1023,12 @@ class CClassScope(ClassScope):
 		return self.has_pyobject_attrs or \
 			(self.parent_type.base_type and \
 				self.parent_type.base_type.scope.needs_gc())
+	
+	def declare_builtin_var(self, name, type, cname, visibility):
+		entry = self.declare(name, cname or name, type, None)
+		entry.visibility = visibility
+		entry.is_variable = 1
+		return entry
 
 	def declare_var(self, name, type, pos, 
 			cname = None, visibility = 'private', is_cdef = 0):

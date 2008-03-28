@@ -1325,13 +1325,14 @@ class SimpleCallNode(ExprNode):
 			self.compile_time_value_error(e)
 
 	def analyse_types(self, env):
+		#print "SimpleCallNode.analyse_types:", self.pos ###
 		function = self.function
 		function.is_called = 1
 		function.analyse_types(env)
 		#if function.is_attribute:
 		if 1:
 			func_entry = function.entry
-			if func_entry.is_cmethod or func_entry.is_builtin_method:
+			if func_entry and (func_entry.is_cmethod or func_entry.is_builtin_method):
 				# Take ownership of the object from which the attribute
 				# was obtained, because we need to pass it as 'self'.
 				#print "SimpleCallNode: Snarfing self argument" ###
