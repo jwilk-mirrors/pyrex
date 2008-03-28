@@ -158,3 +158,5 @@ Built-in constants (exceptions, etc.)
 Specialised constructors for builtin types.
 
 Special-case integer indexing and slicing.
+
+Make extension types be of type type.

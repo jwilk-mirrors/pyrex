@@ -118,7 +118,7 @@ method returns.<br>
 cannot perform the operation, the <i>same</i> method of the second operand
 is called, with the operands in the <i>same order</i>.  
 <p>This means that you can't rely on the first parameter of these methods
- being "self", and you should test the types of both operands before deciding
+ being "self", and you should test the types of <span style="font-weight: bold;">both</span> operands before deciding
  what to do. If you can't handle the combination of types you've been given,
  you should return <tt>NotImplemented</tt>. </p>
 
@@ -224,7 +224,14 @@ to be performed, as follows:
  a method called <b><tt>__next__</tt></b>, <i>not</i> <tt>next</tt>. The Python
  system will automatically supply a <tt>next</tt> method which calls your
 <span style="font-family: monospace;">__next__</span>.  <b>Do NOT explicitly give your type a <tt>next</tt> method</b>,
-or bad things could happen.  
+or bad things could happen.<br><h2><small>Type Testing in Special Methods <span style="color: rgb(255, 0, 0);">(New in 0.9.7)</span></small></h2>When testing the types of operands to your special methods, the obvious way might appear to be to use the <span style="font-family: monospace;">isinstance</span>
+function. However, this is not completely safe, because it's possible
+for a class to override what gets returned by isinstance tests on its
+instances. This is not a great problem in Python code, but in Pyrex it
+could be disastrous, as we are relying on knowing the C layout of the
+objects we're dealing with.<br><br>Pyrex provides an alternative function, <span style="font-family: monospace; font-weight: bold;">typecheck</span>,
+which corresponds to PyObject_TypeCheck in the Python/C API. This is
+safe to use, as it always tests the actual C type of the object.<br><br>Similarly, there is an <span style="font-family: monospace; font-weight: bold;">issubtype</span> function, corresponding to PyType_IsSubType, as a safe alternative to <span style="font-family: monospace;">issubclass</span>.<br><br>As an example, here's how you might write an __add__ method for an extension type called MyNumber:<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">def __add__(x, y):</span><br style="font-family: monospace;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; if typecheck(x, MyNumber):</span><br style="font-family: monospace;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # we are the left operand<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if typecheck(y, MyNumber):<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # add ourselves to another MyNumber and return result<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if typecheck(y, int):<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # add ourselves to an int and return result<br style="font-family: monospace;"></span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; elseif typecheck(y, MyNumber):<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # we are the right operand<br style="font-family: monospace;"></span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; if typecheck(x, int):<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # add an int to ourselves and return the result<br style="font-family: monospace;"></span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; # Get here if unknown combination</span><br style="font-family: monospace;"><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; return NotImplemented</span><br></div>  
 <h2> <font size="+1">Special Method Table</font></h2>
 
   This table lists all of the special methods together with their parameter
