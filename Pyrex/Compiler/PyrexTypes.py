@@ -129,7 +129,26 @@ class PyrexType(BaseType):
 		return 1
 
 
-class CTypedefType(BaseType):
+class TypeWrapper(BaseType):
+	#  Base class for pseudo-types that delegate most
+	#  attribute lookups to another type.
+	#
+	#  delegate_type   PyrexType
+	
+	def __init__(self, base_type):
+		self.delegate_type = base_type
+
+	def __getattr__(self, name):
+		return getattr(self.delegate_type, name)
+	
+	def define(self, base_type):
+		self.delegate_type = base_type
+
+	def resolve(self):
+		return self.delegate_type.resolve()
+	
+
+class CTypedefType(TypeWrapper):
 	#
 	#  Pseudo-type defined with a ctypedef statement in a
 	#  'cdef extern from' block. Delegates most attribute
@@ -138,16 +157,12 @@ class CTypedefType(BaseType):
 	#
 	#  qualified_name      string
 	#  typedef_cname       string
-	#  typedef_base_type   PyrexType
 	
 	is_typedef = 1
 	
 	def __init__(self, cname, base_type):
+		TypeWrapper.__init__(self, base_type)
 		self.typedef_cname = cname
-		self.typedef_base_type = base_type
-	
-	def resolve(self):
-		return self.typedef_base_type.resolve()
 	
 	def declaration_code(self, entity_code, 
 			for_display = 0, dll_linkage = None, pyrex = 0):
@@ -169,9 +184,6 @@ class CTypedefType(BaseType):
 	def __str__(self):
 		return self.declaration_name(for_display = 1)
 	
-	def __getattr__(self, name):
-		return getattr(self.typedef_base_type, name)
-
 
 class PyObjectType(PyrexType):
 	#
@@ -767,6 +779,7 @@ class ErrorType(PyrexType):
 
 
 py_object_type = PyObjectType()
+py_type_type = TypeWrapper(None) # Bootstrapping placeholder, filled later
 
 c_void_type =         CVoidType()
 c_void_ptr_type =     CPtrType(c_void_type)
@@ -918,8 +931,8 @@ def typecast(to_type, from_type, expr_code):
 	#  assigned to to_type, assuming its existing C type
 	#  is from_type.
 	if to_type is from_type or \
+		same_type(to_type, from_type) or \
 		(not to_type.is_pyobject and assignable_from(to_type, from_type)):
 			return expr_code
 	else:
-		#print "typecast: to", to_type, "from", from_type ###
 		return to_type.cast_code(expr_code)

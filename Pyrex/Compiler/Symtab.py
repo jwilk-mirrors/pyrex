@@ -554,6 +554,11 @@ class BuiltinScope(Scope):
 		self.attach_var_entry_to_c_class(entry)
 		self.type_names[name] = 1
 		return entry
+	
+	def find_type(self, name):
+		#  Used internally during initialisation, always succeeds
+		entry = self.lookup_here(name)
+		return entry.type
 
 
 class ModuleScope(Scope):

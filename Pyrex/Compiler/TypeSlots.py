@@ -20,6 +20,7 @@ class Signature:
 	#
 	#    'O'  Python object
 	#    'T'  Python object of the type of 'self'
+	#    't'  Python type object
 	#    'v'  void
 	#    'p'  void *
 	#    'P'  void **
@@ -37,9 +38,11 @@ class Signature:
 	
 	format_map = {
 		'O': PyrexTypes.py_object_type,
+		't': PyrexTypes.py_type_type,
 		'v': PyrexTypes.c_void_type,
 		'p': PyrexTypes.c_void_ptr_type,
 		'P': PyrexTypes.c_void_ptr_ptr_type,
+		'b': PyrexTypes.c_int_type, # boolean - no error value
 		'i': PyrexTypes.c_int_type,
 		'I': PyrexTypes.c_int_ptr_type,
 		'l': PyrexTypes.c_long_type,
@@ -53,6 +56,7 @@ class Signature:
 	
 	error_value_map = {
 		'O': "0",
+		't': "0",
 		'i': "-1",
 		'l': "-1",
 		'r': "-1",

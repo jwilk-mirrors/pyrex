@@ -1425,10 +1425,9 @@ class SimpleCallNode(ExprNode):
 			return "<error>"
 		formal_args = func_type.args
 		arg_list_code = []
-		for (formal_arg, actual_arg) in \
-			zip(formal_args, self.args):
-				arg_code = actual_arg.result_as(formal_arg.type)
-				arg_list_code.append(arg_code)
+		for (formal_arg, actual_arg) in zip(formal_args, self.args):
+			arg_code = actual_arg.result_as(formal_arg.type)
+			arg_list_code.append(arg_code)
 		for actual_arg in self.args[len(formal_args):]:
 			arg_list_code.append(actual_arg.result_code)
 		result = "%s(%s)" % (self.function.result_code,

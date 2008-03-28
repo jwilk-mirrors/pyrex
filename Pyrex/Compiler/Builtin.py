@@ -4,6 +4,7 @@
 
 from Symtab import BuiltinScope
 from TypeSlots import Signature
+from PyrexTypes import py_type_type
 
 builtin_function_table = [
 	# name,        args,   return,  C API func,           py equiv = "*"
@@ -50,9 +51,8 @@ builtin_function_table = [
 	#('unicode',   "",     "",      ""),
 	#('vars',      "",     "",      ""),
 	#('zip',       "",     "",      ""),
-	#  Can't do these easily until we have builtin type entries.
-	#('typecheck',  "OO",   "i",     "PyObject_TypeCheck", False),
-	#('issubtype',  "OO",   "i",     "PyType_IsSubtype",   False),
+	('typecheck',  "Ot",   "b",     "PyObject_TypeCheck", False),
+	('issubtype',  "tt",   "b",     "PyType_IsSubtype",   False),
 ]
 
 dict_methods = [
@@ -107,7 +107,7 @@ builtin_type_table = [
 #  super
 #  str
 #  tuple
-#  type
+	("type",  "PyTypeObject",  "PyType_Type", []),
 #  xrange
 ]
 
@@ -168,6 +168,7 @@ def init_builtin_funcs():
 def init_builtin_types():
 	for desc in builtin_type_table:
 		declare_builtin_type(*desc)
+	py_type_type.define(builtin_scope.find_type("type"))
 
 def init_builtins():
 	init_builtin_funcs()
