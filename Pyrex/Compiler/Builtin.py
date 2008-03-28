@@ -54,12 +54,12 @@ builtin_function_table = [
 	#('issubtype',  "OO",   "i",     "PyType_IsSubtype",   False),
 ]
 
-builtin_type_table = [
-	# name,  objstruct,      typeobj
-	("list", "PyListObject", "PyList_Type"),
+list_methods = [
+	("insert", "TiO", "r", "PyList_Insert"),
 ]
 
-# Builtin types
+builtin_type_table = [
+	# name,  objstruct,      typeobj,      methods
 #  bool
 #  buffer
 #  classmethod
@@ -68,7 +68,7 @@ builtin_type_table = [
 #  file
 #  float
 #  int
-#  list
+	("list", "PyListObject", "PyList_Type", list_methods),
 #  long
 #  object
 #  property
@@ -79,6 +79,10 @@ builtin_type_table = [
 #  tuple
 #  type
 #  xrange
+]
+
+# Builtin types
+#  list
 
 getattr3_utility_code = ["""
 static PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *); /*proto*/
@@ -110,8 +114,16 @@ def declare_builtin_func(name, args, ret, cname, py_equiv = "*"):
 	utility = builtin_utility_code.get(name)
 	builtin_scope.declare_builtin_cfunction(name, type, cname, py_equiv, utility)
 
-def declare_builtin_type(name, objstruct, typeobj):
-	builtin_scope.declare_builtin_class(name, objstruct, typeobj)
+def declare_builtin_type(name, objstruct, typeobj, methods):
+	entry = builtin_scope.declare_builtin_class(name, objstruct, typeobj)
+	type = entry.type
+	for desc in methods:
+		declare_builtin_method(type, *desc)
+
+def declare_builtin_method(self_type, name, args, ret, cname):
+	sig = Signature(args, ret)
+	meth_type = sig.function_type(self_type)
+	self_type.scope.declare_builtin_method(name, meth_type, cname)
 
 def init_builtin_funcs():
 	for desc in builtin_function_table:

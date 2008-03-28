@@ -1496,7 +1496,8 @@ class GeneralCallNode(ExprNode):
 			self.compile_time_value_error(e)
 
 	def analyse_types(self, env):
-		self.function.analyse_types(env)
+		function = self.function
+		function.analyse_types(env)
 		self.positional_args.analyse_types(env)
 		if self.keyword_args:
 			self.keyword_args.analyse_types(env)
@@ -1508,7 +1509,12 @@ class GeneralCallNode(ExprNode):
 		if self.starstar_arg:
 			self.starstar_arg = \
 				self.starstar_arg.coerce_to_pyobject(env)
-		self.type = py_object_type
+		if function.is_name and function.type_entry:
+			# We are calling an extension type constructor
+			self.type = function.type_entry.type
+			self.result_ctype = py_object_type
+		else:
+			self.type = py_object_type
 		self.is_temp = 1
 		
 	def generate_result_code(self, code):

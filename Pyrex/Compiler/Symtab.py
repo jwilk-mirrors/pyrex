@@ -19,55 +19,55 @@ identifier_pattern = re.compile(r"[A-Za-z_][A-Za-z0-9_]*$")
 class Entry:
 	# A symbol table entry in a Scope or ModuleNamespace.
 	#
-	# name             string     Python name of entity
-	# cname            string     C name of entity
-	# type             PyrexType  Type of entity
-	# doc              string     Doc string
-	# init             string     Initial value
-	# visibility       'private' or 'public' or 'extern'
-	# is_builtin       boolean    Is an entry in the Python builtins dict
-	# is_cglobal       boolean    Is a C global variable
-	# is_pyglobal      boolean    Is a Python module-level variable
-	#                               or class attribute during
-	#                               class construction
-	# is_variable      boolean    Is a variable
-	# is_cfunction     boolean    Is a C function
-	# is_cmethod       boolean    Is a C method of an extension type
-	# is_type          boolean    Is a type definition
-	# is_const         boolean    Is a constant
-	# is_property      boolean    Is a property of an extension type:
-	# doc_cname        string or None  C const holding the docstring
-	# getter_cname     string          C func for getting property
-	# setter_cname     string          C func for setting or deleting property
-	# is_self_arg      boolean    Is the "self" arg of an exttype method
-	# is_readonly      boolean    Can't be assigned to
-	# func_cname       string     C func implementing Python func
-	# pos              position   Source position where declared
-	# namespace_cname  string     If is_pyglobal, the C variable
-	#                               holding its home namespace
-	# pymethdef_cname  string     PyMethodDef structure
-	# signature        Signature  Arg & return types for Python func
-	# init_to_none     boolean    True if initial value should be None
-	# as_variable      Entry      Alternative interpretation of extension
-	#                               type name or builtin C function as a variable
-	# xdecref_cleanup  boolean    Use Py_XDECREF for error cleanup
-	# in_cinclude      boolean    Suppress C declaration code
-	# enum_values      [Entry]    For enum types, list of values
-	# qualified_name   string     "modname.funcname" or "modname.classname"
-	#                               or "modname.classname.funcname"
-	# is_declared_generic  boolean  Is declared as PyObject * even though its
-	#                                 type is an extension type
-	# as_module        None       Module scope, if a cimported module
-	# is_inherited     boolean    Is an inherited attribute of an extension type
-	# #interned_cname   string     C name of interned name string
-	# pystring_cname   string     C name of Python version of string literal
-	# is_interned      boolean    For string const entries, value is interned
+	# name              string          Python name of entity
+	# cname             string          C name of entity
+	# type              PyrexType       Type of entity
+	# doc               string          Doc string
+	# init              string          Initial value
+	# visibility        'private' or 'public' or 'extern'
+	# is_builtin        boolean         Is an entry in the Python builtins dict
+	# is_cglobal        boolean         Is a C global variable
+	# is_pyglobal       boolean         Is a Python module-level variable or
+	#                                     class attribute during class construction
+	# is_variable       boolean         Is a variable
+	# is_cfunction      boolean         Is a C function
+	# is_cmethod        boolean         Is a C method of an extension type
+	# is_builtin_method boolean         Is a method corresponding to a Python/C API func
+	# is_type           boolean         Is a type definition
+	# is_const          boolean         Is a constant
+	# is_property       boolean         Is a property of an extension type:
+	# doc_cname         string or None  C const holding the docstring
+	# getter_cname      string          C func for getting property
+	# setter_cname      string          C func for setting or deleting property
+	# is_self_arg       boolean         Is the "self" arg of an exttype method
+	# is_readonly       boolean         Can't be assigned to
+	# func_cname        string          C func implementing Python func
+	# pos               position        Source position where declared
+	# namespace_cname   string          If is_pyglobal, the C variable
+	#                                     holding its home namespace
+	# pymethdef_cname  string           PyMethodDef structure
+	# signature        Signature        Arg & return types for Python func
+	# init_to_none     boolean          True if initial value should be None
+	# as_variable      Entry            Alternative interpretation of extension
+	#                                     type name or builtin C function as a variable
+	# xdecref_cleanup  boolean          Use Py_XDECREF for error cleanup
+	# in_cinclude      boolean          Suppress C declaration code
+	# enum_values      [Entry]          For enum types, list of values
+	# qualified_name   string           "modname.funcname" or "modname.classname"
+	#                                     or "modname.classname.funcname"
+	# is_declared_generic  boolean        Is declared as PyObject * even though its
+	#                                       type is an extension type
+	# as_module        None             Module scope, if a cimported module
+	# is_inherited     boolean          Is an inherited attribute of an extension type
+	# #interned_cname   string          C name of interned name string
+	# pystring_cname   string           C name of Python version of string literal
+	# is_interned      boolean          For string const entries, value is interned
 	# used             boolean
-	# is_special       boolean    Is a special method or property accessor
-	#                               of an extension type
-	# defined_in_pxd   boolean    Is defined in a .pxd file (not just declared)
-	# api              boolean    Generate C API for C class or function
-	# utility_code     string     Utility code needed when this entry is used
+	# is_special       boolean          Is a special method or property accessor
+	#                                     of an extension type
+	# defined_in_pxd   boolean          Is defined in a .pxd file (not just declared)
+	# api              boolean          Generate C API for C class or function
+	# utility_code     string           Utility code needed when this entry is used
 
 	borrowed = 0
 	init = ""
@@ -78,6 +78,7 @@ class Entry:
 	is_variable = 0
 	is_cfunction = 0
 	is_cmethod = 0
+	is_builtin_method = 0
 	is_type = 0
 	is_const = 0
 	is_property = 0
@@ -365,7 +366,7 @@ class Scope:
 			error(pos, "Non-extern C function declared but not defined")
 		return entry
 	
-	def add_cfunction(self, name, type, pos, cname, visibility):
+	def add_cfunction(self, name, type, pos, cname, visibility = 'private'):
 		# Add a C function entry without giving it a func_cname.
 		entry = self.declare(name, cname, type, pos)
 		entry.is_cfunction = 1
@@ -1079,6 +1080,11 @@ class CClassScope(ClassScope):
 		if name == "__new__":
 			name = "__cinit__"
 		return ClassScope.lookup_here(self, name)
+	
+	def declare_builtin_method(self, name, type, cname):
+		entry = ClassScope.add_cfunction(self, name, type, None, cname)
+		entry.is_builtin_method = 1
+		return entry
 	
 	def declare_cfunction(self, name, type, pos,
 			cname = None, visibility = 'private', defining = 0, api = 0, in_pxd = 0):
