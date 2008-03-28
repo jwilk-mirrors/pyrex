@@ -1024,9 +1024,8 @@ class CClassScope(ClassScope):
 			(self.parent_type.base_type and \
 				self.parent_type.base_type.scope.needs_gc())
 	
-	def declare_builtin_var(self, name, type, cname, visibility):
+	def declare_builtin_var(self, name, type, cname):
 		entry = self.declare(name, cname or name, type, None)
-		entry.visibility = visibility
 		entry.is_variable = 1
 		return entry
 

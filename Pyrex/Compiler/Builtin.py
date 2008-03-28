@@ -55,9 +55,8 @@ builtin_function_table = [
 	#('issubtype',  "OO",   "i",     "PyType_IsSubtype",   False),
 ]
 
-	# name,        args,   return,  C API func
-
 dict_methods = [
+	# name,         args,   return,  C API func
 	("clear",       "O",   "v",     "PyDict_Clear"),
 	("copy",        "O",   "O",     "PyDict_Copy"),
 	("items",       "O",   "O",     "PyDict_Items"),
@@ -69,6 +68,7 @@ dict_methods = [
 ]
 
 list_methods = [
+	# name,        args,   return,  C API func
 	("insert",     "OiO",  "r",     "PyList_Insert"),
 	("append",     "OO",   "r",     "PyList_Append"),
 	("sort",       "O",    "r",     "PyList_Sort"),
@@ -77,14 +77,15 @@ list_methods = [
 ]
 
 slice_methods = [
+	# name,        args,   return,  C API func
 	("indices",    "O",    "O",     "PySlice_Indices"),
 ]
 
 slice_members = [
-	# name,        type,  access
-	("start",      "O",   "ro"),
-	("stop",       "O",   "ro"),
-	("step",       "O",   "ro"),
+	# name,        type
+	("start",      "O"),
+	("stop",       "O"),
+	("step",       "O"),
 ]
 
 builtin_type_table = [
@@ -148,12 +149,9 @@ def declare_builtin_method(self_type, name, args, ret, cname):
 	meth_type = sig.function_type(self_type)
 	self_type.scope.declare_builtin_method(name, meth_type, cname)
 
-member_visibilities = {"ro": 'readonly', "rw": 'public'}
-
-def declare_builtin_member(self_type, name, typecode, rw, cname = None):
+def declare_builtin_member(self_type, name, typecode, cname = None):
 	member_type = Signature.format_map[typecode]
-	visibility = member_visibilities[rw]
-	self_type.scope.declare_builtin_var(name, member_type, cname, visibility)
+	self_type.scope.declare_builtin_var(name, member_type, cname)
 
 def declare_builtin_type(name, objstruct, typeobj, methods, members = []):
 	entry = builtin_scope.declare_builtin_class(name, objstruct, typeobj)
