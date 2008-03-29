@@ -2011,12 +2011,12 @@ class ForInStatNode(StatNode):
 		self.iterator.generate_disposal_code(code)
 
 
-class ForFromStatNode(StatNode):
-	#  for name from expr rel name rel expr
+class IntegerForStatNode(StatNode):
+	#  for expr rel name rel expr
 	#
-	#  target        NameNode
 	#  bound1        ExprNode
 	#  relation1     string
+	#  target        NameNode
 	#  relation2     string
 	#  bound2        ExprNode
 	#  body          StatNode

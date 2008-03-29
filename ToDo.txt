@@ -157,3 +157,6 @@ Specialised constructors for builtin types.
 
 Special-case integer indexing and slicing.
 
+Allow "extern api".
+
+Lockstep iteration syntax.

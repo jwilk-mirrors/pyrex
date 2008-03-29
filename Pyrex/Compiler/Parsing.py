@@ -9,7 +9,7 @@ from Scanning import PyrexScanner
 import Nodes
 import ExprNodes
 from ModuleNode import ModuleNode
-from Errors import error, InternalError
+from Errors import warning, error, InternalError
 
 def p_ident(s, message = "Expected an identifier"):
 	if s.sy == 'IDENT':
@@ -441,14 +441,23 @@ def p_atom(s):
 		if name == "None":
 			return ExprNodes.NoneNode(pos)
 		else:
-			return p_name(s, name)
+			return p_name_atom(s, name)
 	elif sy == 'NULL':
 		s.next()
 		return ExprNodes.NullNode(pos)
 	else:
 		s.error("Expected an identifier or literal")
 
-def p_name(s, name):
+def p_name(s):
+	if s.sy == 'IDENT':
+		pos = s.position()
+		name = s.systring
+		s.next()
+		return ExprNodes.NameNode(pos, name = name)
+	else:
+		s.error("Expected a variable name")
+
+def p_name_atom(s, name):
 	pos = s.position()
 	if not s.compile_time_expr:
 		try:
@@ -958,47 +967,126 @@ def p_for_statement(s):
 	# s.sy == 'for'
 	pos = s.position()
 	s.next()
-	target = p_for_target(s)
+	expr = p_for_expr(s)
 	if s.sy == 'in':
-		s.next()
-		iterator = p_for_iterator(s)
-		body = p_suite(s)
-		else_clause = p_else_clause(s)
-		return Nodes.ForInStatNode(pos, 
-			target = target,
-			iterator = iterator,
-			body = body,
-			else_clause = else_clause)
+		return p_standard_for_statement(s, expr)
+	elif s.sy in inequality_relations:
+		return p_integer_for_statement(s, expr)
 	elif s.sy == 'from':
-		s.next()
-		bound1 = p_bit_expr(s)
-		rel1 = p_for_from_relation(s)
-		name2_pos = s.position()
-		name2 = p_ident(s)
-		rel2_pos = s.position()
-		rel2 = p_for_from_relation(s)
-		bound2 = p_bit_expr(s)
-		if not target.is_name:
-			error(target.pos, 
-				"Target of for-from statement must be a variable name")
-		elif name2 <> target.name:
-			error(name2_pos,
-				"Variable name in for-from range does not match target")
-		if rel1[0] <> rel2[0]:
-			error(rel2_pos,
-				"Relation directions in for-from do not match")
-		body = p_suite(s)
-		else_clause = p_else_clause(s)
-		return Nodes.ForFromStatNode(pos,
-			target = target,
-			bound1 = bound1,
-			relation1 = rel1,
-			relation2 = rel2,
-			bound2 = bound2,
-			body = body,
-			else_clause = else_clause)
+		warning(pos, "Old-style integer for-loop is deprecated, use 'for x < i < y' instead")
+		return p_old_style_integer_for_statement(s, expr)
+	else:
+		s.error("Expected 'in' or an inequality relation")
 
-def p_for_from_relation(s):
+def p_standard_for_statement(s, target):
+	# s.sy == 'in'
+	s.next()
+	iterator = p_for_iterator(s)
+	body = p_suite(s)
+	else_clause = p_else_clause(s)
+	return Nodes.ForInStatNode(target.pos, 
+		target = target,
+		iterator = iterator,
+		body = body,
+		else_clause = else_clause)
+
+def p_integer_for_statement(s, bound1):
+	rel1 = s.sy
+	s.next()
+	name_pos = s.position()
+	target = p_name(s)
+	rel2_pos = s.position()
+	rel2 = p_inequality_relation(s)
+	bound2 = p_bit_expr(s)
+	if rel1[0] <> rel2[0]:
+		error(rel2_pos,
+			"Relation directions in integer for-loop do not match")
+	body = p_suite(s)
+	else_clause = p_else_clause(s)
+	return Nodes.IntegerForStatNode(bound1.pos,
+		bound1 = bound1,
+		relation1 = rel1,
+		target = target,
+		relation2 = rel2,
+		bound2 = bound2,
+		body = body,
+		else_clause = else_clause)
+
+def p_old_style_integer_for_statement(s, target):
+	# s.sy == 'for'
+	s.next()
+	bound1 = p_bit_expr(s)
+	rel1 = p_inequality_relation(s)
+	name2_pos = s.position()
+	name2 = p_ident(s)
+	rel2_pos = s.position()
+	rel2 = p_inequality_relation(s)
+	bound2 = p_bit_expr(s)
+	if not target.is_name:
+		error(target.pos, 
+			"Target of for-from statement must be a variable name")
+	elif name2 <> target.name:
+		error(name2_pos,
+			"Variable name in for-from range does not match target")
+	if rel1[0] <> rel2[0]:
+		error(rel2_pos,
+			"Relation directions in for-from do not match")
+	body = p_suite(s)
+	else_clause = p_else_clause(s)
+	return Nodes.IntegerForStatNode(bound1.pos,
+		bound1 = bound1,
+		relation1 = rel1,
+		target = target,
+		relation2 = rel2,
+		bound2 = bound2,
+		body = body,
+		else_clause = else_clause)
+
+#def p_for_statement(s):
+#	# s.sy == 'for'
+#	pos = s.position()
+#	s.next()
+#	target = p_for_target(s)
+#	if s.sy == 'in':
+#		s.next()
+#		iterator = p_for_iterator(s)
+#		body = p_suite(s)
+#		else_clause = p_else_clause(s)
+#		return Nodes.ForInStatNode(pos, 
+#			target = target,
+#			iterator = iterator,
+#			body = body,
+#			else_clause = else_clause)
+#	elif s.sy == 'from':
+#		s.next()
+#		bound1 = p_bit_expr(s)
+#		rel1 = p_for_from_relation(s)
+#		name2_pos = s.position()
+#		name2 = p_ident(s)
+#		rel2_pos = s.position()
+#		rel2 = p_for_from_relation(s)
+#		bound2 = p_bit_expr(s)
+#		if not target.is_name:
+#			error(target.pos, 
+#				"Target of for-from statement must be a variable name")
+#		elif name2 <> target.name:
+#			error(name2_pos,
+#				"Variable name in for-from range does not match target")
+#		if rel1[0] <> rel2[0]:
+#			error(rel2_pos,
+#				"Relation directions in for-from do not match")
+#		body = p_suite(s)
+#		else_clause = p_else_clause(s)
+#		return Nodes.ForFromStatNode(pos,
+#			target = target,
+#			bound1 = bound1,
+#			relation1 = rel1,
+#			relation2 = rel2,
+#			bound2 = bound2,
+#			body = body,
+#			else_clause = else_clause)
+
+def p_inequality_relation(s):
 	if s.sy in inequality_relations:
 		op = s.sy
 		s.next()
@@ -1008,7 +1096,8 @@ def p_for_from_relation(s):
 
 inequality_relations = ('<', '<=', '>', '>=')
 
-def p_for_target(s):
+def p_for_expr(s):
+	# Target of standard for-statement or first bound of integer for-statement
 	pos = s.position()
 	expr = p_bit_expr(s)
 	if s.sy == ',':

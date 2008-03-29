@@ -22,6 +22,11 @@ Enhancements:
 		without Python attributes.
 	
 	- Safer code generated in tp_clear. [Stefan Behnel]
+	
+	- Indexing with a C int type generates calls to PySequence_GetItem
+		and PySequence_SetItem.
+	
+	- Integer for-loop syntax streamlined to 'for x < i < y'.
 
 Bug fixes:
 
@@ -45,6 +50,9 @@ Bug fixes:
 		non-existent base tp_traverse and tp_clear functions. [Stefan Behnel]
 	
 	- Compile-time IF with no ELSE clause crashed compiler. [Kirk McDonald]
+	
+	- Values in enum declaration were not being checked for appropriate type.
+		[Simon Burton]
 
 
 0.9.6.4

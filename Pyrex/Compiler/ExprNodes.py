@@ -1113,8 +1113,9 @@ class IndexNode(ExprNode):
 	def analyse_types(self, env):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
-		if self.base.type.is_pyobject: 
-			self.index = self.index.coerce_to_pyobject(env)
+		if self.base.type.is_pyobject:
+			if not self.index.type.is_int:
+				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
 			self.is_temp = 1
 		else:
@@ -1146,21 +1147,35 @@ class IndexNode(ExprNode):
 	
 	def generate_result_code(self, code):
 		if self.type.is_pyobject:
+			if self.index.type.is_int:
+				function = "PySequence_GetItem"
+				index_code = self.index.result_code
+			else:
+				function = "PyObject_GetItem"
+				index_code = self.index.py_result()
 			code.putln(
-				"%s = PyObject_GetItem(%s, %s); if (!%s) %s" % (
+				"%s = %s(%s, %s); if (!%s) %s" % (
 					self.result_code,
+					function,
 					self.base.py_result(),
-					self.index.py_result(),
+					index_code,
 					self.result_code,
 					code.error_goto(self.pos)))
 	
 	def generate_assignment_code(self, rhs, code):
 		self.generate_subexpr_evaluation_code(code)
 		if self.type.is_pyobject:
+			if self.index.type.is_int:
+				function = "PySequence_SetItem"
+				index_code = self.index.result_code
+			else:
+				function = "PyObject_SetItem"
+				index_code = self.index.py_result()
 			code.putln(
-				"if (PyObject_SetItem(%s, %s, %s) < 0) %s" % (
+				"if (%s(%s, %s, %s) < 0) %s" % (
+					function,
 					self.base.py_result(),
-					self.index.py_result(),
+					index_code,
 					rhs.py_result(),
 					code.error_goto(self.pos)))
 		else:
