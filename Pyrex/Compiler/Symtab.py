@@ -23,6 +23,7 @@ class Entry:
 	# name              string          Python name of entity
 	# cname             string          C name of entity
 	# type              PyrexType       Type of entity
+	# ctype             PyrexType       Declared C type, if different from Pyrex type
 	# doc               string          Doc string
 	# init              string          Initial value
 	# visibility        'private' or 'public' or 'extern'
@@ -73,6 +74,7 @@ class Entry:
 	borrowed = 0
 	init = ""
 	visibility = 'private'
+	ctype = None
 	is_builtin = 0
 	is_cglobal = 0
 	is_pyglobal = 0
@@ -530,8 +532,10 @@ class BuiltinScope(Scope):
 		entry.is_builtin = 1
 		return entry
 	
-	def declare_builtin_constant(self, name, type, cname):
+	def declare_builtin_constant(self, name, type, cname, ctype = None):
 		entry = self.declare(name, cname, type, None)
+		if ctype:
+			entry.ctype = ctype
 		entry.is_variable = 1
 		entry.is_cglobal = 1
 		entry.is_readonly = 1
