@@ -476,6 +476,9 @@ class CEnumDefItemNode(StatNode):
 	def analyse_declarations(self, env, enum_entry):
 		if self.value:
 			self.value.analyse_const_expression(env)
+			if not self.value.type.is_int:
+				error(self.pos,
+					"Type '%s' is not a valid enum value" % self.value.type)
 			value = self.value.result_code
 		else:
 			value = self.name
