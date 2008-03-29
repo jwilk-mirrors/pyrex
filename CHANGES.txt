@@ -43,6 +43,8 @@ Bug fixes:
 	
 	- GC type with non-GC base type caused crash due to trying to call
 		non-existent base tp_traverse and tp_clear functions. [Stefan Behnel]
+	
+	- Compile-time IF with no ELSE clause crashed compiler. [Kirk McDonald]
 
 
 0.9.6.4
