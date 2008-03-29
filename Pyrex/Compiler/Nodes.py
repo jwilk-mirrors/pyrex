@@ -782,6 +782,7 @@ class DefNode(FuncDefNode):
 	assmt = None
 	num_kwonly_args = 0
 	reqd_kw_flags_cname = "0"
+	has_star_or_kwonly_args = 0
 	
 	def __init__(self, pos, **kwds):
 		FuncDefNode.__init__(self, pos, **kwds)
@@ -790,6 +791,8 @@ class DefNode(FuncDefNode):
 			if arg.kw_only:
 				n += 1
 		self.num_kwonly_args = n
+		if self.star_arg or self.starstar_arg or n > 0:
+			self.has_star_or_kwonly_args = 1
 	
 	def analyse_declarations(self, env):
 		for arg in self.args:
@@ -811,7 +814,7 @@ class DefNode(FuncDefNode):
 		self.declare_pyfunction(env)
 		self.analyse_signature(env)
 		self.return_type = self.entry.signature.return_type()
-		if self.star_arg or self.starstar_arg:
+		if self.has_star_or_kwonly_args:
 			env.use_utility_code(get_starargs_utility_code)
 	
 	def analyse_signature(self, env):
@@ -1063,7 +1066,7 @@ class DefNode(FuncDefNode):
 				code.putln(error_return_code)
 		
 	def put_stararg_decrefs(self, code):
-		if self.star_arg or self.starstar_arg:
+		if self.has_star_or_kwonly_args:
 			code.put_xdecref(Naming.args_cname, py_object_type)
 			code.put_xdecref(Naming.kwds_cname, py_object_type)
 	
@@ -1828,16 +1831,15 @@ class AssertStatNode(StatNode):
 		self.cond.release_temp(env)
 		if self.value:
 			self.value.release_temp(env)
-		#env.recycle_pending_temps() # TEMPORARY
 	
 	def generate_execution_code(self, code):
 		code.putln("#ifndef PYREX_WITHOUT_ASSERTIONS")
 		self.cond.generate_evaluation_code(code)
-		if self.value:
-			self.value.generate_evaluation_code(code)
 		code.putln(
 			"if (!%s) {" %
 				self.cond.result_code)
+		if self.value:
+			self.value.generate_evaluation_code(code)
 		if self.value:
 			code.putln(
 				"PyErr_SetObject(PyExc_AssertionError, %s);" %
@@ -1850,8 +1852,9 @@ class AssertStatNode(StatNode):
 		code.putln(
 			"}")
 		self.cond.generate_disposal_code(code)
-		if self.value:
-			self.value.generate_disposal_code(code)
+		# Disposal code for value not needed because exception always raised
+		#if self.value:
+		#	self.value.generate_disposal_code(code)
 		code.putln("#endif")
 
 class IfStatNode(StatNode):

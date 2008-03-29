@@ -153,10 +153,7 @@ Private fields of extension types in a separate struct.
 
 Private vtable entries in a separate struct.
 
-Built-in constants (exceptions, etc.)
-
 Specialised constructors for builtin types.
 
 Special-case integer indexing and slicing.
 
-Make extension types be of type type.

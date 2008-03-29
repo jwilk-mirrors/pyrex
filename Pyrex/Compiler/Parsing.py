@@ -1097,7 +1097,7 @@ def p_with_statement(s):
 		body = p_suite(s)
 		return Nodes.GILStatNode(pos, state = state, body = body)
 	else:
-		s.error(pos, "Only 'with gil' and 'with nogil' implemented")
+		s.error("Only 'with nogil' implemented")
 	
 def p_simple_statement(s, level):
 	if s.sy == 'global':

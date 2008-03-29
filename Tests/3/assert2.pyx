@@ -1,3 +1,2 @@
 def f(a, b):
-	assert a, b
-	
+	assert a, a+b

@@ -2878,7 +2878,7 @@ class CmpNode:
 				or ((type2.is_ptr or type2.is_array)
 					and type1.base_type.same_as(type2.base_type))
 		elif ((type1.is_numeric and type2.is_numeric
-					or type1.is_enum and (type1 is type2 or type2.is_int)
+					or type1.is_enum and (type2.is_int or type1.same_as(type2))
 					or type1.is_int and type2.is_enum)
 				and op not in ('is', 'is_not')):
 			return 1
@@ -2916,10 +2916,11 @@ class CmpNode:
 			if (type1.is_extension_type or type2.is_extension_type) \
 					and not type1.same_as(type2):
 				common_type = py_object_type
+				code1 = operand1.result_as(common_type)
+				code2 = operand2.result_as(common_type)
 			else:
-				common_type = type1
-			code1 = operand1.result_as(common_type)
-			code2 = operand2.result_as(common_type)
+				code1 = operand1.result_code
+				code2 = operand2.result_code
 			code.putln("%s = %s %s %s;" % (
 				result_code, 
 				code1, 

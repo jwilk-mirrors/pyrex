@@ -1,10 +1,40 @@
 0.9.7
 -----
 
+New features:
+
+	- Builtin constants and types are known, and are referenced directly
+		with no dictionary lookup.
+	
+	- Direct calls are made to certain methods of lists and dicts when
+		their type is statically known.
+	
+	- New builtin functions 'typecheck' and 'issubtype' added, providing
+		safer type checking than isinstance and issubclass (which can be
+		overridden).
+
 Enhancements:
 
 	- Redundant type test eliminated when assigning the result of an
 		extension type constructor call to a variable of the same type.
+
+Bug fixes:
+
+	- Value raised by assert statement now only evaluated if the
+		assertion fails. [Stefan Behnel]
+	
+	- Comparing a value of an enum type with another value of a type
+		which is ctypedefed to the same enum type gave a spurious type
+		error. [Matt Hammond]
+	
+	- Comparing an int with a float resulted in the float being cast
+		to an int before comparison. [Robin Becker]
+	
+	- Compiler crashed on an invalid argument to a 'with nogil' statement.
+		[Stefan Behnel]
+	
+	- Incorrect code generated for function with keyword only args
+		and no * or ** args. [Stefan Behnel]
 
 
 0.9.6.4
