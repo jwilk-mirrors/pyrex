@@ -72,7 +72,7 @@ static PyObject *__pyx_f_6ewing2_1D___mod__(PyObject *__pyx_v_x, PyObject *__pyx
   if (!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_y), __pyx_ptype_6ewing2_C, 1, "y")) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/ewing/ewing2.pyx":7 */
-  __pyx_1 = __pyx_v_c == ((struct __pyx_obj_6ewing2_C *)__pyx_v_y);
+  __pyx_1 = ((PyObject*)__pyx_v_c) == __pyx_v_y;
   if (__pyx_1) {
     goto __pyx_L2;
   }
@@ -113,14 +113,6 @@ static PyObject *__pyx_tp_new_6ewing2_C(PyTypeObject *t, PyObject *a, PyObject *
 
 static void __pyx_tp_dealloc_6ewing2_C(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_6ewing2_C(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_6ewing2_C(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_6ewing2_C[] = {
@@ -220,8 +212,8 @@ PyTypeObject __pyx_type_6ewing2_C = {
   &__pyx_tp_as_buffer_C, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6ewing2_C, /*tp_traverse*/
-  __pyx_tp_clear_6ewing2_C, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -254,14 +246,6 @@ static PyObject *__pyx_tp_new_6ewing2_D(PyTypeObject *t, PyObject *a, PyObject *
 
 static void __pyx_tp_dealloc_6ewing2_D(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_6ewing2_D(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_6ewing2_D(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_6ewing2_D[] = {
@@ -361,8 +345,8 @@ PyTypeObject __pyx_type_6ewing2_D = {
   &__pyx_tp_as_buffer_D, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6ewing2_D, /*tp_traverse*/
-  __pyx_tp_clear_6ewing2_D, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

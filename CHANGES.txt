@@ -17,6 +17,9 @@ Enhancements:
 
 	- Redundant type test eliminated when assigning the result of an
 		extension type constructor call to a variable of the same type.
+	
+	- No tp_traverse and tp_clear functions generated for types
+		without Python attributes.
 
 Bug fixes:
 
@@ -35,6 +38,9 @@ Bug fixes:
 	
 	- Incorrect code generated for function with keyword only args
 		and no * or ** args. [Stefan Behnel]
+	
+	- GC type with non-GC base type caused crash due to trying to call
+		non-existent base tp_traverse and tp_clear functions. [Stefan Behnel]
 
 
 0.9.6.4

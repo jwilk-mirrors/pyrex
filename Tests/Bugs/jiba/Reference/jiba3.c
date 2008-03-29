@@ -277,17 +277,6 @@ static void __pyx_tp_dealloc_5jiba3_Point(PyObject *o) {
   __pyx_ptype_5jiba3_Position->tp_dealloc(o);
 }
 
-static int __pyx_tp_traverse_5jiba3_Point(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_5jiba3_Position->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_5jiba3_Point(PyObject *o) {
-  __pyx_ptype_5jiba3_Position->tp_clear(o);
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_5jiba3_Point[] = {
   {0, 0, 0, 0}
 };
@@ -385,8 +374,8 @@ PyTypeObject __pyx_type_5jiba3_Point = {
   &__pyx_tp_as_buffer_Point, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_5jiba3_Point, /*tp_traverse*/
-  __pyx_tp_clear_5jiba3_Point, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -423,17 +412,6 @@ static PyObject *__pyx_tp_new_5jiba3_Vector(PyTypeObject *t, PyObject *a, PyObje
 
 static void __pyx_tp_dealloc_5jiba3_Vector(PyObject *o) {
   __pyx_ptype_5jiba3_Point->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_5jiba3_Vector(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_5jiba3_Point->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_5jiba3_Vector(PyObject *o) {
-  __pyx_ptype_5jiba3_Point->tp_clear(o);
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_5jiba3_Vector[] = {
@@ -533,8 +511,8 @@ PyTypeObject __pyx_type_5jiba3_Vector = {
   &__pyx_tp_as_buffer_Vector, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_5jiba3_Vector, /*tp_traverse*/
-  __pyx_tp_clear_5jiba3_Vector, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -567,14 +545,6 @@ static PyObject *__pyx_tp_new_5jiba3_CoordSyst(PyTypeObject *t, PyObject *a, PyO
 
 static void __pyx_tp_dealloc_5jiba3_CoordSyst(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_5jiba3_CoordSyst(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_5jiba3_CoordSyst(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_5jiba3_CoordSyst[] = {
@@ -674,8 +644,8 @@ PyTypeObject __pyx_type_5jiba3_CoordSyst = {
   &__pyx_tp_as_buffer_CoordSyst, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_5jiba3_CoordSyst, /*tp_traverse*/
-  __pyx_tp_clear_5jiba3_CoordSyst, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

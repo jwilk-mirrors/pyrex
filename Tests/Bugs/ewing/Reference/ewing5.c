@@ -55,30 +55,20 @@ static char *__pyx_f_6ewing5_f(void); /*proto*/
 
 /* Implementation of ewing5 */
 
-static PyObject *__pyx_n_Exception;
-
 static char *__pyx_f_6ewing5_f(void) {
   char *__pyx_r;
   PyObject *__pyx_1 = 0;
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_Exception); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
-  __Pyx_Raise(__pyx_1, 0, 0);
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __Pyx_Raise(PyExc_Exception, 0, 0);
   {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
 
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1:;
-  Py_XDECREF(__pyx_1);
   __Pyx_WriteUnraisable("ewing5.f");
   __pyx_r = 0;
   __pyx_L0:;
   return __pyx_r;
 }
-
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Exception, "Exception"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -95,7 +85,6 @@ PyMODINIT_FUNC initewing5(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("ewing5");

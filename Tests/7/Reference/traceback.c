@@ -53,23 +53,18 @@ static int __pyx_f_9traceback_grail(void); /*proto*/
 
 /* Implementation of traceback */
 
-static PyObject *__pyx_n_Exception;
-
 static PyObject *__pyx_f_9traceback_spam(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_9traceback_spam(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_r;
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {0};
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "", __pyx_argnames)) return 0;
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_Exception); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
-  __Pyx_Raise(__pyx_1, 0, 0);
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __Pyx_Raise(PyExc_Exception, 0, 0);
   {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
 
   __pyx_r = Py_None; Py_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1:;
-  Py_XDECREF(__pyx_1);
   __Pyx_AddTraceback("traceback.spam");
   __pyx_r = 0;
   __pyx_L0:;
@@ -78,16 +73,12 @@ static PyObject *__pyx_f_9traceback_spam(PyObject *__pyx_self, PyObject *__pyx_a
 
 static int __pyx_f_9traceback_grail(void) {
   int __pyx_r;
-  PyObject *__pyx_1 = 0;
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_Exception); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
-  __Pyx_Raise(__pyx_1, 0, 0);
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __Pyx_Raise(PyExc_Exception, 0, 0);
   {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
 
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1:;
-  Py_XDECREF(__pyx_1);
   __Pyx_AddTraceback("traceback.grail");
   __pyx_r = (-1);
   __pyx_L0:;
@@ -126,7 +117,6 @@ static PyObject *__pyx_f_9traceback_tomato(PyObject *__pyx_self, PyObject *__pyx
 }
 
 static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Exception, "Exception"},
   {&__pyx_n_spam, "spam"},
   {0, 0}
 };

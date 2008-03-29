@@ -59,7 +59,8 @@ static PyObject *__pyx_f_7assert2_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   #ifndef PYREX_WITHOUT_ASSERTIONS
   __pyx_1 = PyObject_IsTrue(__pyx_v_a); if (__pyx_1 < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   if (!__pyx_1) {
-    PyErr_SetObject(PyExc_AssertionError, __pyx_v_b);
+    __pyx_2 = PyNumber_Add(__pyx_v_a, __pyx_v_b); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
+    PyErr_SetObject(PyExc_AssertionError, __pyx_2);
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   }
   #endif
@@ -67,6 +68,7 @@ static PyObject *__pyx_f_7assert2_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   __pyx_r = Py_None; Py_INCREF(Py_None);
   goto __pyx_L0;
   __pyx_L1:;
+  Py_XDECREF(__pyx_2);
   __Pyx_AddTraceback("assert2.f");
   __pyx_r = 0;
   __pyx_L0:;

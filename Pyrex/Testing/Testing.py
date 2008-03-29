@@ -407,6 +407,9 @@ def munge_c_line(line):
 	
 	# ------ End of standing hacks -----
 	
+	# HACK: Ignore Py_TPFLAGS_HAVE_GC
+	line = line.replace("|Py_TPFLAGS_HAVE_GC", "")
+	
 	# ---------- END HACKS ----------
 
 	return line

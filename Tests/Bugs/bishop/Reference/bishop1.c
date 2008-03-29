@@ -100,14 +100,6 @@ static void __pyx_tp_dealloc_7bishop1_fmatrix(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_7bishop1_fmatrix(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_7bishop1_fmatrix(PyObject *o) {
-  return 0;
-}
-
 static int __pyx_mp_ass_subscript_7bishop1_fmatrix(PyObject *o, PyObject *i, PyObject *v) {
   if (v) {
     return __pyx_f_7bishop1_7fmatrix___setitem__(o, i, v);
@@ -216,8 +208,8 @@ PyTypeObject __pyx_type_7bishop1_fmatrix = {
   &__pyx_tp_as_buffer_fmatrix, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_7bishop1_fmatrix, /*tp_traverse*/
-  __pyx_tp_clear_7bishop1_fmatrix, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

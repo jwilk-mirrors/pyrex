@@ -2914,10 +2914,9 @@ class CmpNode:
 			type1 = operand1.type
 			type2 = operand2.type
 			if (type1.is_extension_type or type2.is_extension_type) \
-					and not type1.same_as(type2):
-				common_type = py_object_type
-				code1 = operand1.result_as(common_type)
-				code2 = operand2.result_as(common_type)
+					and not operand1.ctype().same_as(operand2.ctype()):
+				code1 = operand1.result_as(py_object_type)
+				code2 = operand2.result_as(py_object_type)
 			else:
 				code1 = operand1.result_code
 				code2 = operand2.result_code

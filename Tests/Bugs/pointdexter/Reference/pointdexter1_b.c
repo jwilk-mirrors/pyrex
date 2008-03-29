@@ -132,17 +132,6 @@ static void __pyx_tp_dealloc_14pointdexter1_b_B(PyObject *o) {
   __pyx_ptype_14pointdexter1_a_A->tp_dealloc(o);
 }
 
-static int __pyx_tp_traverse_14pointdexter1_b_B(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_14pointdexter1_a_A->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_14pointdexter1_b_B(PyObject *o) {
-  __pyx_ptype_14pointdexter1_a_A->tp_clear(o);
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_14pointdexter1_b_B[] = {
   {0, 0, 0, 0}
 };
@@ -240,8 +229,8 @@ PyTypeObject __pyx_type_14pointdexter1_b_B = {
   &__pyx_tp_as_buffer_B, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_14pointdexter1_b_B, /*tp_traverse*/
-  __pyx_tp_clear_14pointdexter1_b_B, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

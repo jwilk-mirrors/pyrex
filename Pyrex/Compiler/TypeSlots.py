@@ -221,6 +221,17 @@ class InternalMethodSlot(SlotDescriptor):
 		return scope.mangle_internal(self.slot_name)
 
 
+class PyAttrDependentSlot(InternalMethodSlot):
+	#  Type slot for a method that is synthesized only
+	#  when the extension type has Python-valued attributes.
+	
+	def slot_code(self, scope):
+		if scope.pyattr_entries:
+			return InternalMethodSlot.slot_code(self, scope)
+		else:
+			return "0"
+
+
 class SyntheticSlot(InternalMethodSlot):
 	#  Type slot descriptor for a synthesized method which
 	#  dispatches to one or more user-defined methods depending
@@ -245,10 +256,9 @@ class TypeFlagsSlot(SlotDescriptor):
 	#  Descriptor for the type flags slot.
 	
 	def slot_code(self, scope):
-		# Always add Py_TPFLAGS_HAVE_GC -- PyType_Ready doesn't seem to inherit it
-		value = "Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC"
-		#if scope.has_pyobject_attrs:
-		#	value += "|Py_TPFLAGS_HAVE_GC"
+		value = "Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE"
+		if scope.pyattr_entries:
+			value += "|Py_TPFLAGS_HAVE_GC"
 		return value
 		
 
@@ -558,8 +568,8 @@ slot_table = (
 	TypeFlagsSlot("tp_flags"),
 	DocStringSlot("tp_doc"),
 
-	InternalMethodSlot("tp_traverse"),
-	InternalMethodSlot("tp_clear"),
+	PyAttrDependentSlot("tp_traverse"),
+	PyAttrDependentSlot("tp_clear"),
 
 	# Later -- synthesize a method to split into separate ops?
 	MethodSlot(richcmpfunc, "tp_richcompare", "__richcmp__"),

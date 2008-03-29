@@ -114,14 +114,6 @@ static void __pyx_tp_dealloc_12extcmethcall_Spam(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_12extcmethcall_Spam(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_12extcmethcall_Spam(PyObject *o) {
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_12extcmethcall_Spam[] = {
   {0, 0, 0, 0}
 };
@@ -219,8 +211,8 @@ PyTypeObject __pyx_type_12extcmethcall_Spam = {
   &__pyx_tp_as_buffer_Spam, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_12extcmethcall_Spam, /*tp_traverse*/
-  __pyx_tp_clear_12extcmethcall_Spam, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -257,17 +249,6 @@ static PyObject *__pyx_tp_new_12extcmethcall_SuperSpam(PyTypeObject *t, PyObject
 
 static void __pyx_tp_dealloc_12extcmethcall_SuperSpam(PyObject *o) {
   __pyx_ptype_12extcmethcall_Spam->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_12extcmethcall_SuperSpam(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_12extcmethcall_Spam->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_12extcmethcall_SuperSpam(PyObject *o) {
-  __pyx_ptype_12extcmethcall_Spam->tp_clear(o);
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_12extcmethcall_SuperSpam[] = {
@@ -367,8 +348,8 @@ PyTypeObject __pyx_type_12extcmethcall_SuperSpam = {
   &__pyx_tp_as_buffer_SuperSpam, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_12extcmethcall_SuperSpam, /*tp_traverse*/
-  __pyx_tp_clear_12extcmethcall_SuperSpam, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

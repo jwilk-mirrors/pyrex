@@ -125,14 +125,6 @@ static void __pyx_tp_dealloc_13extinheritdel_Parrot(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_13extinheritdel_Parrot(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_13extinheritdel_Parrot(PyObject *o) {
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_13extinheritdel_Parrot[] = {
   {0, 0, 0, 0}
 };
@@ -230,8 +222,8 @@ PyTypeObject __pyx_type_13extinheritdel_Parrot = {
   &__pyx_tp_as_buffer_Parrot, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_13extinheritdel_Parrot, /*tp_traverse*/
-  __pyx_tp_clear_13extinheritdel_Parrot, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -264,17 +256,6 @@ static PyObject *__pyx_tp_new_13extinheritdel_Norwegian(PyTypeObject *t, PyObjec
 
 static void __pyx_tp_dealloc_13extinheritdel_Norwegian(PyObject *o) {
   __pyx_ptype_13extinheritdel_Parrot->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_13extinheritdel_Norwegian(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_13extinheritdel_Parrot->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_13extinheritdel_Norwegian(PyObject *o) {
-  __pyx_ptype_13extinheritdel_Parrot->tp_clear(o);
-  return 0;
 }
 
 static int __pyx_mp_ass_subscript_13extinheritdel_Norwegian(PyObject *o, PyObject *i, PyObject *v) {
@@ -423,8 +404,8 @@ PyTypeObject __pyx_type_13extinheritdel_Norwegian = {
   &__pyx_tp_as_buffer_Norwegian, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_13extinheritdel_Norwegian, /*tp_traverse*/
-  __pyx_tp_clear_13extinheritdel_Norwegian, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

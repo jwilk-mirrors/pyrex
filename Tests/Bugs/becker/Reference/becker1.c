@@ -185,14 +185,6 @@ static void __pyx_tp_dealloc_7becker1__Box(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_7becker1__Box(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_7becker1__Box(PyObject *o) {
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_7becker1__Box[] = {
   {0, 0, 0, 0}
 };
@@ -299,8 +291,8 @@ PyTypeObject __pyx_type_7becker1__Box = {
   &__pyx_tp_as_buffer__Box, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_7becker1__Box, /*tp_traverse*/
-  __pyx_tp_clear_7becker1__Box, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -333,17 +325,6 @@ static PyObject *__pyx_tp_new_7becker1_Box(PyTypeObject *t, PyObject *a, PyObjec
 
 static void __pyx_tp_dealloc_7becker1_Box(PyObject *o) {
   __pyx_ptype_7becker1__Box->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_7becker1_Box(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_7becker1__Box->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_7becker1_Box(PyObject *o) {
-  __pyx_ptype_7becker1__Box->tp_clear(o);
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_7becker1_Box[] = {
@@ -443,8 +424,8 @@ PyTypeObject __pyx_type_7becker1_Box = {
   &__pyx_tp_as_buffer_Box, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   "Class representing a glyph or character.  Boxes have a fixed\n    width that doesn\'t change.\n    ", /*tp_doc*/
-  __pyx_tp_traverse_7becker1_Box, /*tp_traverse*/
-  __pyx_tp_clear_7becker1_Box, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -481,17 +462,6 @@ static PyObject *__pyx_tp_new_7becker1_Glue(PyTypeObject *t, PyObject *a, PyObje
 
 static void __pyx_tp_dealloc_7becker1_Glue(PyObject *o) {
   __pyx_ptype_7becker1__Box->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_7becker1_Glue(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_7becker1__Box->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_7becker1_Glue(PyObject *o) {
-  __pyx_ptype_7becker1__Box->tp_clear(o);
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_7becker1_Glue[] = {
@@ -591,8 +561,8 @@ PyTypeObject __pyx_type_7becker1_Glue = {
   &__pyx_tp_as_buffer_Glue, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   "Class representing a bit of glue.  Glue has a preferred width,\n    but it can stretch up to an additional distance, and can shrink\n    by a certain amount.  Line breaks can be placed at any point where\n    glue immediately follows a box.\n    ", /*tp_doc*/
-  __pyx_tp_traverse_7becker1_Glue, /*tp_traverse*/
-  __pyx_tp_clear_7becker1_Glue, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

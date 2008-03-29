@@ -74,14 +74,6 @@ static void __pyx_tp_dealloc_10extdelitem_Spam(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_10extdelitem_Spam(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_10extdelitem_Spam(PyObject *o) {
-  return 0;
-}
-
 static int __pyx_mp_ass_subscript_10extdelitem_Spam(PyObject *o, PyObject *i, PyObject *v) {
   if (v) {
     PyErr_Format(PyExc_NotImplementedError,
@@ -190,8 +182,8 @@ PyTypeObject __pyx_type_10extdelitem_Spam = {
   &__pyx_tp_as_buffer_Spam, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_10extdelitem_Spam, /*tp_traverse*/
-  __pyx_tp_clear_10extdelitem_Spam, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

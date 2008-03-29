@@ -116,14 +116,6 @@ static void __pyx_tp_dealloc_6ewing6_C(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_6ewing6_C(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_6ewing6_C(PyObject *o) {
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_6ewing6_C[] = {
   {0, 0, 0, 0}
 };
@@ -221,8 +213,8 @@ PyTypeObject __pyx_type_6ewing6_C = {
   &__pyx_tp_as_buffer_C, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6ewing6_C, /*tp_traverse*/
-  __pyx_tp_clear_6ewing6_C, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -259,17 +251,6 @@ static PyObject *__pyx_tp_new_6ewing6_D(PyTypeObject *t, PyObject *a, PyObject *
 
 static void __pyx_tp_dealloc_6ewing6_D(PyObject *o) {
   __pyx_ptype_6ewing6_C->tp_dealloc(o);
-}
-
-static int __pyx_tp_traverse_6ewing6_D(PyObject *o, visitproc v, void *a) {
-  int e;
-  e = __pyx_ptype_6ewing6_C->tp_traverse(o, v, a); if (e) return e;
-  return 0;
-}
-
-static int __pyx_tp_clear_6ewing6_D(PyObject *o) {
-  __pyx_ptype_6ewing6_C->tp_clear(o);
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_6ewing6_D[] = {
@@ -369,8 +350,8 @@ PyTypeObject __pyx_type_6ewing6_D = {
   &__pyx_tp_as_buffer_D, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6ewing6_D, /*tp_traverse*/
-  __pyx_tp_clear_6ewing6_D, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -403,14 +384,6 @@ static PyObject *__pyx_tp_new_6ewing6_E(PyTypeObject *t, PyObject *a, PyObject *
 
 static void __pyx_tp_dealloc_6ewing6_E(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_6ewing6_E(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_6ewing6_E(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_6ewing6_E[] = {
@@ -510,8 +483,8 @@ PyTypeObject __pyx_type_6ewing6_E = {
   &__pyx_tp_as_buffer_E, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6ewing6_E, /*tp_traverse*/
-  __pyx_tp_clear_6ewing6_E, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

@@ -62,8 +62,6 @@ static PyTypeObject *__pyx_ptype_7pinard7_Curseur = 0;
 
 /* Implementation of pinard7 */
 
-static PyObject *__pyx_n_False;
-
 static PyObject *__pyx_f_7pinard7_7Curseur_method(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_7pinard7_7Curseur_method(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_r;
@@ -73,15 +71,12 @@ static PyObject *__pyx_f_7pinard7_7Curseur_method(PyObject *__pyx_v_self, PyObje
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "", __pyx_argnames)) return 0;
   Py_INCREF(__pyx_v_self);
   #ifndef PYREX_WITHOUT_ASSERTIONS
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_False); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
-  __pyx_2 = PyObject_IsTrue(__pyx_1); if (__pyx_2 < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
-  __pyx_1 = PyInt_FromLong(((struct __pyx_obj_7pinard7_Curseur *)__pyx_v_self)->mode); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_2 = PyObject_IsTrue(Py_False); if (__pyx_2 < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   if (!__pyx_2) {
+  	__pyx_1 = PyInt_FromLong(((struct __pyx_obj_7pinard7_Curseur *)__pyx_v_self)->mode); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
     PyErr_SetObject(PyExc_AssertionError, __pyx_1);
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   }
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
   #endif
 
   __pyx_r = Py_None; Py_INCREF(Py_None);
@@ -95,11 +90,6 @@ static PyObject *__pyx_f_7pinard7_7Curseur_method(PyObject *__pyx_v_self, PyObje
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_False, "False"},
-  {0, 0}
-};
-
 static PyObject *__pyx_tp_new_7pinard7_Curseur(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
   if (!o) return 0;
@@ -108,14 +98,6 @@ static PyObject *__pyx_tp_new_7pinard7_Curseur(PyTypeObject *t, PyObject *a, PyO
 
 static void __pyx_tp_dealloc_7pinard7_Curseur(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_7pinard7_Curseur(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_7pinard7_Curseur(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_7pinard7_Curseur[] = {
@@ -216,8 +198,8 @@ PyTypeObject __pyx_type_7pinard7_Curseur = {
   &__pyx_tp_as_buffer_Curseur, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_7pinard7_Curseur, /*tp_traverse*/
-  __pyx_tp_clear_7pinard7_Curseur, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -257,7 +239,6 @@ PyMODINIT_FUNC initpinard7(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_7pinard7_Curseur) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Curseur", (PyObject *)&__pyx_type_7pinard7_Curseur) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   __pyx_ptype_7pinard7_Curseur = &__pyx_type_7pinard7_Curseur;

@@ -279,7 +279,10 @@ static void __pyx_tp_dealloc_10extinherit_Norwegian(PyObject *o) {
 static int __pyx_tp_traverse_10extinherit_Norwegian(PyObject *o, visitproc v, void *a) {
   int e;
   struct __pyx_obj_10extinherit_Norwegian *p = (struct __pyx_obj_10extinherit_Norwegian *)o;
-  e = __pyx_ptype_10extinherit_Parrot->tp_traverse(o, v, a); if (e) return e;
+  traverseproc t;
+  if ((t = __pyx_ptype_10extinherit_Parrot->tp_traverse)) {
+    e = t(o, v, a); if (e) return e;
+  }
   if (p->plumage_colour) {
     e = (*v)(p->plumage_colour, a); if (e) return e;
   }
@@ -288,7 +291,10 @@ static int __pyx_tp_traverse_10extinherit_Norwegian(PyObject *o, visitproc v, vo
 
 static int __pyx_tp_clear_10extinherit_Norwegian(PyObject *o) {
   struct __pyx_obj_10extinherit_Norwegian *p = (struct __pyx_obj_10extinherit_Norwegian *)o;
-  __pyx_ptype_10extinherit_Parrot->tp_clear(o);
+  inquiry c;
+  if ((c = __pyx_ptype_10extinherit_Parrot->tp_clear)) {
+    c(o);
+  }
   Py_XDECREF(p->plumage_colour);
   p->plumage_colour = Py_None; Py_INCREF(Py_None);
   return 0;

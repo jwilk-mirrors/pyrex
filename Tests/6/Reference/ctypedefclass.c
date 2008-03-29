@@ -63,14 +63,6 @@ static void __pyx_tp_dealloc_13ctypedefclass_spam(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_13ctypedefclass_spam(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_13ctypedefclass_spam(PyObject *o) {
-  return 0;
-}
-
 static struct PyMethodDef __pyx_methods_13ctypedefclass_spam[] = {
   {0, 0, 0, 0}
 };
@@ -168,8 +160,8 @@ PyTypeObject __pyx_type_13ctypedefclass_spam = {
   &__pyx_tp_as_buffer_spam, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_13ctypedefclass_spam, /*tp_traverse*/
-  __pyx_tp_clear_13ctypedefclass_spam, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

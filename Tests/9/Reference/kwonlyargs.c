@@ -124,6 +124,8 @@ static PyObject *__pyx_f_10kwonlyargs_d(PyObject *__pyx_self, PyObject *__pyx_ar
   Py_DECREF(__pyx_v_a);
   Py_DECREF(__pyx_v_b);
   Py_DECREF(__pyx_v_c);
+  Py_XDECREF(__pyx_args);
+  Py_XDECREF(__pyx_kwds);
   return __pyx_r;
 }
 
@@ -211,6 +213,8 @@ static PyObject *__pyx_f_10kwonlyargs_f(PyObject *__pyx_self, PyObject *__pyx_ar
   Py_DECREF(__pyx_v_b);
   Py_DECREF(__pyx_v_c);
   Py_DECREF(__pyx_v_d);
+  Py_XDECREF(__pyx_args);
+  Py_XDECREF(__pyx_kwds);
   return __pyx_r;
 }
 

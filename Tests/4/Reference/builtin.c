@@ -50,7 +50,6 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Implementation of builtin */
 
-static PyObject *__pyx_n_open;
 static PyObject *__pyx_n_foo;
 
 
@@ -64,13 +63,11 @@ static PyObject *__pyx_f_7builtin_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   static char *__pyx_argnames[] = {0};
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "", __pyx_argnames)) return 0;
   __pyx_v_x = Py_None; Py_INCREF(Py_None);
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_open); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   __pyx_2 = PyTuple_New(1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   Py_INCREF(__pyx_n_foo);
   PyTuple_SET_ITEM(__pyx_2, 0, __pyx_n_foo);
-  __pyx_3 = PyObject_CallObject(__pyx_1, __pyx_2); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
+  __pyx_3 = PyObject_CallObject(((PyObject *)(&PyFile_Type)), __pyx_2); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;
-  Py_DECREF(__pyx_2); __pyx_2 = 0;
   Py_DECREF(__pyx_v_x);
   __pyx_v_x = __pyx_3;
   __pyx_3 = 0;
@@ -80,7 +77,6 @@ static PyObject *__pyx_f_7builtin_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   __pyx_L1:;
   Py_XDECREF(__pyx_1);
   Py_XDECREF(__pyx_2);
-  Py_XDECREF(__pyx_3);
   __Pyx_AddTraceback("builtin.f");
   __pyx_r = 0;
   __pyx_L0:;
@@ -90,7 +86,6 @@ static PyObject *__pyx_f_7builtin_f(PyObject *__pyx_self, PyObject *__pyx_args, 
 
 static __Pyx_InternTabEntry __pyx_intern_tab[] = {
   {&__pyx_n_foo, "foo"},
-  {&__pyx_n_open, "open"},
   {0, 0}
 };
 

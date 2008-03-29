@@ -187,14 +187,6 @@ static void __pyx_tp_dealloc_9extcoerce_Grail(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_9extcoerce_Grail(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_9extcoerce_Grail(PyObject *o) {
-  return 0;
-}
-
 static int __pyx_sq_ass_slice_9extcoerce_Grail(PyObject *o, Py_ssize_t i, Py_ssize_t j, PyObject *v) {
   if (v) {
     return __pyx_f_9extcoerce_5Grail___setslice__(o, i, j, v);
@@ -303,8 +295,8 @@ PyTypeObject __pyx_type_9extcoerce_Grail = {
   &__pyx_tp_as_buffer_Grail, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_9extcoerce_Grail, /*tp_traverse*/
-  __pyx_tp_clear_9extcoerce_Grail, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -337,14 +329,6 @@ static PyObject *__pyx_tp_new_9extcoerce_Swallow(PyTypeObject *t, PyObject *a, P
 
 static void __pyx_tp_dealloc_9extcoerce_Swallow(PyObject *o) {
   (*o->ob_type->tp_free)(o);
-}
-
-static int __pyx_tp_traverse_9extcoerce_Swallow(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_9extcoerce_Swallow(PyObject *o) {
-  return 0;
 }
 
 static struct PyMethodDef __pyx_methods_9extcoerce_Swallow[] = {
@@ -444,8 +428,8 @@ PyTypeObject __pyx_type_9extcoerce_Swallow = {
   &__pyx_tp_as_buffer_Swallow, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_9extcoerce_Swallow, /*tp_traverse*/
-  __pyx_tp_clear_9extcoerce_Swallow, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

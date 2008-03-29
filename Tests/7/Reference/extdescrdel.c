@@ -74,14 +74,6 @@ static void __pyx_tp_dealloc_11extdescrdel_Foo(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_11extdescrdel_Foo(PyObject *o, visitproc v, void *a) {
-  return 0;
-}
-
-static int __pyx_tp_clear_11extdescrdel_Foo(PyObject *o) {
-  return 0;
-}
-
 static int __pyx_tp_descr_set_11extdescrdel_Foo(PyObject *o, PyObject *i, PyObject *v) {
   if (v) {
     PyErr_SetString(PyExc_NotImplementedError, "__set__");
@@ -189,8 +181,8 @@ PyTypeObject __pyx_type_11extdescrdel_Foo = {
   &__pyx_tp_as_buffer_Foo, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_11extdescrdel_Foo, /*tp_traverse*/
-  __pyx_tp_clear_11extdescrdel_Foo, /*tp_clear*/
+  0, /*tp_traverse*/
+  0, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/

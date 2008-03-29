@@ -633,10 +633,11 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln(
 			"static void %s(PyObject *o) {"
 				% scope.mangle_internal("tp_dealloc"))
-		py_attrs = []
-		for entry in scope.var_entries:
-			if entry.type.is_pyobject and entry.name <> "__weakref__":
-				py_attrs.append(entry)
+		#py_attrs = []
+		#for entry in scope.var_entries:
+		#	if entry.type.is_pyobject and entry.name <> "__weakref__":
+		#		py_attrs.append(entry)
+		py_attrs = scope.pyattr_entries
 		if py_attrs:
 			self.generate_self_cast(scope, code)
 		self.generate_usr_dealloc_call(scope, code)
@@ -678,65 +679,71 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				"}")
 	
 	def generate_traverse_function(self, scope, code):
-		base_type = scope.parent_type.base_type
-		code.putln("")
-		code.putln(
-			"static int %s(PyObject *o, visitproc v, void *a) {"
-				% scope.mangle_internal("tp_traverse"))
-		py_attrs = []
-		for entry in scope.var_entries:
-			if entry.type.is_pyobject and entry.name <> "__weakref__":
-				py_attrs.append(entry)
-		if base_type or py_attrs:
-			code.putln(
-					"int e;")
+		py_attrs = scope.pyattr_entries
 		if py_attrs:
+			base_type = scope.parent_type.base_type
+			code.putln("")
+			code.putln(
+				"static int %s(PyObject *o, visitproc v, void *a) {"
+					% scope.mangle_internal("tp_traverse"))
+			code.putln(
+				"int e;")
 			self.generate_self_cast(scope, code)
-		if base_type:
-			code.putln(
-					"e = %s->tp_traverse(o, v, a); if (e) return e;" %
-						base_type.typeptr_cname)
-		for entry in py_attrs:
-			var_code = "p->%s" % entry.cname
-			code.putln(
-					"if (%s) {"
-						% var_code)
-			if entry.type.is_extension_type:
-				var_code = "((PyObject*)%s)" % var_code
-			code.putln(
-						"e = (*v)(%s, a); if (e) return e;" 
+			if base_type:
+				code.putln(
+					"traverseproc t;")
+				code.putln(
+						"if ((t = %s->tp_traverse)) {" %
+							base_type.typeptr_cname)
+				code.putln(
+							"e = t(o, v, a); if (e) return e;")
+				code.putln(
+						"}")
+			for entry in py_attrs:
+				var_code = "p->%s" % entry.cname
+				code.putln(
+						"if (%s) {"
 							% var_code)
+				if entry.type.is_extension_type:
+					var_code = "((PyObject*)%s)" % var_code
+				code.putln(
+							"e = (*v)(%s, a); if (e) return e;" 
+								% var_code)
+				code.putln(
+						"}")
 			code.putln(
-					"}")
-		code.putln(
-				"return 0;")
-		code.putln(
-			"}")
+					"return 0;")
+			code.putln(
+				"}")
 	
 	def generate_clear_function(self, scope, code):
-		base_type = scope.parent_type.base_type
-		code.putln("")
-		code.putln(
-			"static int %s(PyObject *o) {"
-				% scope.mangle_internal("tp_clear"))
-		py_attrs = []
-		for entry in scope.var_entries:
-			if entry.type.is_pyobject and entry.name <> "__weakref__":
-				py_attrs.append(entry)
+		py_attrs = scope.pyattr_entries
 		if py_attrs:
-			self.generate_self_cast(scope, code)
-		if base_type:
+			base_type = scope.parent_type.base_type
+			code.putln("")
 			code.putln(
-				"%s->tp_clear(o);" %
-					base_type.typeptr_cname)
-		for entry in py_attrs:
-			name = "p->%s" % entry.cname
-			code.put_xdecref(name, entry.type)
-			code.put_init_var_to_py_none(entry, "p->%s")
-		code.putln(
-			"return 0;")
-		code.putln(
-			"}")
+				"static int %s(PyObject *o) {"
+					% scope.mangle_internal("tp_clear"))
+			self.generate_self_cast(scope, code)
+			if base_type:
+				code.putln(
+					"inquiry c;")
+			if base_type:
+				code.putln(
+					"if ((c = %s->tp_clear)) {" %
+						base_type.typeptr_cname)
+				code.putln(
+						"c(o);")
+				code.putln(
+					"}")
+			for entry in py_attrs:
+				name = "p->%s" % entry.cname
+				code.put_xdecref(name, entry.type)
+				code.put_init_var_to_py_none(entry, "p->%s")
+			code.putln(
+				"return 0;")
+			code.putln(
+				"}")
 		
 	def generate_getitem_int_function(self, scope, code):
 		# This function is put into the sq_item slot when

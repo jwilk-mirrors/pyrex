@@ -52,7 +52,6 @@ static int __pyx_f_12builtinfuncs_f(void); /*proto*/
 /* Implementation of builtinfuncs */
 
 static PyObject *__pyx_n_spam;
-static PyObject *__pyx_n_open;
 static PyObject *__pyx_n_abs;
 
 
@@ -140,15 +139,13 @@ static int __pyx_f_12builtinfuncs_f(void) {
   __pyx_v_i = __pyx_5;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/builtinfuncs.pyx":16 */
-  __pyx_1 = __Pyx_GetName(__pyx_b, __pyx_n_open); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
   __pyx_6 = PyTuple_New(2); if (!__pyx_6) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
   Py_INCREF(__pyx_v_y);
   PyTuple_SET_ITEM(__pyx_6, 0, __pyx_v_y);
   Py_INCREF(__pyx_v_z);
   PyTuple_SET_ITEM(__pyx_6, 1, __pyx_v_z);
-  __pyx_7 = PyObject_CallObject(__pyx_1, __pyx_6); if (!__pyx_7) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
+  __pyx_7 = PyObject_CallObject(((PyObject*)(&PyFile_Type)), __pyx_6); if (!__pyx_7) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;
-  Py_DECREF(__pyx_6); __pyx_6 = 0;
   Py_DECREF(__pyx_v_x);
   __pyx_v_x = __pyx_7;
   __pyx_7 = 0;
@@ -185,7 +182,6 @@ static int __pyx_f_12builtinfuncs_f(void) {
   __pyx_L1:;
   Py_XDECREF(__pyx_1);
   Py_XDECREF(__pyx_6);
-  Py_XDECREF(__pyx_7);
   __Pyx_AddTraceback("builtinfuncs.f");
   __pyx_r = (-1);
   __pyx_L0:;
@@ -198,7 +194,6 @@ static int __pyx_f_12builtinfuncs_f(void) {
 
 static __Pyx_InternTabEntry __pyx_intern_tab[] = {
   {&__pyx_n_abs, "abs"},
-  {&__pyx_n_open, "open"},
   {&__pyx_n_spam, "spam"},
   {0, 0}
 };

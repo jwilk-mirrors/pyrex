@@ -1015,6 +1015,7 @@ class CClassScope(ClassScope):
 	#  member_table_cname    string
 	#  getset_table_cname    string
 	#  has_pyobject_attrs    boolean  Any PyObject attributes?
+	#  pyattr_entries        [Entry]
 	#  public_attr_entries   boolean  public/readonly attrs
 	#  property_entries      [Entry]
 	#  defined               boolean  Defined in .pxd file
@@ -1030,6 +1031,7 @@ class CClassScope(ClassScope):
 			self.member_table_cname = outer_scope.mangle(Naming.memtab_prefix, name)
 			self.getset_table_cname = outer_scope.mangle(Naming.gstab_prefix, name)
 		self.has_pyobject_attrs = 0
+		self.pyattr_entries = []
 		self.public_attr_entries = []
 		self.property_entries = []
 		self.inherited_var_entries = []
@@ -1065,8 +1067,9 @@ class CClassScope(ClassScope):
 		entry.visibility = visibility
 		entry.is_variable = 1
 		self.var_entries.append(entry)
-		if type.is_pyobject:
+		if type.is_pyobject and name <> "__weakref__":
 			self.has_pyobject_attrs = 1
+			self.pyattr_entries.append(entry)
 		if visibility not in ('private', 'public', 'readonly'):
 			error(pos,
 				"Attribute of extension type cannot be declared %s" % visibility)
