@@ -7,8 +7,9 @@ from Errors import warning, error, InternalError
 import Options
 import Naming
 import PyrexTypes
-from PyrexTypes import c_int_type, \
-	py_object_type, c_char_array_type, \
+from PyrexTypes import \
+	py_object_type, py_type_type, \
+	c_int_type, c_char_array_type, \
 	CEnumType, CStructOrUnionType, PyExtensionType
 from TypeSlots import \
 	pyfunction_signature, pymethod_signature, \
@@ -381,9 +382,11 @@ class Scope:
 		# variable entry, we use a read-only C global variable whose name is an
 		# expression that refers to the type object.
 		var_entry = Entry(name = entry.name,
-			type = py_object_type,
+			#type = py_object_type,
+			type = py_type_type,
 			pos = entry.pos,
-			cname = "((PyObject*)%s)" % entry.type.typeptr_cname)
+			#cname = "((PyObject*)%s)" % entry.type.typeptr_cname
+			cname = entry.type.typeptr_cname)
 		var_entry.is_variable = 1
 		var_entry.is_cglobal = 1
 		var_entry.is_readonly = 1
@@ -525,6 +528,13 @@ class BuiltinScope(Scope):
 	def declare_builtin(self, name, pos):
 		entry = self.declare(name, name, py_object_type, pos)
 		entry.is_builtin = 1
+		return entry
+	
+	def declare_builtin_constant(self, name, type, cname):
+		entry = self.declare(name, cname, type, None)
+		entry.is_variable = 1
+		entry.is_cglobal = 1
+		entry.is_readonly = 1
 		return entry
 	
 	def declare_builtin_cfunction(self, name, type, cname, python_equiv = None,

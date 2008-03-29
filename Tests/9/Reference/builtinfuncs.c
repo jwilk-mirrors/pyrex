@@ -82,6 +82,10 @@ static int __pyx_f_12builtinfuncs_f(void) {
   __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/builtinfuncs.pyx":5 */
+  __pyx_2 = PyObject_IsTrue(__pyx_v_x); if (__pyx_2 == -1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
+  __pyx_v_i = __pyx_2;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/builtinfuncs.pyx":5 */
   __pyx_2 = PyObject_DelAttr(__pyx_v_x,__pyx_n_spam); if (__pyx_2 == -1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/builtinfuncs.pyx":6 */

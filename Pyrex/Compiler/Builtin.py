@@ -6,6 +6,20 @@ from Symtab import BuiltinScope
 from TypeSlots import Signature
 from PyrexTypes import py_type_type
 
+builtin_constant_table = [
+	# name,         type,  C API name
+	("buffer",      "t",   "PyBuffer_Type"),
+	("enumerate",   "t",   "PyEnum_Type"),
+	("file",        "t",   "PyFile_Type"),
+	("float",       "t",   "PyFloat_Type"),
+	("int",         "t",   "PyInt_Type"),
+	("long",        "t",   "PyLong_Type"),
+	("property",    "t",   "PyProperty_Type"),
+	("str",         "t",   "PyString_Type"),
+	("tuple",       "t",   "PyTuple_Type"),
+	("xrange",      "t",   "PyRange_Type"),
+]
+
 builtin_function_table = [
 	# name,        args,   return,  C API func,           py equiv = "*"
 	('abs',        "O",    "O",     "PyNumber_Absolute"),
@@ -90,23 +104,23 @@ slice_members = [
 
 builtin_type_table = [
 	# name,  objstruct,      typeobj,      methods,        members
-#  bool - doing this as a function
-#  buffer
+#  bool - function
+#  buffer - constant
 #  classmethod
 	("dict", "PyDictObject", "PyDict_Type", dict_methods),
-#  enumerate
-#  file
-#  float
-#  int
+#  enumerate - constant
+#  file - constant
+#  float - constant
+#  int - constant
 	("list", "PyListObject", "PyList_Type", list_methods),
-#  long
+#  long - constant
 #  object
-#  property
+#  property - constant
 	("slice", "PySliceObject", "PySlice_Type", slice_methods, slice_members),
 #  staticmethod
 #  super
-#  str
-#  tuple
+#  str - constant
+#  tuple - constant
 	("type",  "PyTypeObject",  "PyType_Type", []),
 #  xrange
 ]

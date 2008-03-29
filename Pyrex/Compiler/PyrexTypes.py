@@ -157,12 +157,14 @@ class CTypedefType(TypeWrapper):
 	#
 	#  qualified_name      string
 	#  typedef_cname       string
+	#  typedef_base_type   PyrexType
 	
 	is_typedef = 1
 	
 	def __init__(self, cname, base_type):
 		TypeWrapper.__init__(self, base_type)
 		self.typedef_cname = cname
+		self.typedef_base_type = base_type
 	
 	def declaration_code(self, entity_code, 
 			for_display = 0, dll_linkage = None, pyrex = 0):

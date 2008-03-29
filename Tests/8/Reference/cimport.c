@@ -127,7 +127,6 @@ PyMODINIT_FUNC initcimport(void) {
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/8/cimport.pyx":10 */
   __pyx_1 = PyObject_CallObject(((PyObject*)__pyx_ptype_3pkg_4eggs_Eggs), 0); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
-  if (!__Pyx_TypeTest(__pyx_1, __pyx_ptype_3pkg_4eggs_Eggs)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
   Py_DECREF(((PyObject *)__pyx_v_7cimport_fried));
   __pyx_v_7cimport_fried = ((struct __pyx_obj_3pkg_4eggs_Eggs *)__pyx_1);
   __pyx_1 = 0;

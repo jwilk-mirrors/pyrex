@@ -19,6 +19,4 @@ cdef int f() except -1:
 	x = reload(y)
 	x = repr(y)
 	setattr(x, y, z)
-	#i = typecheck(x, y)
-	#i = issubtype(x, y)
 	x = abs
