@@ -8,16 +8,73 @@ from PyrexTypes import py_type_type
 
 builtin_constant_table = [
 	# name,         type,  C API name
-	("buffer",      "t",   "PyBuffer_Type"),
-	("enumerate",   "t",   "PyEnum_Type"),
-	("file",        "t",   "PyFile_Type"),
-	("float",       "t",   "PyFloat_Type"),
-	("int",         "t",   "PyInt_Type"),
-	("long",        "t",   "PyLong_Type"),
-	("property",    "t",   "PyProperty_Type"),
-	("str",         "t",   "PyString_Type"),
-	("tuple",       "t",   "PyTuple_Type"),
-	("xrange",      "t",   "PyRange_Type"),
+	("buffer",      "t",   "(&PyBuffer_Type)"),
+	("enumerate",   "t",   "(&PyEnum_Type)"),
+	("file",        "t",   "(&PyFile_Type)"),
+	("float",       "t",   "(&PyFloat_Type)"),
+	("int",         "t",   "(&PyInt_Type)"),
+	("long",        "t",   "(&PyLong_Type)"),
+	("open",        "t",   "(&PyFile_Type)"),
+	("property",    "t",   "(&PyProperty_Type)"),
+	("str",         "t",   "(&PyString_Type)"),
+	("tuple",       "t",   "(&PyTuple_Type)"),
+	("xrange",      "t",   "(&PyRange_Type)"),
+	
+	#("True",        "O",   "Py_True"),
+	#("False",       "O",   "Py_False"),
+	#("Ellipsis",    "O",   "Py_Ellipsis"),
+
+	("Exception",             "O", "PyExc_Exception"),
+	("StopIteration",         "O", "PyExc_StopIteration"),
+	("StandardError",         "O", "PyExc_StandardError"),
+	("ArithmeticError",       "O", "PyExc_ArithmeticError"),
+	("LookupError",           "O", "PyExc_LookupError"),
+
+	("AssertionError",        "O", "PyExc_AssertionError"),
+	("AssertionError",        "O", "PyExc_AssertionError"),
+	("EOFError",              "O", "PyExc_EOFError"),
+	("FloatingPointError",    "O", "PyExc_FloatingPointError"),
+	("EnvironmentError",      "O", "PyExc_EnvironmentError"),
+	("IOError",               "O", "PyExc_IOError"),
+	("OSError",               "O", "PyExc_OSError"),
+	("ImportError",           "O", "PyExc_ImportError"),
+	("IndexError",            "O", "PyExc_IndexError"),
+	("KeyError",              "O", "PyExc_KeyError"),
+	("KeyboardInterrupt",     "O", "PyExc_KeyboardInterrupt"),
+	("MemoryError",           "O", "PyExc_MemoryError"),
+	("NameError",             "O", "PyExc_NameError"),
+	("OverflowError",         "O", "PyExc_OverflowError"),
+	("RuntimeError",          "O", "PyExc_RuntimeError"),
+	("NotImplementedError",   "O", "PyExc_NotImplementedError"),
+	("SyntaxError",           "O", "PyExc_SyntaxError"),
+	("IndentationError",      "O", "PyExc_IndentationError"),
+	("TabError",              "O", "PyExc_TabError"),
+	("ReferenceError",        "O", "PyExc_ReferenceError"),
+	("SystemError",           "O", "PyExc_SystemError"),
+	("SystemExit",            "O", "PyExc_SystemExit"),
+	("TypeError",             "O", "PyExc_TypeError"),
+	("UnboundLocalError",     "O", "PyExc_UnboundLocalError"),
+	("UnicodeError",          "O", "PyExc_UnicodeError"),
+	("UnicodeEncodeError",    "O", "PyExc_UnicodeEncodeError"),
+	("UnicodeDecodeError",    "O", "PyExc_UnicodeDecodeError"),
+	("UnicodeTranslateError", "O", "PyExc_UnicodeTranslateError"),
+	("ValueError",            "O", "PyExc_ValueError"),
+	("ZeroDivisionError",     "O", "PyExc_ZeroDivisionError"),
+	# Not including these by default because they are platform-specific
+	#("WindowsError",          "O", "PyExc_WindowsError"),
+	#("VMSError",              "O", "PyExc_VMSError"),
+
+	("MemoryErrorInst",       "O", "PyExc_MemoryErrorInst"),
+
+	("Warning",                   "O", "PyExc_Warning"),
+	("UserWarning",               "O", "PyExc_UserWarning"),
+	("DeprecationWarning",        "O", "PyExc_DeprecationWarning"),
+	("PendingDeprecationWarning", "O", "PyExc_PendingDeprecationWarning"),
+	("SyntaxWarning",             "O", "PyExc_SyntaxWarning"),
+	("OverflowWarning",           "O", "PyExc_OverflowWarning"),
+	("RuntimeWarning",            "O", "PyExc_RuntimeWarning"),
+	("FutureWarning",             "O", "PyExc_FutureWarning"),
+
 ]
 
 builtin_function_table = [
@@ -122,7 +179,7 @@ builtin_type_table = [
 #  str - constant
 #  tuple - constant
 	("type",  "PyTypeObject",  "PyType_Type", []),
-#  xrange
+#  xrange - constant
 ]
 
 # Builtin types
@@ -152,6 +209,10 @@ builtin_utility_code = {
 
 builtin_scope = BuiltinScope()
 
+def declare_builtin_constant(name, typecode, cname):
+	type = Signature.format_map[typecode]
+	builtin_scope.declare_builtin_constant(name, type, cname)
+
 def declare_builtin_func(name, args, ret, cname, py_equiv = "*"):
 	sig = Signature(args, ret)
 	type = sig.function_type()
@@ -175,6 +236,10 @@ def declare_builtin_type(name, objstruct, typeobj, methods, members = []):
 	for desc in members:
 		declare_builtin_member(type, *desc)
 
+def init_builtin_constants():
+	for desc in builtin_constant_table:
+		declare_builtin_constant(*desc)
+
 def init_builtin_funcs():
 	for desc in builtin_function_table:
 		declare_builtin_func(*desc)
@@ -185,6 +250,7 @@ def init_builtin_types():
 	py_type_type.define(builtin_scope.find_type("type"))
 
 def init_builtins():
+	init_builtin_constants()
 	init_builtin_funcs()
 	init_builtin_types()
 
