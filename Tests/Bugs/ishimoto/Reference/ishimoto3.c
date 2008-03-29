@@ -244,8 +244,10 @@ static int __pyx_tp_traverse_9ishimoto3_C2(PyObject *o, visitproc v, void *a) {
 
 static int __pyx_tp_clear_9ishimoto3_C2(PyObject *o) {
   struct __pyx_obj_9ishimoto3_C2 *p = (struct __pyx_obj_9ishimoto3_C2 *)o;
-  Py_XDECREF(((PyObject *)p->c1));
+  PyObject *t;
+  t = ((PyObject *)p->c1); 
   p->c1 = ((struct __pyx_obj_9ishimoto3_C1 *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

@@ -88,8 +88,10 @@ static int __pyx_tp_traverse_6ewing8_Blarg(PyObject *o, visitproc v, void *a) {
 
 static int __pyx_tp_clear_6ewing8_Blarg(PyObject *o) {
   struct __pyx_obj_6ewing8_Blarg *p = (struct __pyx_obj_6ewing8_Blarg *)o;
-  Py_XDECREF(((PyObject *)p->b));
+  PyObject *t;
+  t = ((PyObject *)p->b); 
   p->b = ((__pyx_t_6ewing8_BlargType)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

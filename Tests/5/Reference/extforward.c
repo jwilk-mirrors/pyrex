@@ -218,8 +218,10 @@ static int __pyx_tp_traverse_10extforward_Grail(PyObject *o, visitproc v, void *
 
 static int __pyx_tp_clear_10extforward_Grail(PyObject *o) {
   struct __pyx_obj_10extforward_Grail *p = (struct __pyx_obj_10extforward_Grail *)o;
-  Py_XDECREF(((PyObject *)p->spam));
+  PyObject *t;
+  t = ((PyObject *)p->spam); 
   p->spam = ((struct __pyx_obj_10extforward_Spam *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

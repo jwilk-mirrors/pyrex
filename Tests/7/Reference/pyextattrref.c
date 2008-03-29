@@ -99,8 +99,10 @@ static int __pyx_tp_traverse_12pyextattrref_Eggs(PyObject *o, visitproc v, void 
 
 static int __pyx_tp_clear_12pyextattrref_Eggs(PyObject *o) {
   struct __pyx_obj_12pyextattrref_Eggs *p = (struct __pyx_obj_12pyextattrref_Eggs *)o;
-  Py_XDECREF(p->ham);
+  PyObject *t;
+  t = p->ham; 
   p->ham = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 
@@ -253,8 +255,10 @@ static int __pyx_tp_traverse_12pyextattrref_Spam(PyObject *o, visitproc v, void 
 
 static int __pyx_tp_clear_12pyextattrref_Spam(PyObject *o) {
   struct __pyx_obj_12pyextattrref_Spam *p = (struct __pyx_obj_12pyextattrref_Spam *)o;
-  Py_XDECREF(((PyObject *)p->eggs));
+  PyObject *t;
+  t = ((PyObject *)p->eggs); 
   p->eggs = ((struct __pyx_obj_12pyextattrref_Eggs *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

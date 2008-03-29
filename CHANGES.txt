@@ -20,6 +20,8 @@ Enhancements:
 	
 	- No tp_traverse and tp_clear functions generated for types
 		without Python attributes.
+	
+	- Safer code generated in tp_clear. [Stefan Behnel]
 
 Bug fixes:
 

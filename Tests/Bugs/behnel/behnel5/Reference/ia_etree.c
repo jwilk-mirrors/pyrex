@@ -127,8 +127,10 @@ static int __pyx_tp_traverse_8ia_etree__BaseParser(PyObject *o, visitproc v, voi
 
 static int __pyx_tp_clear_8ia_etree__BaseParser(PyObject *o) {
   struct __pyx_obj_8ia_etree__BaseParser *p = (struct __pyx_obj_8ia_etree__BaseParser *)o;
-  Py_XDECREF(((PyObject *)p->bunny));
+  PyObject *t;
+  t = ((PyObject *)p->bunny); 
   p->bunny = ((struct __pyx_obj_8ia_etree_Vorpal *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 
@@ -281,8 +283,10 @@ static int __pyx_tp_traverse_8ia_etree__Document(PyObject *o, visitproc v, void 
 
 static int __pyx_tp_clear_8ia_etree__Document(PyObject *o) {
   struct LxmlDocument *p = (struct LxmlDocument *)o;
-  Py_XDECREF(((PyObject *)p->_parser));
+  PyObject *t;
+  t = ((PyObject *)p->_parser); 
   p->_parser = ((struct __pyx_obj_8ia_etree__BaseParser *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 
@@ -435,8 +439,10 @@ static int __pyx_tp_traverse_8ia_etree__Element(PyObject *o, visitproc v, void *
 
 static int __pyx_tp_clear_8ia_etree__Element(PyObject *o) {
   struct LxmlElement *p = (struct LxmlElement *)o;
-  Py_XDECREF(((PyObject *)p->_doc));
+  PyObject *t;
+  t = ((PyObject *)p->_doc); 
   p->_doc = ((struct LxmlDocument *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

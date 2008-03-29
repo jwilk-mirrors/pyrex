@@ -218,8 +218,10 @@ static int __pyx_tp_traverse_5baas6_DoIHaveGCDel(PyObject *o, visitproc v, void 
 
 static int __pyx_tp_clear_5baas6_DoIHaveGCDel(PyObject *o) {
   struct __pyx_obj_5baas6_DoIHaveGCDel *p = (struct __pyx_obj_5baas6_DoIHaveGCDel *)o;
-  Py_XDECREF(p->foo);
+  PyObject *t;
+  t = p->foo; 
   p->foo = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

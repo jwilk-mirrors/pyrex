@@ -79,8 +79,10 @@ static int __pyx_tp_traverse_9coventry1_Tst(PyObject *o, visitproc v, void *a) {
 
 static int __pyx_tp_clear_9coventry1_Tst(PyObject *o) {
   struct __pyx_obj_9coventry1_Tst *p = (struct __pyx_obj_9coventry1_Tst *)o;
-  Py_XDECREF(p->foo);
+  PyObject *t;
+  t = p->foo; 
   p->foo = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

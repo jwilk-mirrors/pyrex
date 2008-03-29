@@ -4,7 +4,7 @@
 
 import os, time
 from cStringIO import StringIO
-from PyrexTypes import CPtrType
+from PyrexTypes import CPtrType, py_object_type, typecast
 
 import Code
 import Naming
@@ -725,10 +725,11 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				"static int %s(PyObject *o) {"
 					% scope.mangle_internal("tp_clear"))
 			self.generate_self_cast(scope, code)
+			code.putln(
+					"PyObject *t;")
 			if base_type:
 				code.putln(
 					"inquiry c;")
-			if base_type:
 				code.putln(
 					"if ((c = %s->tp_clear)) {" %
 						base_type.typeptr_cname)
@@ -738,8 +739,13 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 					"}")
 			for entry in py_attrs:
 				name = "p->%s" % entry.cname
-				code.put_xdecref(name, entry.type)
+				code.putln(
+					"t = %s; " %
+						typecast(py_object_type, entry.type, name))
 				code.put_init_var_to_py_none(entry, "p->%s")
+				#code.put_xdecref(name, entry.type)
+				code.putln(
+					"Py_XDECREF(t);")
 			code.putln(
 				"return 0;")
 			code.putln(

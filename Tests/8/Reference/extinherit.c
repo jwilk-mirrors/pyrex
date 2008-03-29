@@ -133,8 +133,10 @@ static int __pyx_tp_traverse_10extinherit_Parrot(PyObject *o, visitproc v, void 
 
 static int __pyx_tp_clear_10extinherit_Parrot(PyObject *o) {
   struct __pyx_obj_10extinherit_Parrot *p = (struct __pyx_obj_10extinherit_Parrot *)o;
-  Py_XDECREF(p->name);
+  PyObject *t;
+  t = p->name; 
   p->name = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 
@@ -291,12 +293,14 @@ static int __pyx_tp_traverse_10extinherit_Norwegian(PyObject *o, visitproc v, vo
 
 static int __pyx_tp_clear_10extinherit_Norwegian(PyObject *o) {
   struct __pyx_obj_10extinherit_Norwegian *p = (struct __pyx_obj_10extinherit_Norwegian *)o;
+  PyObject *t;
   inquiry c;
   if ((c = __pyx_ptype_10extinherit_Parrot->tp_clear)) {
     c(o);
   }
-  Py_XDECREF(p->plumage_colour);
+  t = p->plumage_colour; 
   p->plumage_colour = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

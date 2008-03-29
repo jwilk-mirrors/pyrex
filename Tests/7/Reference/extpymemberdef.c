@@ -96,10 +96,13 @@ static int __pyx_tp_traverse_14extpymemberdef_Spam(PyObject *o, visitproc v, voi
 
 static int __pyx_tp_clear_14extpymemberdef_Spam(PyObject *o) {
   struct __pyx_obj_14extpymemberdef_Spam *p = (struct __pyx_obj_14extpymemberdef_Spam *)o;
-  Py_XDECREF(p->o);
+  PyObject *t;
+  t = p->o; 
   p->o = Py_None; Py_INCREF(Py_None);
-  Py_XDECREF(((PyObject *)p->e));
+  Py_XDECREF(t);
+  t = ((PyObject *)p->e); 
   p->e = ((struct __pyx_obj_14extpymemberdef_Spam *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

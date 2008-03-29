@@ -249,8 +249,10 @@ static int __pyx_tp_traverse_7pinard5_Curseur(PyObject *o, visitproc v, void *a)
 
 static int __pyx_tp_clear_7pinard5_Curseur(PyObject *o) {
   struct __pyx_obj_7pinard5_Curseur *p = (struct __pyx_obj_7pinard5_Curseur *)o;
-  Py_XDECREF(((PyObject *)p->tri));
+  PyObject *t;
+  t = ((PyObject *)p->tri); 
   p->tri = ((struct __pyx_obj_7pinard5_Tri *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

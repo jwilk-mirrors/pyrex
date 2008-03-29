@@ -233,8 +233,10 @@ static int __pyx_tp_traverse_7exttype_Spam(PyObject *o, visitproc v, void *a) {
 
 static int __pyx_tp_clear_7exttype_Spam(PyObject *o) {
   struct __pyx_obj_7exttype_Spam *p = (struct __pyx_obj_7exttype_Spam *)o;
-  Py_XDECREF(p->eggs);
+  PyObject *t;
+  t = p->eggs; 
   p->eggs = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

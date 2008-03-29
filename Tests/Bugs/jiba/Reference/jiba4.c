@@ -79,8 +79,10 @@ static int __pyx_tp_traverse_5jiba4_A(PyObject *o, visitproc v, void *a) {
 
 static int __pyx_tp_clear_5jiba4_A(PyObject *o) {
   struct __pyx_obj_5jiba4_A *p = (struct __pyx_obj_5jiba4_A *)o;
-  Py_XDECREF(p->x);
+  PyObject *t;
+  t = p->x; 
   p->x = Py_None; Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 

@@ -130,8 +130,10 @@ static int __pyx_tp_traverse_5jiba3_Position(PyObject *o, visitproc v, void *a) 
 
 static int __pyx_tp_clear_5jiba3_Position(PyObject *o) {
   struct __pyx_obj_5jiba3_Position *p = (struct __pyx_obj_5jiba3_Position *)o;
-  Py_XDECREF(((PyObject *)p->parent));
+  PyObject *t;
+  t = ((PyObject *)p->parent); 
   p->parent = ((struct __pyx_obj_5jiba3_CoordSyst *)Py_None); Py_INCREF(Py_None);
+  Py_XDECREF(t);
   return 0;
 }
 
