@@ -56,6 +56,9 @@ Bug fixes:
 	
 	- Improved the error message from attempting to declare a struct or
 	  union member as a function. [Yong Sun]
+	
+	- Referring to an undefined name in a compile-time constant crashed
+	  the compiler. [Stefan Behnel]
 
 
 0.9.6.4
