@@ -953,6 +953,12 @@ class StructOrUnionScope(Scope):
 			error(pos,
 				"C struct/union member cannot be declared %s" % visibility)
 		return entry
+	
+	def declare_cfunction(self, name, type, pos, *args, **kwds):
+		error(pos, "C struct/union member cannot be a function")
+		#  Define it anyway to suppress further errors
+		kwds['defining'] = 1
+		Scope.declare_cfunction(self, name, type, pos, *args, **kwds)
 
 
 class ClassScope(Scope):

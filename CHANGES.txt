@@ -53,6 +53,9 @@ Bug fixes:
 	
 	- Values in enum declaration were not being checked for appropriate type.
 		[Simon Burton]
+	
+	- Improved the error message from attempting to declare a struct or
+	  union member as a function. [Yong Sun]
 
 
 0.9.6.4
@@ -479,8 +482,7 @@ Improvements:
 	
 	- Generated code should be compilable as either C or C++.
 		When compiling as C++, "extern C" is used where appropriate
-		to preserve linkage semantics. C++ functions still cannot
-		be called yet.
+		to preserve linkage semantics.
 	
 	- An extension type can be made weak-referenceable by
 		giving it a C attribute of type object called __weakref__.

@@ -143,7 +143,10 @@ where it is assigned. Unlike Python, however, a name which is referred
 to but not declared or assigned is assumed to reside in the <i>builtin
 scope, </i>not the module scope.
 Names added to the module dictionary at run time will not shadow such
-names.<br><br>This can result in some odd things happening under rare circumstances, for example<br><br><div style="margin-left: 40px;"><tt>print __name__</tt></div> <p>In Pyrex, instead of printing the name of the current module, this prints the name of the builtins module. The reason is that because Pyrex hasn't seen a declaration of anything called <span style="font-family: monospace;">__name__</span> in the module, it's assumed to reside in the builtins. The solution is to use a <span style="font-weight: bold;">global</span> statement to declare <span style="font-family: monospace;">__name__</span> as a module-level name:<tt></tt></p><p style="margin-left: 40px;"><tt>global
+names.<br><br>This can result in some odd things happening under rare circumstances, for example<br><br><div style="margin-left: 40px;"><tt>print __name__</tt></div> <p>In
+Pyrex, instead of printing the name of the current module, this prints
+the name of the builtins module. The reason is that because Pyrex
+hasn't seen a declaration of anything called <span style="font-family: monospace;">__name__</span> in the module, it's assumed to reside in the builtins. The solution is to use a <span style="font-weight: bold;">global</span> statement to declare <span style="font-family: monospace;">__name__</span> as a module-level name:<tt></tt></p><p style="margin-left: 40px;"><tt>global
 __name__</tt><tt><br>print __name__</tt></p> Another
 consequence of these rules is that the module-level scope behaves the
 same way as a Python local scope if you refer to a variable before
@@ -202,15 +205,13 @@ i in range(n):</tt> <br> <tt>&nbsp;&nbsp;&nbsp;
 and <tt>n</tt> are declared as
 C integers, because <tt>range</tt> is a Python function.
 For iterating over ranges of integers, Pyrex has another form of
-for-loop: <blockquote><tt>for i from 0 &lt;= i
+for-loop: <blockquote><tt>for 0 &lt;= i
 &lt; n:</tt> <br> <tt>&nbsp;&nbsp;&nbsp;
-...</tt></blockquote> If the loop variable and the lower
+...</tt></blockquote> Provided the loop variable and the lower
 and upper bounds are all C integers, this form of loop will be much
 faster, because Pyrex will translate it into pure C code. <p>Some
-things to note about the <tt>for-from</tt> loop: </p>
-<ul><li> The target expression must be a variable name.</li><li>
-The name between the lower and upper bounds must be the same as
-the target name.</li><li> The direction of iteration is
+things to note about the integer for-loop: </p>
+<ul><li> The target expression (the middle one) must be a variable name.</li><li>The direction of iteration is
 determined by the relations. If they are both from the set {<tt>&lt;</tt>,
 <tt>&lt;=</tt>} then it is upwards; if they are both
 from the set {<tt>&gt;</tt>, <tt>&gt;=</tt>}

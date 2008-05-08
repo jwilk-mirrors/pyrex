@@ -382,7 +382,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			code.putln("")
 			code.putln(header)
 			var_entries = scope.var_entries
-			if not var_entries:
+			if not var_entries and not scope.cfunc_entries:
 				error(entry.pos,
 					"Empty struct or union definition not allowed outside a"
 					" 'cdef extern from' block")
