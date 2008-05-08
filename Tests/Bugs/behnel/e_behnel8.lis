@@ -1,0 +1,2 @@
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/behnel/e_behnel8.pyx:1:24: Compile-time name 'nosuchidentifier' not defined
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/behnel/e_behnel8.pyx:4:5: Invalid type for compile-time constant: NoneType
