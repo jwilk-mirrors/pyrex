@@ -28,6 +28,9 @@ Enhancements:
 	
 	- Integer for-loop syntax streamlined to 'for x < i < y'.
 
+	- Appropriate C code generated for compile-time expressions
+	  evaluating to float nan, inf and -inf. [Stefan Behnel]
+
 Bug fixes:
 
 	- Value raised by assert statement now only evaluated if the
