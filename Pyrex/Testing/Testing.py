@@ -402,16 +402,14 @@ def munge_c_line(line):
 	if line == "Py_ssize_t__pyx_x;":
 		line = ""
 	
-	# MINOR HACK: ignore gcc3.3 bug workaround lines
-	if "__pyx_gcc33_" in line:
-		line = ""
-	
-	# MINOR HACK: allow for 2.3/2.5 difference in module-level traceback lines
+	## MINOR HACK: ignore gcc3.3 bug workaround lines
+	#if "__pyx_gcc33_" in line:
+	#	line = ""
 	
 	# ------ End of standing hacks -----
 	
-	# HACK: Ignore Py_TPFLAGS_HAVE_GC
-	line = line.replace("|Py_TPFLAGS_HAVE_GC", "")
+	## HACK: Ignore Py_TPFLAGS_HAVE_GC
+	#line = line.replace("|Py_TPFLAGS_HAVE_GC", "")
 	
 	# ---------- END HACKS ----------
 
