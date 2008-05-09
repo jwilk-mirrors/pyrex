@@ -72,10 +72,8 @@ static PyObject *__pyx_f_3del_f(PyObject *__pyx_self, PyObject *__pyx_args, PyOb
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/3/del.pyx":5 */
   __pyx_1 = PyObject_GetItem(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
-  __pyx_2 = PyInt_FromLong(42); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
-  if (PyObject_DelItem(__pyx_1, __pyx_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
+  if (PySequence_DelItem(__pyx_1, 42) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;
-  Py_DECREF(__pyx_2); __pyx_2 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/3/del.pyx":6 */
   if (PyObject_DelAttr(__pyx_v_a, __pyx_n_spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
@@ -89,7 +87,6 @@ static PyObject *__pyx_f_3del_f(PyObject *__pyx_self, PyObject *__pyx_args, PyOb
   goto __pyx_L0;
   __pyx_L1:;
   Py_XDECREF(__pyx_1);
-  Py_XDECREF(__pyx_2);
   __Pyx_AddTraceback("del.f");
   __pyx_r = 0;
   __pyx_L0:;

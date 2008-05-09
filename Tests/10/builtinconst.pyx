@@ -56,7 +56,7 @@ cdef int f() except -1:
 	x = DeprecationWarning
 	x = PendingDeprecationWarning
 	x = SyntaxWarning
-	x = OverflowWarning
+	#x = OverflowWarning # Does not seem to exist in 2.5
 	x = RuntimeWarning
 	x = FutureWarning
 	typecheck(x, Exception)

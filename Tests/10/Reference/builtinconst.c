@@ -335,11 +335,6 @@ static int __pyx_f_12builtinconst_f(void) {
   Py_DECREF(__pyx_v_x);
   __pyx_v_x = PyExc_SyntaxWarning;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/builtinconst.pyx":59 */
-  Py_INCREF(PyExc_OverflowWarning);
-  Py_DECREF(__pyx_v_x);
-  __pyx_v_x = PyExc_OverflowWarning;
-
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/builtinconst.pyx":60 */
   Py_INCREF(PyExc_RuntimeWarning);
   Py_DECREF(__pyx_v_x);

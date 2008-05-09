@@ -1198,11 +1198,21 @@ class IndexNode(ExprNode):
 	
 	def generate_deletion_code(self, code):
 		self.generate_subexpr_evaluation_code(code)
+		#if self.type.is_pyobject:
+		if self.index.type.is_int:
+			function = "PySequence_DelItem"
+			index_code = self.index.result_code
+		else:
+			function = "PyObject_DelItem"
+			index_code = self.index.py_result()
 		code.putln(
-			"if (PyObject_DelItem(%s, %s) < 0) %s" % (
+			"if (%s(%s, %s) < 0) %s" % (
+				function,
 				self.base.py_result(),
-				self.index.py_result(),
+				index_code,
 				code.error_goto(self.pos)))
+		#else:
+		#	error(self.pos, "Cannot delete non-Python variable")
 		self.generate_subexpr_disposal_code(code)
 
 

@@ -474,12 +474,14 @@ class CEnumDefItemNode(StatNode):
 	#  value    ExprNode or None
 	
 	def analyse_declarations(self, env, enum_entry):
-		if self.value:
-			self.value.analyse_const_expression(env)
-			if not self.value.type.is_int:
+		value_node = self.value
+		if value_node:
+			value_node.analyse_const_expression(env)
+			type = value_node.type
+			if not (type.is_int or type.is_enum):
 				error(self.pos,
-					"Type '%s' is not a valid enum value" % self.value.type)
-			value = self.value.result_code
+					"Type '%s' is not a valid enum value" % type)
+			value = value_node.result_code
 		else:
 			value = self.name
 		entry = env.declare_const(self.name, enum_entry.type, 

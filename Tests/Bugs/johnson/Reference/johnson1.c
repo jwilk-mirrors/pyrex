@@ -71,9 +71,7 @@ static void __pyx_f_8johnson1_func(void) {
   __pyx_2 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/johnson/johnson1.pyx":7 */
-  __pyx_1 = PyInt_FromLong(0); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
-  __pyx_2 = PyObject_GetItem(__pyx_v_map, __pyx_1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __pyx_1 = PySequence_GetItem(__pyx_v_map, 0); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
   __pyx_3 = ((__pyx_t_8johnson1_foo)PyInt_AsLong(__pyx_2)); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   __pyx_v_x = __pyx_3;

@@ -10,6 +10,9 @@ from Pyrex.Compiler import Main
 from Pyrex.Utils import replace_suffix
 from Pyrex.Compiler.Main import CCompilerError
 
+from Pyrex.Compiler import ModuleNode
+ModuleNode.testing_mode = 1
+
 platform = sys.platform
 if platform == "mac":
 	from Pyrex.Testing.MacTesting import run_python_file

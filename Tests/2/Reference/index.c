@@ -90,9 +90,7 @@ static PyObject *__pyx_f_5index_f(PyObject *__pyx_self, PyObject *__pyx_args, Py
   __pyx_v_int1 = (__pyx_v_array1[__pyx_2]);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/2/index.pyx":11 */
-  __pyx_1 = PyInt_FromLong(__pyx_v_int3); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; goto __pyx_L1;}
-  __pyx_3 = PyObject_GetItem(__pyx_v_obj2, __pyx_1); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; goto __pyx_L1;}
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __pyx_3 = PySequence_GetItem(__pyx_v_obj2, __pyx_v_int3); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; goto __pyx_L1;}
   Py_DECREF(__pyx_v_obj1);
   __pyx_v_obj1 = __pyx_3;
   __pyx_3 = 0;
@@ -105,9 +103,7 @@ static PyObject *__pyx_f_5index_f(PyObject *__pyx_self, PyObject *__pyx_args, Py
   (__pyx_v_array1[__pyx_2]) = __pyx_v_int3;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/2/index.pyx":14 */
-  __pyx_1 = PyInt_FromLong(__pyx_v_int2); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; goto __pyx_L1;}
-  if (PyObject_SetItem(__pyx_v_obj1, __pyx_1, __pyx_v_obj3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; goto __pyx_L1;}
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  if (PySequence_SetItem(__pyx_v_obj1, __pyx_v_int2, __pyx_v_obj3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/2/index.pyx":15 */
   __pyx_3 = PyInt_FromLong(42); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 15; goto __pyx_L1;}
@@ -118,7 +114,6 @@ static PyObject *__pyx_f_5index_f(PyObject *__pyx_self, PyObject *__pyx_args, Py
   goto __pyx_L0;
   __pyx_L1:;
   Py_XDECREF(__pyx_1);
-  Py_XDECREF(__pyx_3);
   __Pyx_AddTraceback("index.f");
   __pyx_r = 0;
   __pyx_L0:;
