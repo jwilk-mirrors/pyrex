@@ -25,7 +25,7 @@ verbose = 0
 class Context:
 	#  This class encapsulates the context needed for compiling
 	#  one or more Pyrex implementation files along with their
-	#  associated and imported declaration files. It includes
+	#  associated and imported declaration files. It holds
 	#  the root of the module import namespace and the list
 	#  of directories to search for include files.
 	#
@@ -33,7 +33,6 @@ class Context:
 	#  include_directories   [string]
 	
 	def __init__(self, include_directories):
-		#self.modules = {"__builtin__" : BuiltinScope()}
 		self.modules = {"__builtin__" : Builtin.builtin_scope}
 		self.include_directories = include_directories
 		
@@ -80,7 +79,7 @@ class Context:
 				if debug_find_module:
 					print "......found ", pxd_pathname
 				if not pxd_pathname and need_pxd:
-					error(pos, "'%s.pxd' not found" % module_name)
+					error(pos, "Cannot find .pxd file for module '%s'" % module_name)
 			if pxd_pathname:
 				try:
 					if debug_find_module:
@@ -91,11 +90,71 @@ class Context:
 					pass
 		return scope
 	
-	def find_pxd_file(self, module_name, pos):
-		# Search include directories for the .pxd file
-		# corresponding to the given (full) module name.
-		pxd_filename = "%s.pxd" % module_name
-		return self.search_include_directories(pxd_filename, pos)
+	def find_pxd_file(self, qualified_name, pos):
+		#  Search include directories for the .pxd file
+		#  corresponding to the given fully-qualified module name.
+		#  Will find either a dotted filename or a file in a
+		#  package directory. If a source file position is given,
+		#  the directory containing the source file is searched first
+		#  for a dotted filename, and its containing package root
+		#  directory is searched first for a non-dotted filename.
+		dotted_pxd_filename = "%s.pxd" % qualified_name
+		if pos:
+			here = os.path.dirname(pos[0])
+			path = os.path.join(here, dotted_pxd_filename)
+			if os.path.exists(path):
+				return path
+		dirs = self.include_directories
+		if pos:
+			here = self.find_root_package_dir(pos[0])
+			dirs = [here] + dirs
+		names = qualified_name.split(".")
+		package_names = names[:-1]
+		module_name = names[-1]
+		pxd_filename = module_name + ".pxd"
+		for root in dirs:
+			path = os.path.join(root, dotted_pxd_filename)
+			if os.path.exists(path):
+				return path
+			dir = self.descend_to_package_dir(root, package_names)
+			if dir:
+				path = os.path.join(dir, pxd_filename)
+				if os.path.exists(path):
+					return path
+				path = os.path.join(dir, module_name, "__init__.pxd")
+				if os.path.exists(path):
+					return path
+	
+	def find_root_package_dir(self, file_path):
+		#  Given the full pathname of a source file, find the directory
+		#  containing the top-level package that it ultimately belongs to.
+		dir = os.path.dirname(file_path)
+		while 1:
+			if not self.is_package_dir(dir):
+				return dir
+			parent = os.path.dirname(dir)
+			if parent == dir:
+				return dir
+			dir = parent
+
+	def descend_to_package_dir(self, root_dir, package_names):
+		#  Starting from the given root directory, look for a nested
+		#  succession of package directories. Returns the full pathname
+		#  of the innermost one, or None.
+		dir = root_dir
+		for name in package_names:
+			dir = os.path.join(dir, name)
+			for filename in ("__init__.py", "__init__.pyx"):
+				path = os.path.join(dir, filename)
+				if os.path.exists(path):
+					return dir
+	
+	def is_package_dir(self, dir_path):
+		#  Return true if the given directory is a package directory.
+		for filename in ("__init__.py", "__init__.pyx"):
+			path = os.path.join(dir_path, filename)
+			if os.path.exists(path):
+				return 1
 	
 	def find_include_file(self, filename, pos):
 		# Search list of include directories for filename.
@@ -147,10 +206,26 @@ class Context:
 		return tree
 
 	def extract_module_name(self, path):
-		# Get the module name out of a source file pathname.
-		_, tail = os.path.split(path)
-		name, _ = os.path.splitext(tail)
-		return name
+		#  Find fully_qualified module name from the full pathname
+		#  of a source file.
+		#print "extract_module_name:", path ###
+		dir, filename = os.path.split(path)
+		module_name, _ = os.path.splitext(filename)
+		if "." in module_name:
+			return module_name
+		if module_name == "__init__":
+			dir, module_name = os.path.split(dir)
+		names = [module_name]
+		while self.is_package_dir(dir):
+			parent, package_name = os.path.split(dir)
+			#print dir, "-->", parent, package_name ###
+			if parent == dir:
+				break
+			names.insert(0, package_name)
+			dir = parent
+		result = ".".join(names)
+		#print "result:", result ###
+		return result
 
 	def compile(self, source, options = None):
 		# Compile a Pyrex implementation file in this context
@@ -195,7 +270,6 @@ class Context:
 			errors_occurred = True
 		if errors_occurred and result.c_file:
 			try:
-				#os.unlink(result.c_file)
 				Utils.castrate_file(result.c_file, c_stat)
 			except EnvironmentError:
 				pass

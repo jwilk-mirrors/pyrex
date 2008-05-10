@@ -1,0 +1,1 @@
+cdef Spam s

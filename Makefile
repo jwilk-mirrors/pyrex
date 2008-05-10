@@ -1,4 +1,4 @@
-VERSION = 0.9.6.4
+VERSION = 0.9.7
 
 version:
 	@echo "Setting version to $(VERSION)"
@@ -10,3 +10,6 @@ clean:
 	@rm -f *~ */*~ */*/*~
 	@rm -f core */core
 	@(cd Demos; $(MAKE) clean)
+
+test_setup:
+	python setup.py --dry-run install

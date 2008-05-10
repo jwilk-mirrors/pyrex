@@ -3,8 +3,8 @@ Release Checklist
 
 * Ensure all tests pass
 
-* Test Demos
+* cd Demos; make test
 
-* Test setup.py
+* make test_setup
 
 * Check version number in Makefile
