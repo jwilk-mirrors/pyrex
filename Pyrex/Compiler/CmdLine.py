@@ -11,6 +11,10 @@ Options:
   -l, --create-listing           Write error messages to a listing file
   -I, --include-dir <directory>  Search for include files in named directory
   -o, --output-file <filename>   Specify name of generated C file
+  -r, --recursive                Recursively find and compile dependencies
+  -t, --timestamps               Only compile newer source files (implied with -r)
+  -f, --force                    Compile all source files (overrides implied -t)
+  -q, --quiet                    Don't print module names in recursive mode
 The following experimental options are supported only on MacOSX:
   -C, --compile    Compile generated .c file to .o file
   -X, --link       Link .o file to produce extension module (implies -C)
@@ -60,6 +64,12 @@ def parse_command_line(args):
 				options.include_path.append(pop_arg())
 			elif option in ("-o", "--output-file"):
 				options.output_file = pop_arg()
+			elif option in ("-r", "--recursive"):
+				options.recursive = 1
+			elif option in ("-t", "--timestamps"):
+				options.timestamps = 1
+			elif option in ("-f", "--force"):
+				options.timestamps = 0
 			else:
 				bad_usage()
 		else:

@@ -1,4 +1,4 @@
-/* 0.9.7 on Sat May 10 21:19:10 2008 */
+/* 0.9.7 on Sun May 11 00:28:22 2008 */
 
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
@@ -40,34 +40,26 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from include */
+/* Declarations from cimport2 */
 
-__PYX_EXTERN_C DL_EXPORT(void) f(void); /*proto*/
-static int __pyx_f_7include_eggs(void); /*proto*/
+struct __pyx_t_8cimport2_C2 {
+  int y;
+};
+
+struct __pyx_t_8cimport2_Inc {
+  int z;
+};
 
 
-/* Implementation of include */
+/* Declarations from cimport1 */
 
-static int __pyx_f_7include_eggs(void) {
-  PyObject *__pyx_v_x;
-  int __pyx_r;
-  PyObject *__pyx_1 = 0;
-  __pyx_v_x = Py_None; Py_INCREF(Py_None);
-  __pyx_1 = PyInt_FromLong(42); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_x);
-  __pyx_v_x = __pyx_1;
-  __pyx_1 = 0;
+struct __pyx_t_8cimport1_C1 {
+  int x;
+};
 
-  __pyx_r = 0;
-  goto __pyx_L0;
-  __pyx_L1:;
-  Py_XDECREF(__pyx_1);
-  __Pyx_AddTraceback("include.eggs");
-  __pyx_r = (-1);
-  __pyx_L0:;
-  Py_DECREF(__pyx_v_x);
-  return __pyx_r;
-}
+
+
+/* Implementation of cimport1 */
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -75,26 +67,24 @@ static struct PyMethodDef __pyx_methods[] = {
 
 static void __pyx_init_filenames(void); /*proto*/
 
-PyMODINIT_FUNC initinclude(void); /*proto*/
-PyMODINIT_FUNC initinclude(void) {
+PyMODINIT_FUNC initcimport1(void); /*proto*/
+PyMODINIT_FUNC initcimport1(void) {
   __pyx_init_filenames();
-  __pyx_m = Py_InitModule4("include", __pyx_methods, 0, 0, PYTHON_API_VERSION);
-  if (!__pyx_m) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; goto __pyx_L1;};
+  __pyx_m = Py_InitModule4("cimport1", __pyx_methods, 0, 0, PYTHON_API_VERSION);
+  if (!__pyx_m) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   Py_INCREF(__pyx_m);
   __pyx_b = PyImport_AddModule("__builtin__");
-  if (!__pyx_b) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/7/include.pyx":3 */
-  f();
+  /* "/Local/Projects/D/Pyrex/Source/Tests/(Manual)/Recursion/cimport1.pyx":4 */
   return;
   __pyx_L1:;
-  __Pyx_AddTraceback("include");
+  __Pyx_AddTraceback("cimport1");
 }
 
 static char *__pyx_filenames[] = {
-  "spam.pyi",
-  "include.pyx",
+  "cimport1.pyx",
 };
 
 /* Runtime support code */

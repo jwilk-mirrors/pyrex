@@ -1,0 +1,2 @@
+cimport cimport2
+include inc.pxi

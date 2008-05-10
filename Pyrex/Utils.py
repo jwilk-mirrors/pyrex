@@ -4,6 +4,10 @@
 #
 
 import os, sys
+try:
+	set
+except NameError:
+	from sets import Set as set
 
 def replace_suffix(path, newsuf):
 	base, _ = os.path.splitext(path)
@@ -24,7 +28,6 @@ def castrate_file(path, st):
 	except EnvironmentError:
 		pass
 	else:
-		#st = os.stat(path)
 		f.seek(0, 0)
 		f.truncate()
 		f.write(
@@ -32,3 +35,11 @@ def castrate_file(path, st):
 		f.close()
 		if st:
 			os.utime(path, (st.st_atime, st.st_mtime))
+
+def modification_time(path):
+	st = os.stat(path)
+	return st.st_mtime
+
+def file_newer_than(path, time):
+	ftime = modification_time(path)
+	return ftime > time

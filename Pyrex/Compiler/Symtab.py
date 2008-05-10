@@ -496,10 +496,6 @@ class Scope:
 		return [entry for entry in self.temp_entries
 			if entry not in self.free_temp_entries]
 	
-	#def recycle_pending_temps(self):
-	#	# Obsolete
-	#	pass
-
 	def use_utility_code(self, new_code):
 		self.global_scope().use_utility_code(new_code)
 	
@@ -598,6 +594,7 @@ class ModuleScope(Scope):
 	# all_pystring_entries [Entry]            Python string consts from all scopes
 	# types_imported       {PyrexType : 1}    Set of types for which import code generated
 	# type_names           {string : 1}       Set of type names (used during parsing)
+	# pyrex_include_files  [string]           Pyrex sources included with 'include'
 
 	def __init__(self, name, parent_module, context):
 		self.parent_module = parent_module
@@ -623,6 +620,7 @@ class ModuleScope(Scope):
 		self.interned_names = []
 		self.all_pystring_entries = []
 		self.types_imported = {}
+		self.pyrex_include_files = []
 	
 	def qualifying_scope(self):
 		return self.parent_module

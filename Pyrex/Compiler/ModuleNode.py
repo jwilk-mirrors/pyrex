@@ -46,6 +46,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		if self.has_imported_c_functions():
 			self.module_temp_cname = env.allocate_temp_pyobject()
 			env.release_temp(self.module_temp_cname)
+		self.generate_dep_file(env, result)
 		self.generate_c_code(env, result)
 		self.generate_h_code(env, options, result)
 		self.generate_api_code(env, result)
@@ -56,6 +57,20 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				if entry.defined_in_pxd:
 					return 1
 		return 0
+	
+	def generate_dep_file(self, env, result):
+		modules = self.referenced_modules
+		if len(modules) > 1 or env.pyrex_include_files:
+			dep_file = replace_suffix(result.c_file, ".dep")
+			f = open(dep_file, "w")
+			try:
+				for module in modules:
+					if module is not env:
+						f.write("cimport %s\n" % module.qualified_name)
+					for path in module.pyrex_include_files:
+						f.write("include %s\n" % path)
+			finally:
+				f.close()
 	
 	def generate_h_code(self, env, options, result):
 		def h_entries(entries, pxd = 0):
