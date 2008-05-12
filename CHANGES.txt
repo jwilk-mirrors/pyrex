@@ -1,3 +1,18 @@
+0.9.8
+-----
+
+New features:
+
+	- Modules in packages no longer need to have dotted names. Instead
+	  a Python-like package directory structure can be used, with
+	  package dirs marked by containing an __init__.py or __init__.pyx.
+	 
+	- Dependency tracking. The Pyrex compiler records information about
+	  other source files cimported or included, and can automatically
+	  compile all the modules a given module depends on, with timestamp
+	  checking.
+
+
 0.9.7
 -----
 

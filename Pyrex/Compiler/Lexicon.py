@@ -30,32 +30,33 @@ def make_lexicon():
 	fltconst = (decimal_fract + Opt(exponent)) | (decimal + exponent)
 	imagconst = (intconst | fltconst) + Any("jJ")
 	
-	sq_string = (
-		Str("'") + 
-		Rep(AnyBut("\\\n'") | (Str("\\") + AnyChar)) + 
-		Str("'")
-	)
-	
-	dq_string = (
-		Str('"') + 
-		Rep(AnyBut('\\\n"') | (Str("\\") + AnyChar)) + 
-		Str('"')
-	)
-	
-	non_sq = AnyBut("'") | (Str('\\') + AnyChar)
-	tsq_string = (
-		Str("'''")
-		+ Rep(non_sq | (Str("'") + non_sq) | (Str("''") + non_sq)) 
-		+ Str("'''")
-	)
-	
-	non_dq = AnyBut('"') | (Str('\\') + AnyChar)
-	tdq_string = (
-		Str('"""')
-		+ Rep(non_dq | (Str('"') + non_dq) | (Str('""') + non_dq)) 
-		+ Str('"""')
-	)
-	stringlit = Opt(Any(string_prefixes)) + (sq_string | dq_string | tsq_string| tdq_string)
+#	sq_string = (
+#		Str("'") + 
+#		Rep(AnyBut("\\\n'") | (Str("\\") + AnyChar)) + 
+#		Str("'")
+#	)
+#	
+#	dq_string = (
+#		Str('"') + 
+#		Rep(AnyBut('\\\n"') | (Str("\\") + AnyChar)) + 
+#		Str('"')
+#	)
+#	
+#	non_sq = AnyBut("'") | (Str('\\') + AnyChar)
+#	tsq_string = (
+#		Str("'''")
+#		+ Rep(non_sq | (Str("'") + non_sq) | (Str("''") + non_sq)) 
+#		+ Str("'''")
+#	)
+#	
+#	non_dq = AnyBut('"') | (Str('\\') + AnyChar)
+#	tdq_string = (
+#		Str('"""')
+#		+ Rep(non_dq | (Str('"') + non_dq) | (Str('""') + non_dq)) 
+#		+ Str('"""')
+#	)
+#
+#	stringlit = Opt(Any(string_prefixes)) + (sq_string | dq_string | tsq_string| tdq_string)
 	
 	beginstring = Opt(Any(string_prefixes)) + (Str("'") | Str('"') | Str("'''") | Str('"""'))
 	two_oct = octdigit + octdigit
@@ -66,7 +67,8 @@ def make_lexicon():
 	bra = Any("([{")
 	ket = Any(")]}")
 	punct = Any(":,;+-*/|&<>=.%`~^?")
-	diphthong = Str("==", "<>", "!=", "<=", ">=", "<<", ">>", "**")
+	diphthong = Str("==", "<>", "!=", "<=", ">=", "<<", ">>", "**",
+		"+=", "-=", "*=", "/=", "%=", "**=", "<<=", ">>=", "&=", "^=", "|=")
 	spaces = Rep1(Any(" \t\f"))
 	comment = Str("#") + Rep(AnyBut("\n"))
 	escaped_newline = Str("\\\n")
