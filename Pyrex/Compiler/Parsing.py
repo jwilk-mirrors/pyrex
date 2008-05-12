@@ -973,7 +973,7 @@ def p_for_statement(s):
 	elif s.sy in inequality_relations:
 		return p_integer_for_statement(s, expr)
 	elif s.sy == 'from':
-		warning(pos, "Old-style integer for-loop is deprecated, use 'for x < i < y' instead")
+		#warning(pos, "Old-style integer for-loop is deprecated, use 'for x < i < y' instead")
 		return p_old_style_integer_for_statement(s, expr)
 	else:
 		s.error("Expected 'in' or an inequality relation")
