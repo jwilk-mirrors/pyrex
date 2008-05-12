@@ -22,6 +22,7 @@ class ExprNode(Node):
 	#  type         PyrexType    Type of the result
 	#  result_code  string       Code fragment
 	#  result_ctype string       C type of result_code if different from type
+	#  inplace_result  string    Temp var holding in-place operation result
 	#  is_temp      boolean      Result is in a temporary variable
 	#  is_sequence_constructor  
 	#               boolean      Is a list or tuple constructor expression
@@ -128,19 +129,16 @@ class ExprNode(Node):
 	#   Code Generation phase
 	#
 	#      generate_evaluation_code
-	#        - Call generate_evaluation_code for sub-expressions.
-	#        - Perform the functions of generate_result_code
-	#          (see below).
-	#        - If result is temporary, call generate_disposal_code
-	#          on all sub-expressions.
+	#        1. Call generate_evaluation_code for sub-expressions.
+	#        2. Generate any C statements necessary to calculate
+	#           the result of this node from the results of its
+	#           sub-expressions.
+	#        3. If result is temporary, call generate_disposal_code
+	#           on all sub-expressions.
 	#
 	#        A default implementation of generate_evaluation_code
-	#        is provided which uses the following abstract method:
-	#
-	#          generate_result_code
-	#            - Generate any C statements necessary to calculate
-	#              the result of this node from the results of its
-	#              sub-expressions.
+	#        is provided which calls the abstract method generate_result_code
+	#        to perform the functions of no. 2 above.
 	#
 	#      generate_assignment_code
 	#        Called on the LHS of an assignment.
@@ -171,6 +169,9 @@ class ExprNode(Node):
 				(self.__class__.__name__, method_name))		
 				
 	def is_lvalue(self):
+		return 0
+	
+	def is_inplace_lvalue(self):
 		return 0
 	
 	def is_ephemeral(self):
@@ -286,6 +287,13 @@ class ExprNode(Node):
 	def analyse_target_types(self, env):
 		self.analyse_types(env)
 	
+	def analyse_inplace_types(self, env):
+		if self.is_inplace_lvalue():
+			self.analyse_types(env)
+		else:
+			error(self.pos, "Invalid target for in-place operation")
+			self.type = error_type
+	
 	def check_const(self):
 		self.not_const()
 	
@@ -307,7 +315,7 @@ class ExprNode(Node):
 		#  a subnode.
 		return self.is_temp
 			
-	def allocate_target_temps(self, env, rhs):
+	def allocate_target_temps(self, env, rhs, inplace = 0):
 		#  Perform temp allocation for the LHS of an assignment.
 		if debug_temp_alloc:
 			print self, "Allocating target temps"
@@ -315,6 +323,21 @@ class ExprNode(Node):
 		self.result_code = self.target_code()
 		if rhs:
 			rhs.release_temp(env)
+		self.release_subexpr_temps(env)
+	
+	def allocate_inplace_target_temps(self, env, rhs):
+		if debug_temp_alloc:
+			print self, "Allocating inplace target temps"
+		self.allocate_subexpr_temps(env)
+		self.result_code = self.target_code()
+		py_inplace = self.type.is_pyobject
+		if py_inplace:
+			self.allocate_temp(env)
+			self.inplace_result = env.allocate_temp(py_object_type)
+			self.release_temp(env)
+		rhs.release_temp(env)
+		if py_inplace:
+			env.release_temp(self.inplace_result)
 		self.release_subexpr_temps(env)
 	
 	def allocate_temps(self, env, result = None):
@@ -373,10 +396,6 @@ class ExprNode(Node):
 	
 	def calculate_result_code(self):
 		self.not_implemented("calculate_result_code")
-	
-#	def release_target_temp(self, env):
-#		#  Release temporaries used by LHS of an assignment.
-#		self.release_subexpr_temps(env)
 
 	def release_temp(self, env):
 		#  If this node owns a temporary result, release it,
@@ -419,6 +438,42 @@ class ExprNode(Node):
 	def generate_result_code(self, code):
 		self.not_implemented("generate_result_code")
 	
+	inplace_functions = {
+		"+=": "PyNumber_InPlaceAdd",
+		"-=": "PyNumber_InPlaceSubtract",
+		"*=": "PyNumber_InPlaceMultiply",
+		"/=": "PyNumber_InPlaceDivide",
+		"%=": "PyNumber_InPlaceRemainder",
+		"**=": "PyNumber_InPlacePower",
+		"<<=": "PyNumber_InPlaceLShift",
+		">>=": "PyNumber_InPlaceRShift",
+		"&=": "PyNumber_InPlaceAnd",
+		"^=": "PyNumber_InPlaceXor",
+		"|=": "PyNumber_InPlaceOr",
+	}
+	
+	def generate_inplace_operation_code(self, operator, rhs, code):
+		args = (self.py_result(), rhs.py_result())
+		if operator == "**=":
+			arg_code = "%s, %s, Py_None" % args
+		else:
+			arg_code = "%s, %s" % args
+		code.putln("%s = %s(%s); if (!%s) %s" % (
+			self.inplace_result,
+			self.inplace_functions[operator],
+			arg_code,
+			self.inplace_result,
+			code.error_goto(self.pos)))
+		if self.is_temp:
+			code.put_decref_clear(self.result_code, self.ctype())
+		rhs.generate_disposal_code(code)
+		if self.type.is_extension_type:
+			code.putln(
+				"if (!__Pyx_TypeTest(%s, %s)) %s" % (
+					self.inplace_result,
+					self.type.typeptr_cname,
+					code.error_goto(self.pos)))
+	
 	def generate_disposal_code(self, code):
 		# If necessary, generate code to dispose of 
 		# temporary Python reference.
@@ -443,6 +498,9 @@ class ExprNode(Node):
 				code.putln("%s = 0;" % self.result_code)
 		else:
 			self.generate_subexpr_disposal_code(code)
+	
+	def generate_inplace_result_disposal_code(self, code):
+		code.put_decref_clear(self.inplace_result, py_object_type)
 	
 	def generate_assignment_code(self, rhs, code):
 		#  Stub method for nodes which are not legal as
@@ -722,6 +780,7 @@ class NameNode(AtomicExprNode):
 	#  interned_cname  string
 	
 	is_name = 1
+	entry = None
 	type_entry = None
 	
 	def compile_time_value(self, denv):
@@ -781,7 +840,7 @@ class NameNode(AtomicExprNode):
 				% self.name)
 			self.type = PyrexTypes.error_type
 		self.entry.used = 1
-		
+	
 	def analyse_rvalue_entry(self, env):
 		#print "NameNode.analyse_rvalue_entry:", self.name ###
 		#print "Entry:", self.entry.__dict__ ###
@@ -846,6 +905,9 @@ class NameNode(AtomicExprNode):
 			not self.entry.type.is_array and \
 			not self.entry.is_readonly
 	
+	def is_inplace_lvalue(self):
+		return self.is_lvalue()
+	
 	def is_ephemeral(self):
 		#  Name nodes are never ephemeral, even if the
 		#  result is in a temporary.
@@ -892,38 +954,37 @@ class NameNode(AtomicExprNode):
 					self.result_code, 
 					code.error_goto(self.pos)))		
 
+	def generate_setattr_code(self, value_code, code):
+		entry = self.entry
+		namespace = self.entry.namespace_cname
+		if Options.intern_names:
+			code.putln(
+				'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
+					namespace, 
+					self.interned_cname,
+					value_code, 
+					code.error_goto(self.pos)))
+		else:
+			code.putln(
+				'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
+					namespace, 
+					entry.name,
+					rhs.py_result(), 
+					code.error_goto(self.pos)))
+
 	def generate_assignment_code(self, rhs, code):
 		#print "NameNode.generate_assignment_code:", self.name ###
 		entry = self.entry
 		if entry is None:
 			return # There was an error earlier
 		if entry.is_pyglobal:
-			namespace = self.entry.namespace_cname
-			if Options.intern_names:
-				code.putln(
-					'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
-						namespace, 
-						#entry.interned_cname,
-						self.interned_cname,
-						rhs.py_result(), 
-						code.error_goto(self.pos)))
-			else:
-				code.putln(
-					'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
-						namespace, 
-						entry.name,
-						rhs.py_result(), 
-						code.error_goto(self.pos)))
+			self.generate_setattr_code(rhs.py_result(), code)
 			if debug_disposal_code:
 				print "NameNode.generate_assignment_code:"
 				print "...generating disposal code for", rhs
 			rhs.generate_disposal_code(code)
 		else:
 			if self.type.is_pyobject:
-				#print "NameNode.generate_assignment_code: to", self.name ###
-				#print "...from", rhs ###
-				#print "...LHS type", self.type, "ctype", self.ctype() ###
-				#print "...RHS type", rhs.type, "ctype", rhs.ctype() ###
 				rhs.make_owned_reference(code)
 				code.put_decref(self.result_code, self.ctype())
 			code.putln('%s = %s;' % (self.result_code, rhs.result_as(self.ctype())))
@@ -931,6 +992,24 @@ class NameNode(AtomicExprNode):
 				print "NameNode.generate_assignment_code:"
 				print "...generating post-assignment code for", rhs
 			rhs.generate_post_assignment_code(code)
+	
+	def generate_inplace_assignment_code(self, operator, rhs, code):
+		entry = self.entry
+		if entry is None:
+			return # There was an error earlier
+		if self.type.is_pyobject:
+			self.generate_result_code(code)
+			self.generate_inplace_operation_code(operator, rhs, code)
+			if entry.is_pyglobal:
+				self.generate_setattr_code(self.inplace_result, code)
+				self.generate_inplace_result_disposal_code(code)
+			else:
+				code.put_decref(self.result_code, self.ctype())
+				cast_inplace_result = typecast(self.ctype(), py_object_type, self.inplace_result)
+				code.putln('%s = %s;' % (self.result_code, cast_inplace_result))
+		else:
+			code.putln("%s %s %s;" % (self.result_code, operator, rhs.result_code))
+			rhs.generate_disposal_code(code)
 	
 	def generate_deletion_code(self, code):
 		if self.entry is None:
@@ -1152,6 +1231,9 @@ class IndexNode(ExprNode):
 	def is_lvalue(self):
 		return 1
 	
+	def is_inplace_lvalue(self):
+		return 1
+	
 	def calculate_result_code(self):
 		return "(%s[%s])" % (
 			self.base.result_code, self.index.result_code)
@@ -1173,28 +1255,43 @@ class IndexNode(ExprNode):
 					self.result_code,
 					code.error_goto(self.pos)))
 	
+	def generate_setitem_code(self, value_code, code):
+		if self.index.type.is_int:
+			function = "PySequence_SetItem"
+			index_code = self.index.result_code
+		else:
+			function = "PyObject_SetItem"
+			index_code = self.index.py_result()
+		code.putln(
+			"if (%s(%s, %s, %s) < 0) %s" % (
+				function,
+				self.base.py_result(),
+				index_code,
+				value_code,
+				code.error_goto(self.pos)))
+	
 	def generate_assignment_code(self, rhs, code):
 		self.generate_subexpr_evaluation_code(code)
 		if self.type.is_pyobject:
-			if self.index.type.is_int:
-				function = "PySequence_SetItem"
-				index_code = self.index.result_code
-			else:
-				function = "PyObject_SetItem"
-				index_code = self.index.py_result()
-			code.putln(
-				"if (%s(%s, %s, %s) < 0) %s" % (
-					function,
-					self.base.py_result(),
-					index_code,
-					rhs.py_result(),
-					code.error_goto(self.pos)))
+			self.generate_setitem_code(rhs.py_result(), code)
 		else:
 			code.putln(
 				"%s = %s;" % (
 					self.result_code, rhs.result_code))
 		self.generate_subexpr_disposal_code(code)
 		rhs.generate_disposal_code(code)
+	
+	def generate_inplace_assignment_code(self, operator, rhs, code):
+		self.generate_subexpr_evaluation_code(code)
+		if self.type.is_pyobject:
+			self.generate_result_code(code)
+			self.generate_inplace_operation_code(operator, rhs, code)
+			self.generate_setitem_code(self.inplace_result, code)
+			self.generate_inplace_result_disposal_code(code)
+		else:
+			code.putln("%s %s %s;" % (self.result_code, operator, rhs.result_code))
+			rhs.generate_disposal_code(code)
+		self.generate_subexpr_disposal_code(code)
 	
 	def generate_deletion_code(self, code):
 		self.generate_subexpr_evaluation_code(code)
@@ -1224,6 +1321,9 @@ class SliceIndexNode(ExprNode):
 	#  stop      ExprNode or None
 	
 	subexprs = ['base', 'start', 'stop']
+	
+	def is_inplace_lvalue(self):
+		return 1
 	
 	def compile_time_value(self, denv):
 		base = self.base.compile_time_value(denv)
@@ -1262,17 +1362,28 @@ class SliceIndexNode(ExprNode):
 				self.result_code,
 				code.error_goto(self.pos)))
 	
-	def generate_assignment_code(self, rhs, code):
-		self.generate_subexpr_evaluation_code(code)
+	def generate_setslice_code(self, value_code, code):
 		code.putln(
 			"if (PySequence_SetSlice(%s, %s, %s, %s) < 0) %s" % (
 				self.base.py_result(),
 				self.start_code(),
 				self.stop_code(),
-				rhs.result_code,
+				value_code,
 				code.error_goto(self.pos)))
+	
+	def generate_assignment_code(self, rhs, code):
+		self.generate_subexpr_evaluation_code(code)
+		self.generate_setslice_code(rhs.result_code, code)
 		self.generate_subexpr_disposal_code(code)
 		rhs.generate_disposal_code(code)
+	
+	def generate_inplace_assignment_code(self, operator, rhs, code):
+		self.generate_subexpr_evaluation_code(code)
+		self.generate_result_code(code)
+		self.generate_inplace_operation_code(operator, rhs, code)
+		self.generate_setslice_code(self.inplace_result, code)
+		self.generate_inplace_result_disposal_code(code)
+		self.generate_subexpr_disposal_code(code)
 
 	def generate_deletion_code(self, code):
 		self.generate_subexpr_evaluation_code(code)
@@ -1816,6 +1927,9 @@ class AttributeNode(ExprNode):
 		else:
 			return NameNode.is_lvalue(self)
 	
+	def is_inplace_lvalue(self):
+		return self.is_lvalue()
+	
 	def is_ephemeral(self):
 		if self.obj:
 			return self.obj.is_ephemeral()
@@ -1855,23 +1969,26 @@ class AttributeNode(ExprNode):
 						self.result_code,
 						code.error_goto(self.pos)))
 	
+	def generate_setattr_code(self, value_code, code):
+		if Options.intern_names:
+			code.putln(
+				'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
+					self.obj.py_result(),
+					self.interned_attr_cname,
+					value_code,
+					code.error_goto(self.pos)))
+		else:
+			code.putln(
+				'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
+					self.obj.py_result(),
+					self.attribute,
+					value_code,
+					code.error_goto(self.pos)))
+	
 	def generate_assignment_code(self, rhs, code):
 		self.obj.generate_evaluation_code(code)
 		if self.is_py_attr:
-			if Options.intern_names:
-				code.putln(
-					'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
-						self.obj.py_result(),
-						self.interned_attr_cname,
-						rhs.py_result(),
-						code.error_goto(self.pos)))
-			else:
-				code.putln(
-					'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
-						self.obj.py_result(),
-						self.attribute,
-						rhs.py_result(),
-						code.error_goto(self.pos)))
+			self.generate_setattr_code(rhs.py_result(), self)
 			rhs.generate_disposal_code(code)
 		else:
 			select_code = self.result_code
@@ -1882,8 +1999,25 @@ class AttributeNode(ExprNode):
 				"%s = %s;" % (
 					select_code,
 					rhs.result_as(self.ctype())))
-					#rhs.result_code))
 			rhs.generate_post_assignment_code(code)
+		self.obj.generate_disposal_code(code)
+	
+	def generate_inplace_assignment_code(self, operator, rhs, code):
+		self.obj.generate_evaluation_code(code)
+		select_code = self.result_code
+		if self.type.is_pyobject:
+			self.generate_result_code(code)
+			self.generate_inplace_operation_code(operator, rhs, code)
+			if self.is_py_attr:
+				self.generate_setattr_code(self.inplace_result, code)
+				self.generate_inplace_result_disposal_code(code)
+			else:
+				code.put_decref(select_code, self.ctype())
+				cast_inplace_result = typecast(self.ctype(), py_object_type, self.inplace_result)
+				code.putln("%s = %s;" % (select_code, cast_inplace_result))
+		else:
+			code.putln("%s %s %s;" % (select_code, operator, rhs.result_code))
+			rhs.generate_disposal_code(code)
 		self.obj.generate_disposal_code(code)
 	
 	def generate_deletion_code(self, code):

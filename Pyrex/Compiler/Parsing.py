@@ -669,18 +669,24 @@ def p_global_statement(s):
 	names = p_ident_list(s)
 	return Nodes.GlobalNode(pos, names = names)
 
+inplace_operators = ('+=', '-=', '*=', '/=', '%=', '**=',
+	'<<=', '>>=', '&=', '^=', '|=')
+
 def p_expression_or_assignment(s):
-	expr_list = [p_expr(s)]
-	while s.sy == '=':
-		s.next()
-		expr_list.append(p_expr(s))
-	if len(expr_list) == 1:
-		expr = expr_list[0]
+	pos = s.position()
+	expr = p_expr(s)
+	if s.sy in inplace_operators:
+		return p_inplace_operation(s, expr)
+	elif s.sy <> '=':
 		if isinstance(expr, ExprNodes.StringNode):
 			return Nodes.PassStatNode(expr.pos)
 		else:
 			return Nodes.ExprStatNode(expr.pos, expr = expr)
 	else:
+		expr_list = [expr]
+		while s.sy == '=':
+			s.next()
+			expr_list.append(p_expr(s))
 		expr_list_list = []
 		flatten_parallel_assignments(expr_list, expr_list_list)
 		nodes = []
@@ -698,6 +704,13 @@ def p_expression_or_assignment(s):
 			return nodes[0]
 		else:
 			return Nodes.ParallelAssignmentNode(nodes[0].pos, stats = nodes)
+
+def p_inplace_operation(s, lhs):
+	pos = s.position()
+	op = s.sy
+	s.next()
+	rhs = p_expr(s)
+	return Nodes.AugmentedAssignmentNode(pos, lhs = lhs, operator = op, rhs = rhs)
 
 def flatten_parallel_assignments(input, output):
 	#  The input is a list of expression nodes, representing 

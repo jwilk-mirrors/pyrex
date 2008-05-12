@@ -20,15 +20,12 @@ difficult and they're not really needed for Pyrex's intended
 applications. <p>There are also some temporary limitations,
 which may eventually be lifted, including: </p> <blockquote>
 <li> Class and function definitions cannot be placed inside
-control structures.<br> </li> &nbsp; <li>
-In-place arithmetic operators (+=, etc) are not yet supported.<br>
-</li> &nbsp; <li> List comprehensions are not yet
+control structures.<br> </li> &nbsp; <li> List comprehensions are not yet
 supported.<br> </li> &nbsp; <li> There is no
 support for Unicode.<br> </li> &nbsp; <li>
 Special methods of extension types cannot have functioning
 docstrings.<br> <br> </li> <li> The use of
-string literals as comments is not recommended at present, because
-Pyrex doesn't optimize them away, and won't even accept them in
+string literals as comments is not recommended at present, because they are not accepted in
 places where executable statements are not allowed.</li></blockquote><hr style="width: 100%; height: 2px;"><h2><a name="SemanticDifferences"></a>Semantic
 differences between Python and Pyrex</h2> <h3> Behaviour
 of class scopes</h3> In Python, referring to a method of a class

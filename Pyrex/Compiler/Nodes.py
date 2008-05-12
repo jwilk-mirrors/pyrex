@@ -1420,10 +1420,6 @@ class AssignmentNode(StatNode):
 		self.allocate_rhs_temps(env)
 		self.allocate_lhs_temps(env)
 
-#	def analyse_expressions(self, env):
-#		self.analyse_expressions_1(env)
-#		self.analyse_expressions_2(env)
-
 	def generate_execution_code(self, code):
 		self.generate_rhs_evaluation_code(code)
 		self.generate_assignment_code(code)
@@ -1452,27 +1448,39 @@ class SingleAssignmentNode(AssignmentNode):
 
 	def allocate_lhs_temps(self, env):
 		self.lhs.allocate_target_temps(env, self.rhs)
-		#self.lhs.release_target_temp(env)
-		#self.rhs.release_temp(env)		
-	
-#	def analyse_expressions_1(self, env, use_temp = 0):
-#		self.rhs.analyse_types(env)
-#		self.lhs.analyse_target_types(env)
-#		self.rhs = self.rhs.coerce_to(self.lhs.type, env)
-#		if use_temp:
-#			self.rhs = self.rhs.coerce_to_temp(env)
-#		self.rhs.allocate_temps(env)
-#	
-#	def analyse_expressions_2(self, env):
-#		self.lhs.allocate_target_temps(env)
-#		self.lhs.release_target_temp(env)
-#		self.rhs.release_temp(env)		
 
 	def generate_rhs_evaluation_code(self, code):
 		self.rhs.generate_evaluation_code(code)
 	
 	def generate_assignment_code(self, code):
 		self.lhs.generate_assignment_code(self.rhs, code)
+
+
+class AugmentedAssignmentNode(SingleAssignmentNode):
+	#  An in-place operation:
+	#
+	#    a op= b
+	#
+	#  lhs       ExprNode      Left hand side
+	#  operator  string
+	#  rhs       ExprNode      Right hand side
+
+	def analyse_types(self, env):
+		self.rhs.analyse_types(env)
+		self.lhs.analyse_inplace_types(env)
+		type = self.lhs.type
+		if type.is_pyobject:
+			type = py_object_type
+		else:
+			if self.operator == "**=":
+				error(self.pos, "**= operator not supported for non-Python types")
+		self.rhs = self.rhs.coerce_to(type, env)
+
+	def allocate_lhs_temps(self, env):
+		self.lhs.allocate_inplace_target_temps(env, self.rhs)
+
+	def generate_assignment_code(self, code):
+		self.lhs.generate_inplace_assignment_code(self.operator, self.rhs, code)
 
 
 class CascadedAssignmentNode(AssignmentNode):
@@ -1516,28 +1524,6 @@ class CascadedAssignmentNode(AssignmentNode):
 			#rhs.release_temp(env)
 		self.rhs.release_temp(env)
 	
-#	def analyse_expressions_1(self, env, use_temp = 0):
-#		self.rhs.analyse_types(env)
-#		if use_temp:
-#			self.rhs = self.rhs.coerce_to_temp(env)
-#		else:
-#			self.rhs = self.rhs.coerce_to_simple(env)
-#		self.rhs.allocate_temps(env)
-#	
-#	def analyse_expressions_2(self, env):
-#		from ExprNodes import CloneNode
-#		self.coerced_rhs_list = []
-#		for lhs in self.lhs_list:
-#			lhs.analyse_target_types(env)
-#			rhs = CloneNode(self.rhs)
-#			rhs = rhs.coerce_to(lhs.type, env)
-#			self.coerced_rhs_list.append(rhs)
-#			rhs.allocate_temps(env)
-#			lhs.allocate_target_temps(env)
-#			lhs.release_target_temp(env)
-#			rhs.release_temp(env)
-#		self.rhs.release_temp(env)
-	
 	def generate_rhs_evaluation_code(self, code):
 		self.rhs.generate_evaluation_code(code)
 	
@@ -1574,12 +1560,6 @@ class ParallelAssignmentNode(AssignmentNode):
 			stat.allocate_rhs_temps(env)
 		for stat in self.stats:
 			stat.allocate_lhs_temps(env)
-
-#	def analyse_expressions(self, env):
-#		for stat in self.stats:
-#			stat.analyse_expressions_1(env, use_temp = 1)
-#		for stat in self.stats:
-#			stat.analyse_expressions_2(env)
 	
 	def generate_execution_code(self, code):
 		for stat in self.stats:

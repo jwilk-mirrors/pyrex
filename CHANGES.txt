@@ -11,6 +11,8 @@ New features:
 	  other source files cimported or included, and can automatically
 	  compile all the modules a given module depends on, with timestamp
 	  checking.
+	
+	- Augmented assignment operators (+=, etc.) are now supported.
 
 
 0.9.7
