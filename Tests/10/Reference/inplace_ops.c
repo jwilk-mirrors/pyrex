@@ -86,12 +86,12 @@ static int __pyx_f_11inplace_ops_f(void) {
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":9 */
-  __pyx_1 = PyNumber_InPlaceLShift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceLshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":10 */
-  __pyx_1 = PyNumber_InPlaceRShift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceRshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 

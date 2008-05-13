@@ -5,8 +5,8 @@
 
 import os, sys
 try:
-	set
-except NameError:
+	from __builtin__ import set
+except ImportError:
 	from sets import Set as set
 
 def replace_suffix(path, newsuf):

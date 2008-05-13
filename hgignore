@@ -3,3 +3,4 @@ glob:*.o
 glob:*.so
 glob:.DS_Store
 glob:*.pickle
+glob:*.dep

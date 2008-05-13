@@ -445,8 +445,8 @@ class ExprNode(Node):
 		"/=": "PyNumber_InPlaceDivide",
 		"%=": "PyNumber_InPlaceRemainder",
 		"**=": "PyNumber_InPlacePower",
-		"<<=": "PyNumber_InPlaceLShift",
-		">>=": "PyNumber_InPlaceRShift",
+		"<<=": "PyNumber_InPlaceLshift",
+		">>=": "PyNumber_InPlaceRshift",
 		"&=": "PyNumber_InPlaceAnd",
 		"^=": "PyNumber_InPlaceXor",
 		"|=": "PyNumber_InPlaceOr",
@@ -835,6 +835,13 @@ class NameNode(AtomicExprNode):
 		
 	def analyse_target_types(self, env):
 		self.analyse_entry(env)
+		self.finish_analysing_lvalue()
+	
+	def analyse_inplace_types(self, env):
+		self.analyse_rvalue_entry(env)
+		self.finish_analysing_lvalue()
+	
+	def finish_analysing_lvalue(self):
 		if not self.is_lvalue():
 			error(self.pos, "Assignment to non-lvalue '%s'"
 				% self.name)
@@ -1204,7 +1211,9 @@ class IndexNode(ExprNode):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
 		if self.base.type.is_pyobject:
-			if not self.index.type.is_int:
+			if self.index.type.is_int:
+				env.use_utility_code(getitem_int_utility_code)
+			else:
 				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
 			self.is_temp = 1
@@ -1241,7 +1250,7 @@ class IndexNode(ExprNode):
 	def generate_result_code(self, code):
 		if self.type.is_pyobject:
 			if self.index.type.is_int:
-				function = "PySequence_GetItem"
+				function = "__Pyx_GetItemInt"
 				index_code = self.index.result_code
 			else:
 				function = "PyObject_GetItem"
@@ -1988,7 +1997,7 @@ class AttributeNode(ExprNode):
 	def generate_assignment_code(self, rhs, code):
 		self.obj.generate_evaluation_code(code)
 		if self.is_py_attr:
-			self.generate_setattr_code(rhs.py_result(), self)
+			self.generate_setattr_code(rhs.py_result(), code)
 			rhs.generate_disposal_code(code)
 		else:
 			select_code = self.result_code
@@ -3682,3 +3691,23 @@ bad:
 """]
 
 #------------------------------------------------------------------------------------
+
+getitem_int_utility_code = [
+"""
+static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
+""","""
+static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
+	PyTypeObject *t = o->ob_type;
+	PyObject *r;
+	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
+		r = PySequence_GetItem(o, i);
+	else {
+		PyObject *j = PyInt_FromLong(i);
+		if (!j)
+			return 0;
+		r = PyObject_GetItem(o, j);
+		Py_DECREF(j);
+	}
+	return r;
+}
+"""]

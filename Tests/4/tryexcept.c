@@ -42,6 +42,8 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*
 
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 
+static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from tryexcept */
@@ -424,6 +426,21 @@ bad:
 	Py_XDECREF(*value);
 	Py_XDECREF(*tb);
 	return -1;
+}
+
+static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
+	PyTypeObject *t = o->ob_type;
+	PyObject *r;
+	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
+		r = PySequence_GetItem(o, i);
+	else {
+		PyObject *j = PyInt_FromLong(i);
+		if (!j)
+			return 0;
+		r = PyObject_GetItem(o, j);
+		Py_DECREF(j);
+	}
+	return r;
 }
 
 #include "compile.h"

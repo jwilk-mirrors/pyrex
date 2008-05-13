@@ -63,6 +63,7 @@ static int __pyx_f_11inplace_lhs_f(void) {
   int __pyx_v_i;
   int __pyx_v_j;
   int __pyx_v_k;
+  float __pyx_v_x;
   float __pyx_v_y;
   float __pyx_v_z;
   PyObject *__pyx_v_a;

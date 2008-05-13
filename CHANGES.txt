@@ -15,6 +15,20 @@ New features:
 	- Augmented assignment operators (+=, etc.) are now supported.
 
 
+0.9.7.1
+-------
+
+	Bug fixes:
+	
+	- The optimisation for indexing using a C int failed when the
+		object being indexed was a mapping rather than a sequence.
+		[Arc Riley]
+	
+	Modifications:
+	
+	- Old integer for-loop syntax is no longer deprecated.
+
+
 0.9.7
 -----
 
