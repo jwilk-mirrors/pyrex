@@ -33,6 +33,17 @@ New features:
 	  
 	  Among other things, this allows C methods to be declared nogil (this
 	  couldn't be done before because 'self' is always an object argument).
+	
+	- There is now a way of forward-declaring an extension type into
+	  another module. This allows two .pxd files to define extension types
+	  that refer to each other without running into circular import problems.
+	  For example:
+	  
+	    cimport blarg
+	    cdef class blarg.Blarg # Forward declaration
+	    
+	    cdef class Foo:
+	      cdef blarg.Blarg blg
 
 
 0.9.7.2

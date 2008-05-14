@@ -1947,8 +1947,8 @@ def p_c_class_definition(s, level, pos,
 		s.next()
 		module_path.append(class_name)
 		class_name = p_ident(s)
-	if module_path and visibility <> 'extern':
-		error(pos, "Qualified class name only allowed for 'extern' C class")
+	#if module_path and visibility <> 'extern':
+	#	error(pos, "Qualified class name only allowed for 'extern' C class")
 	if module_path and s.sy == 'IDENT' and s.systring == 'as':
 		s.next()
 		as_name = p_ident(s)
