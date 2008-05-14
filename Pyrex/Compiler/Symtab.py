@@ -899,11 +899,13 @@ class LocalScope(Scope):
 	def mangle(self, prefix, name):
 		return prefix + name
 
-	def declare_arg(self, name, type, pos):
+	def declare_arg(self, name, type, pos, readonly = 0):
 		# Add an entry for an argument of a function.
+		#print "LocalScope.declare_arg:", name, "readonly =", readonly ###
 		cname = self.mangle(Naming.var_prefix, name)
 		entry = self.declare(name, cname, type, pos)
 		entry.is_variable = 1
+		entry.is_readonly = readonly
 		if type.is_pyobject:
 			entry.init = "0"
 		#entry.borrowed = 1 # Not using borrowed arg refs for now

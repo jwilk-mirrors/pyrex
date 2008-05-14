@@ -243,10 +243,6 @@ class CFuncDeclaratorNode(CDeclaratorNode):
 			# Catch attempted C-style func(void) decl
 			if type.is_void:
 				error(arg_node.pos, "Function argument cannot be void")
-#			if self.nogil and not self.with_gil:
-#				if type.is_pyobject:
-#					error(self.pos,
-#						"Function with Python argument cannot be declared nogil")
 			func_type_args.append(
 				PyrexTypes.CFuncTypeArg(name, type, arg_node.pos))
 			if arg_node.default:
@@ -265,10 +261,6 @@ class CFuncDeclaratorNode(CDeclaratorNode):
 					error(self.exception_value.pos,
 						"Exception value incompatible with function return type")
 			exc_check = self.exception_check
-#		if self.nogil and not self.with_gil:
-#			if return_type.is_pyobject:
-#				error(self.pos,
-#					"Function with Python return type cannot be declared nogil")
 		if return_type.is_array:
 			error(self.pos,
 				"Function cannot return an array")
@@ -619,7 +611,8 @@ class FuncDefNode(StatNode, BlockNode):
 		# ----- Return cleanup
 		code.put_label(code.return_label)
 		code.put_var_decrefs(lenv.var_entries, used_only = 1)
-		code.put_var_decrefs(lenv.arg_entries)
+		#code.put_var_decrefs(lenv.arg_entries)
+		self.generate_argument_decrefs(env, code)
 		self.put_stararg_decrefs(code)
 		if acquire_gil:
 			code.putln("PyGILState_Release(_save);")
@@ -630,20 +623,27 @@ class FuncDefNode(StatNode, BlockNode):
 	def put_stararg_decrefs(self, code):
 		pass
 
-	def declare_argument(self, env, arg):
+	def declare_argument(self, env, arg, readonly = 0):
 		if arg.type.is_void:
 			error(arg.pos, "Invalid use of 'void'")
 		elif not arg.type.is_complete() and not arg.type.is_array:
 			error(arg.pos,
 				"Argument type '%s' is incomplete" % arg.type)
-		return env.declare_arg(arg.name, arg.type, arg.pos)
+		return env.declare_arg(arg.name, arg.type, arg.pos,
+			readonly = readonly)
 	
 	def generate_argument_increfs(self, env, code):
-		# Turn borrowed argument refs into owned refs.
-		# This is necessary, because if the argument is
-		# assigned to, it will be decrefed.
+		# Turn writable borrowed argument refs into owned refs.
+		# This is necessary, because if the argument is assigned to,
+		# it will be decrefed.
 		for entry in env.arg_entries:
-			code.put_var_incref(entry)
+			if not entry.is_readonly:
+				code.put_var_incref(entry)
+	
+	def generate_argument_decrefs(self, env, code):
+		for entry in env.arg_entries:
+			if not entry.is_readonly:
+				code.put_var_decref(entry)
 
 	def generate_execution_code(self, code):
 		pass
@@ -685,24 +685,28 @@ class CFuncDefNode(FuncDefNode):
 		self.return_type = type.return_type
 	
 	def declare_arguments(self, env):
-		for arg in self.type.args:
+		type = self.type
+		without_gil = type.nogil and not type.with_gil
+		for arg in type.args:
 			if not arg.name:
 				error(arg.pos, "Missing argument name")
-			self.declare_argument(env, arg)
+			self.declare_argument(env, arg,
+				readonly = without_gil and arg.type.is_pyobject)
 			
 	def need_gil_acquisition(self, lenv):
 		type = self.type
 		with_gil = type.with_gil
 		if type.nogil and not with_gil:
-			for arg in type.args:
-				if arg.type.is_pyobject:
-					error(self.pos,
-						"Function with Python argument cannot be declared nogil")
+#			for arg in type.args:
+#				if arg.type.is_pyobject:
+#					error(self.pos,
+#						"Function with Python argument cannot be declared nogil")
 			if type.return_type.is_pyobject:
 				error(self.pos,
 					"Function with Python return type cannot be declared nogil")
 			for entry in lenv.var_entries + lenv.temp_entries:
-				if entry.type.is_pyobject:
+				#print "CFuncDefNode.need_gil_acquisition:", entry.name, entry.cname, "readonly =", entry.is_readonly ###
+				if entry.type.is_pyobject and not entry.is_readonly:
 					error(self.pos, "Function declared nogil has Python locals or temporaries")
 		return with_gil
 

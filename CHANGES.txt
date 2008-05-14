@@ -3,16 +3,36 @@
 
 New features:
 
-	- Modules in packages no longer need to have dotted names. Instead
+	- Modules in packages no longer need to have dotted names. Instead,
 	  a Python-like package directory structure can be used, with
 	  package dirs marked by containing an __init__.py or __init__.pyx.
+	  
+	  Top level package directories are found by searching the include
+	  directories specified by -I options (analogous to PYTHONPATH).
 	 
 	- Dependency tracking. The Pyrex compiler records information about
 	  other source files cimported or included, and can automatically
 	  compile all the modules a given module depends on, with timestamp
 	  checking.
+	  
+	  This is enabled by a -r (recursive) option to the compiler, e.g.
+	  
+	    pyrexc -r mainmodule.pyx
+	  
+	  There are also two other new command-line options:
+	  
+	    -t   Enable timestamp checking. This is implied with -r.
+	    
+	    -f   Overrides implied -t when using -r and forces all
+	         dependent modules to be compiled regardless of timestamps.
 	
 	- Augmented assignment operators (+=, etc.) are now supported.
+	
+	- C functions declared nogil can now have Python objects as arguments.
+	  The argument names are read-only inside the function when this is done.
+	  
+	  Among other things, this allows C methods to be declared nogil (this
+	  couldn't be done before because 'self' is always an object argument).
 
 
 0.9.7.2

@@ -842,7 +842,10 @@ class NameNode(AtomicExprNode):
 		self.finish_analysing_lvalue()
 	
 	def finish_analysing_lvalue(self):
-		if not self.is_lvalue():
+		if self.entry.is_readonly:
+			error(self.pos, "Assignment to read-only name '%s'"
+				% self.name)
+		elif not self.is_lvalue():
 			error(self.pos, "Assignment to non-lvalue '%s'"
 				% self.name)
 			self.type = PyrexTypes.error_type
@@ -908,9 +911,10 @@ class NameNode(AtomicExprNode):
 			self.addr_not_const()
 
 	def is_lvalue(self):
-		return self.entry.is_variable and \
-			not self.entry.type.is_array and \
-			not self.entry.is_readonly
+		entry = self.entry
+		return entry.is_variable and \
+			not entry.type.is_array and \
+			not entry.is_readonly
 	
 	def is_inplace_lvalue(self):
 		return self.is_lvalue()
