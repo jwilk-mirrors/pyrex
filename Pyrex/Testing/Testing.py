@@ -410,6 +410,7 @@ def munge_c_line(line):
 	
 	# HACK: Integer sequence indexing fix
 	line = line.replace("__Pyx_GetItemInt", "PySequence_GetItem")
+	line = line.replace("__Pyx_SetItemInt", "PySequence_SetItem")
 	
 	# ---------- END HACKS ----------
 

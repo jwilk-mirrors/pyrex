@@ -1,9 +1,21 @@
 cdef int i
-i = 3
-j = 3
-d = {3: 'three'}
-l = ['zero', 'one', 'two', 'three']
-print d[j]
-print d[i]
+j = 0
+i = 1
+l = ['zero', 'one']
+d = {0: 'two', 1: 'three'}
 print l[j]
 print l[i]
+print d[j]
+print d[i]
+l[j] = 'Zero'
+d[j] = 'Two'
+print l[j]
+print l[i]
+print d[j]
+print d[i]
+l[i] = 'ONE'
+d[i] = 'THREE'
+print l[j]
+print l[i]
+print d[j]
+print d[i]

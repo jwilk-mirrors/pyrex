@@ -1208,11 +1208,23 @@ class IndexNode(ExprNode):
 		pass
 	
 	def analyse_types(self, env):
+		self.analyse_base_and_index_types(env, getting = 1)
+	
+	def analyse_target_types(self, env):
+		self.analyse_base_and_index_types(env, setting = 1)
+	
+	def analyse_inplace_types(self, env):
+		self.analyse_base_and_index_types(env, getting = 1, setting = 1)
+	
+	def analyse_base_and_index_types(self, env, getting = 0, setting = 0):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
 		if self.base.type.is_pyobject:
 			if self.index.type.is_int:
-				env.use_utility_code(getitem_int_utility_code)
+				if getting:
+					env.use_utility_code(getitem_int_utility_code)
+				if setting:
+					env.use_utility_code(setitem_int_utility_code)
 			else:
 				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
@@ -1266,7 +1278,7 @@ class IndexNode(ExprNode):
 	
 	def generate_setitem_code(self, value_code, code):
 		if self.index.type.is_int:
-			function = "PySequence_SetItem"
+			function = "__Pyx_SetItemInt"
 			index_code = self.index.result_code
 		else:
 			function = "PyObject_SetItem"
@@ -3706,6 +3718,28 @@ static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
 		if (!j)
 			return 0;
 		r = PyObject_GetItem(o, j);
+		Py_DECREF(j);
+	}
+	return r;
+}
+"""]
+
+#------------------------------------------------------------------------------------
+
+setitem_int_utility_code = [
+"""
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
+""","""
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
+	PyTypeObject *t = o->ob_type;
+	int r;
+	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
+		r = PySequence_SetItem(o, i, v);
+	else {
+		PyObject *j = PyInt_FromLong(i);
+		if (!j)
+			return -1;
+		r = PyObject_SetItem(o, j, v);
 		Py_DECREF(j);
 	}
 	return r;

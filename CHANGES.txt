@@ -15,6 +15,14 @@ New features:
 	- Augmented assignment operators (+=, etc.) are now supported.
 
 
+0.9.7.2
+-------
+
+	Bug fixes:
+	
+	- Another integer indexing problem fixed.
+
+
 0.9.7.1
 -------
 
