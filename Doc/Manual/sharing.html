@@ -240,11 +240,7 @@ functions by qualifying them with the name of the module. Here's an example:
 defined in <tt>c_lunch.pxd</tt> are extern C entities. There won't be any
 actual <tt>c_lunch</tt> module at run time, but that doesn't matter; the <tt>c_lunch.pxd</tt> file has done its job of providing an additional namespace at compile time.</p><h2><a name="Sharing_C_Functions"></a>Sharing C Functions</h2><p>C
 functions defined at the top level of a module can be made available
-via cimport by putting headers for them in the .pxd file, for example,</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 0);"><pre>volume.pxd</pre></td><td style="font-weight: bold; background-color: rgb(93, 186, 202);"><pre>spammery.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(255, 204, 0);"><pre>cdef float cube(float)</pre></td><td style="background-color: rgb(93, 186, 202);" colspan="1" rowspan="3"><pre>from volume cimport cube<br><br>def menu(description, size):<br>&nbsp; &nbsp; print description, ":", cube(size), \<br>        "cubic metres of spam"<br><br>menu("Entree", 1)<br>menu("Main course", 3)<br>menu("Dessert", 2)</pre></td></tr><tr style="font-weight: bold;"><td style="vertical-align: top; background-color: rgb(153, 204, 51); height: 1px;"><pre>volume.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(153, 204, 51);"><pre>cdef float cube(float x):<br>&nbsp; &nbsp; return x * x * x</pre></td></tr></tbody></table><br>Note:
-When a module exports a C function in this way, an object appears in
-the module dictionary under the function's name. However, you can't
-make use of this object from Python, nor can you use it from Pyrex
-using a normal import statement; you have to use cimport.<br><h2><a name="Sharing_Extension_Types"></a>Sharing Extension Types</h2>
+via cimport by putting headers for them in the .pxd file, for example,</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 0);"><pre>volume.pxd</pre></td><td style="font-weight: bold; background-color: rgb(93, 186, 202);"><pre>spammery.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(255, 204, 0);"><pre>cdef float cube(float)</pre></td><td style="background-color: rgb(93, 186, 202);" colspan="1" rowspan="3"><pre>from volume cimport cube<br><br>def menu(description, size):<br>&nbsp; &nbsp; print description, ":", cube(size), \<br>        "cubic metres of spam"<br><br>menu("Entree", 1)<br>menu("Main course", 3)<br>menu("Dessert", 2)</pre></td></tr><tr style="font-weight: bold;"><td style="vertical-align: top; background-color: rgb(153, 204, 51); height: 1px;"><pre>volume.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(153, 204, 51);"><pre>cdef float cube(float x):<br>&nbsp; &nbsp; return x * x * x</pre></td></tr></tbody></table><br><h2><a name="Sharing_Extension_Types"></a>Sharing Extension Types</h2>
 
   An extension type can be made available via cimport by splitting its definition into two parts, one in
 a definition file and the other in the corresponding implementation file.
@@ -259,7 +255,7 @@ type's C attributes and C methods.<br>
  <br>
 
  The implementation part must implement all of the C methods declared in
-the definition part, and may not add any further C attributes. It may also
+the definition part, and may not add any further C attributes or methods. It may also
 define Python methods.  
 <p>Here is an example of a module which defines and exports an extension
 type, and another module which uses it. <br>
@@ -287,7 +283,7 @@ type, and another module which uses it. <br>
 
    <td bgcolor="#5dbaca" width="50%"><tt>cdef class Shrubbery:</tt> <br>
 
-       <tt>&nbsp;&nbsp;&nbsp; def __new__(self, int w, int l):</tt> <br>
+       <tt>&nbsp;&nbsp;&nbsp; def __cinit__(self, int w, int l):</tt> <br>
 
        <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self.width = w</tt>
       <br>
@@ -351,7 +347,21 @@ But it doesn't bind the name <tt>Shrubbing</tt> in Landscaping's module namespac
 need to <tt>import</tt> <tt>Shrubbing</tt>.</li>
 
   
-</ul>
+</ul><h2>Circular cimports - Forward-declaring cimported names</h2>If
+you have two structs, unions or extension types defined in different
+.pxd files, and they need to refer to each other, you will have to use
+forward declarations. To avoid circular import difficulties that can
+arise when two .pxd files import each other, there is a special form of
+forward declaration for names that are defined in a different module,
+illustrated by the example below.<br><br><table style="text-align: left; margin-left: 40px;" border="1" cellpadding="5" cellspacing="2"><tbody><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">foo.pxd</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">blarg.pxd</td></tr><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; font-family: monospace; background-color: rgb(255, 204, 24);">cimport blarg<br><br>cdef struct blarg.Eggs<br><br>cdef struct Spam:<br>&nbsp;&nbsp;&nbsp; blarg.Eggs *eggs</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">cimport foo<br><br>cdef struct foo.Spam<br><br>cdef struct Eggs:<br>&nbsp;&nbsp;&nbsp; foo.Spam *spam</td></tr></tbody></table><br>We can't simply say<span style="font-family: monospace;"> from blarg cimport Eggs </span>and<span style="font-family: monospace;"> from foo cimport Spam</span>,
+because that would lead to circular import problems analogous to those
+that arise in Python when two modules try to import names from each
+other. The solution is to only cimport the modules themselves, and use
+forward declarations to fill in the names that haven't been defined
+yet, i.e. <span style="font-family: monospace;">blarg.Eggs</span> and <span style="font-family: monospace;">foo.Spam</span>.<br><br>Note
+that any .pyx file is free to cimport anything it wants from either foo
+or blarg. It's only when two .pxd files import each other that circular
+import issues arise
 
    
 <hr width="100%">Back to the <a href="overview.html">Language Overview</a>

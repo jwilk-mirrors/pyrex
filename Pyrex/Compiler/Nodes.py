@@ -398,6 +398,7 @@ class CVarDefNode(StatNode):
 class CStructOrUnionDefNode(StatNode):
 	#  name          string
 	#  cname         string or None
+	#  module_path   [string]
 	#  kind          "struct" or "union"
 	#  typedef_flag  boolean
 	#  visibility    "public" or "private"
@@ -409,7 +410,13 @@ class CStructOrUnionDefNode(StatNode):
 		scope = None
 		if self.attributes is not None:
 			scope = StructOrUnionScope()
-		self.entry = env.declare_struct_or_union(
+		if self.module_path:
+			home_scope = env.find_imported_module(self.module_path, self.pos)
+			if not home_scope:
+				return
+		else:
+			home_scope = env
+		self.entry = home_scope.declare_struct_or_union(
 			self.name, self.kind, scope, self.typedef_flag, self.pos,
 			self.cname, visibility = self.visibility)
 		if self.attributes is not None:

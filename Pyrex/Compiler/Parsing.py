@@ -1794,7 +1794,8 @@ def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 	# s.sy == ident 'struct' or 'union'
 	kind = s.systring
 	s.next()
-	name = p_ident(s)
+#	name = p_ident(s)
+	module_path, name = p_qualified_name(s)
 	cname = p_opt_cname(s)
 	s.add_type_name(name)
 	attributes = None
@@ -1814,7 +1815,8 @@ def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 	else:
 		s.expect_newline("Syntax error in struct or union definition")
 	return Nodes.CStructOrUnionDefNode(pos, 
-		name = name, cname = cname, kind = kind, attributes = attributes,
+		name = name, cname = cname, module_path = module_path,
+		kind = kind, attributes = attributes,
 		typedef_flag = typedef_flag, visibility = visibility,
 		in_pxd = level == 'module_pxd')
 
@@ -1937,16 +1939,26 @@ def p_class_statement(s):
 		bases = ExprNodes.TupleNode(pos, args = base_list),
 		doc = doc, body = body)
 
+def p_qualified_name(s):
+	path = []
+	name = p_ident(s)
+	while s.sy == '.':
+		s.next()
+		path.append(name)
+		name = p_ident(s)
+	return path, name
+
 def p_c_class_definition(s, level, pos, 
 		visibility = 'private', typedef_flag = 0, api = 0):
 	# s.sy == 'class'
 	s.next()
-	module_path = []
-	class_name = p_ident(s)
-	while s.sy == '.':
-		s.next()
-		module_path.append(class_name)
-		class_name = p_ident(s)
+	module_path, class_name = p_qualified_name(s)
+#	module_path = []
+#	class_name = p_ident(s)
+#	while s.sy == '.':
+#		s.next()
+#		module_path.append(class_name)
+#		class_name = p_ident(s)
 	#if module_path and visibility <> 'extern':
 	#	error(pos, "Qualified class name only allowed for 'extern' C class")
 	if module_path and s.sy == 'IDENT' and s.systring == 'as':
@@ -1961,15 +1973,17 @@ def p_c_class_definition(s, level, pos,
 	base_class_name = None
 	if s.sy == '(':
 		s.next()
-		base_class_path = [p_ident(s)]
-		while s.sy == '.':
-			s.next()
-			base_class_path.append(p_ident(s))
+		base_class_path, base_class_name = p_qualified_name(s)
+#		base_class_path = [p_ident(s)]
+#		while s.sy == '.':
+#			s.next()
+#			base_class_path.append(p_ident(s))
 		if s.sy == ',':
 			s.error("C class may only have one base class")
 		s.expect(')')
-		base_class_module = ".".join(base_class_path[:-1])
-		base_class_name = base_class_path[-1]
+#		base_class_module = ".".join(base_class_path[:-1])
+#		base_class_name = base_class_path[-1]
+		base_class_module = ".".join(base_class_path)
 	if s.sy == '[':
 		if visibility not in ('public', 'extern'):
 			error(s.position(), "Name options only allowed for 'public' or 'extern' C class")

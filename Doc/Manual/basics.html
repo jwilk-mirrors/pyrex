@@ -3,24 +3,23 @@
 <body>
 <h1><hr style="width: 100%; height: 2px;">Language
 Basics <hr width="100%"></h1>
-<ul><li><a href="#PyFuncsVsCFuncs">Python functions vs. C functions</a></li><li>
-<a href="#PyObjParams">Python objects as parameters</a></li><li>
-<a href="#CVarAndTypeDecls">C variable and type definitions</a></li><li><a href="#Grouping_multiple_C_declarations">Grouping multiple C declarations</a><span style="color: rgb(255, 0, 0);"></span></li><li><a href="#AutomaticTypeConversions">Automatic type conversions</a></li><ul><li><a href="#PyToCStringCaveats">Caveats when using a Python
-string in a C context</a></li></ul><li> <a href="#ScopeRules">Scope rules</a></li><li>
-<a href="#StatsAndExprs">Statements and expressions</a></li><ul><li>
-<a href="#ExprSyntaxDifferences">Differences between C and
-Pyrex
-expressions<br> </a></li><li> <a href="#ForFromLoop">Integer for-loops</a></li></ul><li>
-<a href="#ExceptionValues">Error return values</a></li><ul><li>
-<a href="#CheckingReturnValues">Checking return values of
-non-Pyrex functions</a></li></ul><li> <a href="#IncludeStatement">The <tt>include</tt>
-statement</a></li><li><a href="#KeywordOnlyArguments">Keyword-only arguments</a></li><li><a href="#Built-in_Names">Built-in names</a></li><ul><li><a href="#Built-in_Constants">Built-in constants</a> <span style="color: rgb(255, 102, 0);"><span style="color: rgb(255, 0, 0);">(New in 0.9.7)</span></span></li><li><a href="#Built-in_Functions">Built-in functions</a><span style="color: rgb(255, 102, 0);"></span></li><li><a href="#BuiltinTypes">Built-in types</a><span style="color: rgb(255, 102, 0);"> <span style="color: rgb(255, 0, 0);">(New in 0.9.7)</span><br></span></li></ul><li><a href="#Conditional_Compilation">Conditional compilation</a><span style="color: rgb(255, 102, 0);"></span></li><ul><li><a href="#Compile-Time_Definitions">Compile-time definitions</a></li><li><a href="#Conditional_Statements">Conditional statements</a><span style="color: rgb(255, 0, 0);"><br></span></li></ul></ul>This
+<ul id="mozToc"><!--mozToc h2 1 h3 2--><li><a href="#mozTocId641350"> Python
+functions vs. C functions</a></li><li><a href="#mozTocId972536"> Python objects as parameters
+and return values</a></li><li><a href="#mozTocId155104"> C
+variable and type definitions</a></li><ul><li><a href="#mozTocId890190">Forward Declarations</a></li><li><a href="#mozTocId522210">Grouping multiple C declarations</a></li></ul><li><a href="#mozTocId763321">Automatic
+type conversions</a><ul><li><a href="#mozTocId440941">Caveats
+when using a Python string in a C context</a></li></ul></li><li><a href="#mozTocId834148"> Scope rules</a></li><li><a href="#mozTocId954330"> Statements and expressions</a><ul><li><a href="#mozTocId401576"> Differences between C
+and Pyrex
+expressions</a></li><li><a href="#mozTocId899067">Integer for-loops</a></li></ul></li><li><a href="#mozTocId59332"> </a></li><li><a href="#mozTocId482761">
+Error return values</a><ul><li><a href="#mozTocId622828"> Checking
+return values of non-Pyrex functions</a></li></ul></li><li><a href="#mozTocId494354"> The include
+statement</a></li><li><a href="#mozTocId849661">Keyword-only arguments</a></li><li><a href="#mozTocId829237">Built-in Names</a><ul><li><a href="#mozTocId813519">Built-in Constants</a></li><li><a href="#mozTocId593628">Built-in Functions</a></li><li><a href="#mozTocId452377">Built-in Types</a></li></ul></li><li><a href="#mozTocId42018">Conditional Compilation</a><ul><li><a href="#mozTocId379306">Compile-Time Definitions</a></li><li><a href="#mozTocId997015">Conditional Statements</a></li></ul></li></ul>This
 section describes the basic features of the Pyrex language. The
 facilities covered in this section allow you to create Python-callable
 functions that manipulate C data structures and convert between Python
 and C data types. Later sections will cover facilities for <a href="external.html">wrapping external C code</a>, <a href="extension_types.html">creating new Python types</a>
 and <a href="sharing.html">cooperation between Pyrex
-modules</a>.<br> <h2> <a name="PyFuncsVsCFuncs"></a>Python
+modules</a>.<br> <h2><a class="mozTocH2" name="mozTocId641350"></a> <a name="PyFuncsVsCFuncs"></a>Python
 functions vs. C functions</h2> There are two kinds of function
 definition in Pyrex: <p><b>Python functions</b> are
 defined using the <b>def</b> statement, as in Python. They
@@ -43,7 +42,7 @@ is currently only possible for numeric types and string types;
 attempting to use any other type for the parameter of a Python function
 will result in a compile-time error. <p>C functions, on the
 other hand, can have parameters of any type, since they're passed in
-directly using a normal C function call. </p> <h2> <a name="PyObjParams"></a>Python objects as parameters
+directly using a normal C function call. </p> <h2><a class="mozTocH2" name="mozTocId972536"></a> <a name="PyObjParams"></a>Python objects as parameters
 and return values</h2> If no type is specified for a parameter or
 return value, <i>it is assumed to be a Python object.</i>
 (Note that this is different from the C convention, where it would
@@ -63,7 +62,7 @@ which is a Python object. You can also use <b>object </b>as
 the explicit return type of a function, e.g. <blockquote> <pre>cdef object ftang(object int):<br>&nbsp;&nbsp;&nbsp; ...</pre>
 </blockquote> In the interests of clarity, it is probably a good
 idea to always be explicit about <b>object </b>parameters
-in C functions. <h2> <a name="CVarAndTypeDecls"></a>C
+in C functions. <h2><a class="mozTocH2" name="mozTocId155104"></a> <a name="CVarAndTypeDecls"></a>C
 variable and type definitions</h2> The <b>cdef</b>
 statement is also used to declare C variables, either
 local or module-level: <blockquote> <pre>cdef int i, j, k<br>cdef float f, g[42], *h</pre>
@@ -80,7 +79,15 @@ write <blockquote> <pre>cdef Grail *gp</pre> </blockquote>
 and <i>not</i> <blockquote> <pre>cdef struct Grail *gp <font color="#ed181e"># WRONG</font></pre> </blockquote>
 There is also a <b>ctypedef</b> statement for giving names
 to types, e.g. <blockquote> <pre>ctypedef unsigned long ULong</pre>
-<pre>ctypedef int *IntPtr<br></pre></blockquote><h2><a name="Grouping_multiple_C_declarations"></a>Grouping multiple C declarations</h2>If you have a series of declarations that all begin with <span style="font-family: monospace;">cdef</span>, you can group them into a cdef block like this:<br><pre style="margin-left: 40px;">cdef:<br><br>    struct Spam:<br>        int tons<br><br>    int i<br>    float f<br>    Spam *p<br><br>    void f(Spam *s):<br>       print s.tons, "Tons of spam"<br>    </pre><h2><a name="AutomaticTypeConversions"></a>Automatic
+<pre>ctypedef int *IntPtr<br></pre></blockquote><h3><a class="mozTocH2" name="mozTocId890190"></a>Forward Declarations</h3>If
+you have two struct or union types containing pointers that refer to
+each other, you will need to use a forward declaration for at least one
+of them. This is simply the header of a struct or union without the
+colon or body, for example,<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">cdef struct Sandwich</span><br style="font-family: monospace;"><br style="font-family: monospace;"><span style="font-family: monospace;">cdef struct Lunchbox:</span><br style="font-family: monospace;"><div style="margin-left: 40px;"><span style="font-family: monospace;">Sandwich *lunch</span><br style="font-family: monospace;"></div><br style="font-family: monospace;"><span style="font-family: monospace;">cdef struct Sandwich:</span><br style="font-family: monospace;"><div style="margin-left: 40px;"><span style="font-family: monospace;">Lunchbox *container</span><br></div></div><br>You
+can also forward-declare C functions, but there should be little need
+to do this. Pyrex processes all declarations in a module before
+analysing any executable statements, so calling a function defined
+further down in the source file is usually not a problem.<h3><a class="mozTocH2" name="mozTocId522210"></a><a name="Grouping_multiple_C_declarations"></a>Grouping multiple C declarations</h3>If you have a series of declarations that all begin with <span style="font-family: monospace;">cdef</span>, you can group them into a cdef block like this:<br><pre style="margin-left: 40px;">cdef:<br><br>    struct Spam:<br>        int tons<br><br>    int i<br>    float f<br>    Spam *p<br><br>    void f(Spam *s):<br>       print s.tons, "Tons of spam"<br>    </pre><h2><a class="mozTocH2" name="mozTocId763321"></a><a name="AutomaticTypeConversions"></a>Automatic
 type conversions</h2>
 In most situations, automatic conversions will be performed for the
 basic numeric and string types when a Python object is used in a
@@ -103,7 +110,7 @@ long, float<br> </td> <td style="vertical-align: top; width: 150px; white-space:
 </td> </tr> <tr> <td style="vertical-align: top; width: 40%; white-space: nowrap;">char
 *<br> </td> <td style="vertical-align: top; width: 150px; white-space: nowrap;">str<span style="font-style: italic;"></span><br> </td>
 <td style="vertical-align: top; width: 150px; white-space: nowrap;">str<br>
-</td> </tr> </tbody></table><br><h3><a name="PyToCStringCaveats"></a>Caveats
+</td> </tr> </tbody></table><br><h3><a class="mozTocH3" name="mozTocId440941"></a><a name="PyToCStringCaveats"></a>Caveats
 when using a Python string in a C context</h3>
 You need to be careful when using a Python string in a context
 expecting a <span style="font-family: monospace;">char *</span>.
@@ -134,7 +141,7 @@ as necessary.<br>
 only
 heuristics. Sometimes Pyrex will complain unnecessarily, and sometimes
 it will fail to detect a problem that exists. Ultimately, you need to
-understand the issue and be careful what you do. <h2> <a name="ScopeRules"></a>Scope rules</h2> Pyrex
+understand the issue and be careful what you do. <h2><a class="mozTocH2" name="mozTocId834148"></a> <a name="ScopeRules"></a>Scope rules</h2> Pyrex
 determines whether a variable belongs to a local scope, the module
 scope, or the built-in scope <i>completely statically.</i>
 As with Python, assigning to a variable which is not otherwise declared
@@ -156,7 +163,7 @@ in Pyrex:<br> <blockquote> <pre>try:<br>&nbsp; x = True<br>except NameError:<br>
 </blockquote> because, due to the assignment in the last line, <span style="font-family: monospace;">True</span> will
 always be looked up in the module-level scope. You would have to do
 something like this instead:<br> <blockquote> <pre>import __builtin__<br>try:<br>  True = __builtin__.True<br>except AttributeError:<br>  True = 1<br></pre>
-</blockquote> <hr width="100%"> <h2> <a name="StatsAndExprs"></a>Statements and expressions</h2>
+</blockquote> <hr width="100%"> <h2><a class="mozTocH2" name="mozTocId954330"></a> <a name="StatsAndExprs"></a>Statements and expressions</h2>
 Control structures and expressions follow Python syntax for the most
 part. When applied to Python objects, they have the same semantics as
 in Python (unless otherwise noted). Most of the Python operators can
@@ -166,7 +173,7 @@ performed automatically between Python objects and C numeric or string
 types. </p> <p>Reference counts are maintained
 automatically for all Python objects, and
 all Python operations are automatically checked for errors, with
-appropriate action taken. </p> <h3> <a name="ExprSyntaxDifferences"></a>Differences between C
+appropriate action taken. </p> <h3><a class="mozTocH3" name="mozTocId401576"></a> <a name="ExprSyntaxDifferences"></a>Differences between C
 and Pyrex
 expressions</h3>
 There
@@ -198,7 +205,7 @@ perform the conversion automatically.</i></ul>
 some differences
 in operator precedence between Python and C, and that Pyrex uses the
 Python precedences, not the C ones.
-<h3>Integer for-loops</h3>
+<h3><a class="mozTocH3" name="mozTocId899067"></a>Integer for-loops</h3>
 You should be aware that a for-loop such as <blockquote><tt>for
 i in range(n):</tt> <br> <tt>&nbsp;&nbsp;&nbsp;
 ...</tt></blockquote> won't be very fast, even if <tt>i</tt>
@@ -219,7 +226,7 @@ then it is
 downwards. (Any other combination is disallowed.)</li></ul>
 Like other Python looping statements, <tt>break</tt> and <tt>continue</tt>
 may be used in the body, and the loop may have an <tt>else</tt>
-clause. <h2> <hr width="100%"></h2> <h2>
+clause. <h2><a class="mozTocH2" name="mozTocId59332"></a> <hr width="100%"></h2> <h2><a class="mozTocH2" name="mozTocId482761"></a>
 <a name="ExceptionValues"></a>Error return values</h2>
 If you don't do anything special, a function declared with <b>cdef</b>
 that does not return a Python object has no way of reporting Python
@@ -269,7 +276,7 @@ value:</li><ul><pre><tt>int (*grail)(int, char *) except -1</tt></pre></ul><li>
 You don't need to (and shouldn't) declare exception values for
 functions which return Python objects. Remember that a function with no
 declared return type implicitly returns a Python object.</li></ul>
-<h3> <a name="CheckingReturnValues"></a>Checking
+<h3><a class="mozTocH3" name="mozTocId622828"></a> <a name="CheckingReturnValues"></a>Checking
 return values of non-Pyrex functions</h3> It's important to
 understand that the <tt>except</tt> clause does <i>not</i>
 cause an error to be <i>raised</i> when the specified
@@ -285,7 +292,7 @@ get an exception from a non-Python-aware function such as fopen, you
 will
 have to check the return value and raise it yourself, for example, <blockquote>
 <pre>cdef FILE *p<br>p = fopen("spam.txt", "r")<br>if p == NULL:<br>&nbsp;&nbsp;&nbsp; raise SpamError("Couldn't open the spam file")</pre></blockquote><h4><hr width="100%"></h4>
-<h2> <a name="IncludeStatement"></a>The <tt>include</tt>
+<h2><a class="mozTocH2" name="mozTocId494354"></a> <a name="IncludeStatement"></a>The <tt>include</tt>
 statement</h2>A&nbsp;Pyrex source file can include material from other files using the <b>include</b>
 statement, for example <blockquote> <pre>include "spamstuff.pxi"</pre>
 </blockquote> The contents of the named file are textually
@@ -298,7 +305,7 @@ indented to the level of the include statement that is including the
 file.<br><br>Note
 that there are other mechanisms available for splitting Pyrex code into
 separate parts that may be more appropriate in many cases. See<a href="sharing.html"> Sharing Declarations Between
-Pyrex Modules</a>.<br><hr style="width: 100%; height: 2px;"><h2><a name="KeywordOnlyArguments"></a>Keyword-only arguments</h2><p>Python
+Pyrex Modules</a>.<br><hr style="width: 100%; height: 2px;"><h2><a class="mozTocH2" name="mozTocId849661"></a><a name="KeywordOnlyArguments"></a>Keyword-only arguments</h2><p>Python
 functions can have keyword-only arguments listed after the * parameter
 and before the ** paramter if any, e.g.</p><pre style="margin-left: 40px;">def f(a, b, *args, c, d = 42, e, **kwds):<br> ...<br></pre>Here
 c, d and e cannot be passed as position arguments and must be passed as
@@ -307,9 +314,9 @@ since they do not have a default value.<br><br>If the
 parameter name after the * is omitted, the function will not accept any
 extra positional arguments, e.g.<br><br><pre style="margin-left: 40px;">def g(a, b, *, c, d):<br> ...<br></pre>takes
 exactly two positional parameters and has two required keyword
-parameters.<br><br><hr style="width: 100%; height: 2px;"><h2><a name="Built-in_Names"></a>Built-in Names</h2>Pyrex
+parameters.<br><br><hr style="width: 100%; height: 2px;"><h2><a class="mozTocH2" name="mozTocId829237"></a><a name="Built-in_Names"></a>Built-in Names</h2>Pyrex
 knows about many of the names in the builtin namespace, and treats them
-specially in the interests of generating efficient code.<br><h3><a name="Built-in_Constants"></a>Built-in Constants</h3>Pyrex
+specially in the interests of generating efficient code.<br><h3><a class="mozTocH3" name="mozTocId813519"></a><a name="Built-in_Constants"></a>Built-in Constants</h3>Pyrex
 knows the following built-in constant and type names, and references
 their values directly instead of using a dictionary lookup.<br><br><table style="background-color: rgb(204, 255, 255); width: 10px; margin-left: 40px;" border="1" cellpadding="5" cellspacing="0">
 <tbody><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 0);">Type objects (type <span style="font-family: monospace;">type</span>)</td><td colspan="2" rowspan="1" style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 0);">Exceptions (type <span style="font-family: monospace;">type</span>)</td></tr><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; height: 10px;">buffer<br>enumerate<br>file<br>float<br>int<br>long<br>open<br>property<br>str<br>tuple<br>xrange</td><td colspan="1" rowspan="3" align="left" nowrap="nowrap" valign="top">Exception<br>StopIteration<br>StandardError<br>ArithmeticError<br>LookupError<br>AsssertionError<br>EOFError<br>FloatingPointError<br>EnvironmentError<br>IOError<br>OSError<br>ImportError<br>IndexError<br>KeyError<br>KeyboardInterrupt<br>MemoryError<br>NameError<br>OverflowError<br>RuntimeError<br>NotImplementedError<br>SyntaxError</td><td colspan="1" rowspan="3" style="vertical-align: top; white-space: nowrap; text-align: left;">IndentationError<br>TabError<br>ReferenceError<br>SystemError<br>SystemExit<br>TypeError<br>UnboundLocalError<br>UnicodeError<br>UnicodeEncodeError<br>UnicodeDecodeError<br>UnicodeTranslateError<br>ValueError<br>ZeroDivisionError<br>Warning<br>UserWarning<br>DeprecationWarning<br>PendingDeprecationWarning<br>SyntaxWarning<br>OverflowWarning<br>RuntimeWarning<br>FutureWarning</td></tr><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; height: 10px; background-color: rgb(255, 204, 0);">Constants (type <span style="font-family: monospace;">object</span>)</td></tr><tr><td align="left" nowrap="nowrap" valign="top">True<br>False<br>Ellipsis</td></tr>
@@ -326,7 +333,7 @@ their values directly instead of using a dictionary lookup.<br><br><table style=
 <tr></tr><tr></tr></tbody></table><br>Note that although some of the above names refer to type objects, they
 are not Pyrex type names and therefore can't be used to declare the
 type of a variable. Only the names listed under Built-in Types below
-can be used as type names in declarations.<br><h3><a name="Built-in_Functions"></a>Built-in Functions</h3>Pyrex
+can be used as type names in declarations.<br><h3><a class="mozTocH3" name="mozTocId593628"></a><a name="Built-in_Functions"></a>Built-in Functions</h3>Pyrex
 compiles calls to the following built-in functions into direct calls to
 the corresponding Python/C API routines, making them particularly fast.<br><br><table style="text-align: left; background-color: rgb(204, 255, 255); margin-left: 40px;" border="1" cellpadding="4" cellspacing="0"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 51);">Function and arguments</td><td style="font-weight: bold; background-color: rgb(255, 204, 51);">Return type</td><td style="font-weight: bold; white-space: nowrap; background-color: rgb(255, 204, 51);">Python/C API Equivalent</td></tr><tr><td>abs(obj)</td><td>object</td><td>PyNumber_Absolute</td></tr><tr><td align="left" nowrap="nowrap" valign="top">bool(obj) &nbsp; <span style="font-style: italic;">(Note 3)</span></td><td align="left" nowrap="nowrap" valign="top">int</td><td align="left" nowrap="nowrap" valign="top">PyObject_IsTrue</td></tr><tr><td>delattr(obj,&nbsp;name)</td><td>int</td><td>PyObject_DelAttr</td></tr><tr><td>dir(obj)</td><td>object</td><td>PyObject_Dir</td></tr><tr><td>divmod(x, y)</td><td>object</td><td>PyNumber_Divmod</td></tr><tr><td style="white-space: nowrap;">getattr(obj,&nbsp;name) <span style="font-style: italic;">&nbsp; (Note 1</span>)<br>getattr3(obj, name, default)</td><td>object</td><td>PyObject_GetAttr</td></tr><tr><td>hasattr(obj, name)</td><td>int</td><td>PyObject_HasAttr</td></tr><tr><td>hash(obj)</td><td>int</td><td>PyObject_Hash</td></tr><tr><td>intern(obj)</td><td>object</td><td>PyString_InternFromString</td></tr><tr><td>isinstance(obj, type)</td><td>int</td><td>PyObject_IsInstance</td></tr><tr><td>issubclass(obj, type)</td><td>int</td><td>PyObject_IsSubclass</td></tr><tr><td align="left" nowrap="nowrap" valign="top">issubtype(type, type) &nbsp; <span style="font-style: italic;">(Note 4</span>)</td><td align="left" nowrap="nowrap" valign="top">int</td><td align="left" nowrap="nowrap" valign="top">PyType_IsSubType</td></tr><tr><td>iter(obj)</td><td>object</td><td>PyObject_GetIter</td></tr><tr><td>len(obj)</td><td>Py_ssize_t</td><td>PyObject_Length</td></tr><tr><td style="width: 1px;">pow(x, y, z) <span style="font-style: italic;">&nbsp; (Note 2)</span></td><td style="width: 1px;">object</td><td style="width: 1px;">PyNumber_Power</td></tr><tr><td>reload(obj)</td><td>object</td><td>PyImport_ReloadModule</td></tr><tr><td>repr(obj)</td><td>object</td><td>PyObject_Repr</td></tr><tr><td style="width: 200px;">setattr(obj,&nbsp;name)</td><td style="width: 100px;">void</td><td style="width: 150px;">PyObject_SetAttr</td></tr><tr><td align="left" nowrap="nowrap" valign="top">typecheck(obj, type) &nbsp; <span style="font-style: italic;">(Note 4)</span></td><td align="left" nowrap="nowrap" valign="top">int</td><td align="left" nowrap="nowrap" valign="top">PyObject_TypeCheck</td></tr></tbody></table><br><div style="margin-left: 40px;"><span style="font-style: italic;">Note 1:</span> There are two different functions corresponding to the Python <span style="font-family: monospace;">getattr</span> depending on whether a third argument is used. In a non-call context, they both evaluate to the Python <span style="font-family: monospace;">getattr</span> function.<br><br><span style="font-style: italic;">Note 2:</span> Only the three-argument form of <span style="font-family: monospace;">pow()</span> is supported. Use the <span style="font-family: monospace;">**</span> operator otherwise.<br><br><span style="font-style: italic;">Note 3:</span> In a non-call context, the name <span style="font-family: monospace;">bool</span> refers to the Python built-in bool type.<br><br><span style="font-style: italic;">Note 4:</span> The functions <span style="font-family: monospace;">typecheck</span> and <span style="font-family: monospace;">issubtype</span> have no exact Python equivalent. They are included for fast, safe type checking of extension types. They are safer than using <span style="font-family: monospace;">isinstance</span> and <span style="font-family: monospace;">issubclass</span>
 for this purpose, because the behaviour of the latter functions can be
@@ -335,7 +342,7 @@ objects involved.<br></div><br>Only
 direct function calls using these names are optimised. If you do
 something else with one of these names that assumes it's a Python
 object, such as assign it to a Python variable, and later call it, the
-call will be made as a Python function call.<h3><a name="BuiltinTypes"></a>Built-in Types</h3>Pyrex
+call will be made as a Python function call.<h3><a class="mozTocH3" name="mozTocId452377"></a><a name="BuiltinTypes"></a>Built-in Types</h3>Pyrex
 knows about the following builtin
 types:<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">dict</span><br style="font-family: monospace;"><span style="font-family: monospace;">list</span><br><span style="font-family: monospace;">object</span><br style="font-family: monospace;"><span style="font-family: monospace;">slice</span><br style="font-family: monospace;"><span style="font-family: monospace;">type</span><br></div><br>If you declare a variable as being of one of these types, then
 calls to the methods in the table below will be compiled to direct Python/C API calls,
@@ -345,14 +352,14 @@ object's C struct.<br><br>Referring to the types themselves is also
 slightly more efficient, because the relevant type object is accessed
 directly rather than via a global variable lookup.<br><br><table style="text-align: left; background-color: rgb(204, 255, 255); width: 665px; height: 330px;" border="1" cellpadding="4" cellspacing="0"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 51);">Method or Attribute</td><td style="font-weight: bold; background-color: rgb(255, 204, 51);">Return type</td><td colspan="1" rowspan="1" style="font-weight: bold; white-space: nowrap; background-color: rgb(255, 204, 51);">Python/C API Equivalent</td><td style="background-color: rgb(255, 204, 51); font-weight: bold;" align="left" nowrap="nowrap">Notes</td></tr><tr><td colspan="4" rowspan="1" style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(51, 153, 153);"><span style="font-weight: bold;">Type </span><span style="font-family: monospace; font-weight: bold;">dict</span></td></tr><tr><td align="left" nowrap="nowrap" valign="top">clear()</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyDict_Clear</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">copy()</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyDict_Copy</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">items()</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top">PyDict_Items</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">keys()</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top">PyDict_Keys</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">values()</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top">PyDict_Values</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">merge(obj, override)</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyDict_Merge</td><td align="left" nowrap="nowrap" valign="top">Merge items from a mapping</td></tr><tr><td align="left" nowrap="nowrap" valign="top">update(obj)</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyDict_Update</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">merge_pairs(obj,&nbsp;override)</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyDict_MergeFromSeq2</td><td align="left" nowrap="nowrap" valign="top">Merge (key, value) pairs from a sequence</td></tr><tr><td colspan="4" rowspan="1" style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(51, 153, 153);"><span style="font-weight: bold;">Type </span><span style="font-family: monospace; font-weight: bold;">list</span></td></tr><tr><td align="left" nowrap="nowrap" valign="top">insert(int, obj)</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyList_Insert</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">append(obj)</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyList_Append</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">sort()</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyList_Sort</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">reverse()</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top">PyList_Reverse</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">as_tuple()</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top">PyList_AsTuple</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td colspan="4" rowspan="1" style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(51, 153, 153);"><span style="font-weight: bold;">Type <span style="font-family: monospace;">slice</span></span></td></tr><tr><td align="left" nowrap="nowrap" valign="top">indices()</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top">PySlice_Indices</td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">start</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">stop</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top"></td></tr><tr><td align="left" nowrap="nowrap" valign="top">step</td><td align="left" nowrap="nowrap" valign="top">object</td><td align="left" nowrap="nowrap" valign="top"></td><td align="left" nowrap="nowrap" valign="top"></td></tr></tbody></table><br>Some
 of the above methods have no direct Python equivalent, but are there to
-provide access to routines that exist in the Python/C API.<br><br>As an example, the following compiles into code containing no Python attribute lookups or function calls.<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">cdef list cheeses</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses = []</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.append("camembert")</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.append("cheddar")</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.insert(1, "something runny")</span><br style="font-family: monospace;"></div><br><hr style="width: 100%; height: 2px;"><h2><a name="Conditional_Compilation"></a>Conditional Compilation</h2>Some features are available for conditional compilation and compile-time constants within a Pyrex source file.<br><h3><a name="Compile-Time_Definitions"></a>Compile-Time Definitions</h3>A compile-time constant can be defined using the <span style="font-family: monospace; font-weight: bold;">DEF</span> statement:<br><pre style="margin-left: 40px;">DEF FavouriteFood = "spam"<br>DEF ArraySize = 42<br>DEF OtherArraySize = 2 * ArraySize + 17</pre>The
+provide access to routines that exist in the Python/C API.<br><br>As an example, the following compiles into code containing no Python attribute lookups or function calls.<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">cdef list cheeses</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses = []</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.append("camembert")</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.append("cheddar")</span><br style="font-family: monospace;"><span style="font-family: monospace;">cheeses.insert(1, "something runny")</span><br style="font-family: monospace;"></div><br><hr style="width: 100%; height: 2px;"><h2><a class="mozTocH2" name="mozTocId42018"></a><a name="Conditional_Compilation"></a>Conditional Compilation</h2>Some features are available for conditional compilation and compile-time constants within a Pyrex source file.<br><h3><a class="mozTocH3" name="mozTocId379306"></a><a name="Compile-Time_Definitions"></a>Compile-Time Definitions</h3>A compile-time constant can be defined using the <span style="font-family: monospace; font-weight: bold;">DEF</span> statement:<br><pre style="margin-left: 40px;">DEF FavouriteFood = "spam"<br>DEF ArraySize = 42<br>DEF OtherArraySize = 2 * ArraySize + 17</pre>The
 right-hand side of the DEF must be a valid compile-time expression.
 Such expressions are made up of literal values and names defined using
 DEF statements, combined using any of the Python expression syntax.<br><br>The following compile-time names are predefined, corresponding to the values returned by <span style="font-weight: bold;">os.uname()</span>.<br><pre style="margin-left: 40px;">UNAME_SYSNAME, UNAME_NODENAME, UNAME_RELEASE,<br>UNAME_VERSION, UNAME_MACHINE</pre>The following selection of builtin constants and functions are also available:<br><pre style="margin-left: 40px;">None, True, False,<br>abs, bool, chr, cmp, complex, dict, divmod, enumerate,<br>float, hash, hex, int, len, list, long, map, max, min,<br>oct, ord, pow, range, reduce, repr, round, slice, str,<br>sum, tuple, xrange, zip</pre>A
 name defined using DEF can be used anywhere an identifier can appear,
 and it is replaced with its compile-time value as though it were
 written into the source at that point as a literal. For this to work,
-the compile-time expression must evaluate to a Python value of type <span style="font-weight: bold;">int</span>, <span style="font-weight: bold;">long</span>, <span style="font-weight: bold;">float </span>or <span style="font-weight: bold;">str</span>.<br><pre style="margin-left: 40px;">cdef int a1[ArraySize]<br>cdef int a2[OtherArraySize]<br>print "I like", FavouriteFood</pre><h3><a name="Conditional_Statements"></a>Conditional Statements</h3>The <span style="font-family: monospace; font-weight: bold;">IF</span> statement can be used to conditionally include or exclude sections of code at compile time. It works in a similar way to the <span style="font-weight: bold;">#if</span> preprocessor directive in C.<br><pre style="margin-left: 40px;">IF UNAME_SYSNAME == "Windows":<br>    include "icky_definitions.pxi"<br>ELIF UNAME_SYSNAME == "Darwin":<br>    include "nice_definitions.pxi"<br>ELIF UNAME_SYSNAME == "Linux":<br>    include "penguin_definitions.pxi"<br>ELSE:<br>    include "other_definitions.pxi"</pre>The
+the compile-time expression must evaluate to a Python value of type <span style="font-weight: bold;">int</span>, <span style="font-weight: bold;">long</span>, <span style="font-weight: bold;">float </span>or <span style="font-weight: bold;">str</span>.<br><pre style="margin-left: 40px;">cdef int a1[ArraySize]<br>cdef int a2[OtherArraySize]<br>print "I like", FavouriteFood</pre><h3><a class="mozTocH3" name="mozTocId997015"></a><a name="Conditional_Statements"></a>Conditional Statements</h3>The <span style="font-family: monospace; font-weight: bold;">IF</span> statement can be used to conditionally include or exclude sections of code at compile time. It works in a similar way to the <span style="font-weight: bold;">#if</span> preprocessor directive in C.<br><pre style="margin-left: 40px;">IF UNAME_SYSNAME == "Windows":<br>    include "icky_definitions.pxi"<br>ELIF UNAME_SYSNAME == "Darwin":<br>    include "nice_definitions.pxi"<br>ELIF UNAME_SYSNAME == "Linux":<br>    include "penguin_definitions.pxi"<br>ELSE:<br>    include "other_definitions.pxi"</pre>The
 ELIF and ELSE clauses are optional. An IF statement can appear anywhere
 that a normal statement or declaration can appear, and it can contain
 any statements or declarations that would be valid in that context,
