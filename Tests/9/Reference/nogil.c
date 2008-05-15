@@ -43,7 +43,9 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 /* Declarations from nogil */
 
 __PYX_EXTERN_C DL_EXPORT(PyObject) *g(PyObject *); /*proto*/
+__PYX_EXTERN_C DL_EXPORT(void) g2(PyObject *); /*proto*/
 static void __pyx_f_5nogil_f(int); /*proto*/
+static void __pyx_f_5nogil_h(PyObject *); /*proto*/
 
 
 /* Implementation of nogil */
@@ -51,7 +53,7 @@ static void __pyx_f_5nogil_f(int); /*proto*/
 static void __pyx_f_5nogil_f(int __pyx_v_x) {
   int __pyx_v_y;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":5 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":6 */
   __pyx_v_y = 42;
 
 }
@@ -77,7 +79,7 @@ PyMODINIT_FUNC initnogil(void) {
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":3 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":8 */
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("nogil");
