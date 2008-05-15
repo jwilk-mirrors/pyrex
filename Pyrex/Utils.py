@@ -21,8 +21,8 @@ def open_new_file(path):
 def castrate_file(path, st):
 	#  Remove junk contents from an output file after a
 	#  failed compilation, but preserve metadata on Mac.
-	#  Also sets access and modification times back to
-	#  those specified by st (a stat struct).
+	#  Also sets access and modification times earlier
+	#  than those specified by st (a stat struct).
 	try:
 		f = open(path, "r+")
 	except EnvironmentError:
@@ -34,7 +34,7 @@ def castrate_file(path, st):
 			"#error Do not use this file, it is the result of a failed Pyrex compilation.\n")
 		f.close()
 		if st:
-			os.utime(path, (st.st_atime, st.st_mtime))
+			os.utime(path, (st.st_atime - 1, st.st_mtime - 1))
 
 def modification_time(path):
 	st = os.stat(path)

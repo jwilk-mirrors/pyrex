@@ -241,8 +241,9 @@ class Context:
 			#print "...yes, newer than c file" ###
 			return 1
 		pos = [source_path]
-		pxd_path = replace_suffix(source_path, ".pxd")
-		if os.path.exists(pxd_path) and file_newer_than(pxd_path, c_time):
+		module_name = self.extract_module_name(source_path)
+		pxd_path = self.find_pxd_file(module_name, pos)
+		if pxd_path and file_newer_than(pxd_path, c_time):
 			#print "...yes, pxd file newer than c file" ###
 			return 1
 		for kind, name in self.read_dependency_file(source_path):
