@@ -42,6 +42,8 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
 
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
+
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
@@ -115,7 +117,7 @@ static int __pyx_f_11inplace_lhs_f(void) {
   __pyx_3 = PyNumber_InPlaceAdd(__pyx_2, __pyx_1); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   Py_DECREF(__pyx_1); __pyx_1 = 0;
-  if (PySequence_SetItem(__pyx_v_a, __pyx_v_i, __pyx_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
+  if (__Pyx_SetItemInt(__pyx_v_a, __pyx_v_i, __pyx_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
   Py_DECREF(__pyx_3); __pyx_3 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_lhs.pyx":18 */
@@ -247,6 +249,21 @@ static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
 		if (!j)
 			return 0;
 		r = PyObject_GetItem(o, j);
+		Py_DECREF(j);
+	}
+	return r;
+}
+
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
+	PyTypeObject *t = o->ob_type;
+	int r;
+	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
+		r = PySequence_SetItem(o, i, v);
+	else {
+		PyObject *j = PyInt_FromLong(i);
+		if (!j)
+			return -1;
+		r = PyObject_SetItem(o, j, v);
 		Py_DECREF(j);
 	}
 	return r;

@@ -42,7 +42,7 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*
 
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
@@ -223,7 +223,7 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   if (__pyx_2) {
     __Pyx_AddTraceback("tryexcept.f");
     if (__Pyx_GetException(&__pyx_3, &__pyx_4, &__pyx_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
-    if (PySequence_SetItem(__pyx_v_c, 42, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
+    if (__Pyx_SetItemInt(__pyx_v_c, 42, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
     __pyx_v_i = 2;
     Py_DECREF(__pyx_3); __pyx_3 = 0;
     Py_DECREF(__pyx_4); __pyx_4 = 0;
@@ -428,16 +428,16 @@ bad:
 	return -1;
 }
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
 	PyTypeObject *t = o->ob_type;
-	PyObject *r;
+	int r;
 	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_GetItem(o, i);
+		r = PySequence_SetItem(o, i, v);
 	else {
 		PyObject *j = PyInt_FromLong(i);
 		if (!j)
-			return 0;
-		r = PyObject_GetItem(o, j);
+			return -1;
+		r = PyObject_SetItem(o, j, v);
 		Py_DECREF(j);
 	}
 	return r;

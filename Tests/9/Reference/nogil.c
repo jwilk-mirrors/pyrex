@@ -56,6 +56,11 @@ static void __pyx_f_5nogil_f(int __pyx_v_x) {
 
 }
 
+static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
+  g2(__pyx_v_x);
+
+}
+
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
 };

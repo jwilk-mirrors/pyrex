@@ -40,7 +40,7 @@ static char **__pyx_f;
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
 
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
@@ -126,16 +126,16 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	return result;
 }
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
+static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
 	PyTypeObject *t = o->ob_type;
-	PyObject *r;
+	int r;
 	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_GetItem(o, i);
+		r = PySequence_SetItem(o, i, v);
 	else {
 		PyObject *j = PyInt_FromLong(i);
 		if (!j)
-			return 0;
-		r = PyObject_GetItem(o, j);
+			return -1;
+		r = PyObject_SetItem(o, j, v);
 		Py_DECREF(j);
 	}
 	return r;

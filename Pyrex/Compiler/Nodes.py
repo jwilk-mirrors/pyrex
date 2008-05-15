@@ -610,7 +610,7 @@ class FuncDefNode(StatNode, BlockNode):
 		code.put_label(code.return_label)
 		code.put_var_decrefs(lenv.var_entries, used_only = 1)
 		#code.put_var_decrefs(lenv.arg_entries)
-		self.generate_argument_decrefs(env, code)
+		self.generate_argument_decrefs(lenv, code)
 		self.put_stararg_decrefs(code)
 		if acquire_gil:
 			code.putln("PyGILState_Release(_save);")
@@ -1314,7 +1314,7 @@ class CClassDefNode(StatNode):
 					else:
 						self.base_type = base_class_entry.type
 		has_body = self.body is not None
-		if self.module_name:
+		if self.module_name and self.visibility <> 'extern':
 			module_path = self.module_name.split(".")
 			home_scope = env.find_imported_module(module_path, self.pos)
 			if not home_scope:
@@ -1351,7 +1351,7 @@ class CClassDefNode(StatNode):
 			self.body.analyse_expressions(env)
 	
 	def generate_function_definitions(self, env, code):
-		if self.body:
+		if self.entry and self.body:
 			self.body.generate_function_definitions(
 				self.entry.type.scope, code)
 	

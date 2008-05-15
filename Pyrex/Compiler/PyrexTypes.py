@@ -771,6 +771,7 @@ class ErrorType(PyrexType):
 	exception_check	= 0
 	to_py_function = "dummy"
 	from_py_function = "dummy"
+	parsetuple_format = "E"
 	
 	def declaration_code(self, entity_code, 
 			for_display = 0, dll_linkage = None, pyrex = 0):
