@@ -1476,7 +1476,15 @@ class SliceNode(ExprNode):
 				code.error_goto(self.pos)))
 
 
-class SimpleCallNode(ExprNode):
+class CallNode(ExprNode):
+
+	def gil_check(self, env):
+		# Make sure we're not in a nogil environment
+		if env.nogil:
+			error(self.pos, "Calling gil-requiring function without gil")
+
+
+class SimpleCallNode(CallNode):
 	#  Function call without keyword, * or ** args.
 	#
 	#  function       ExprNode
@@ -1527,6 +1535,7 @@ class SimpleCallNode(ExprNode):
 				self.result_ctype = py_object_type
 			else:
 				self.type = py_object_type
+			self.gil_check(env)
 			self.is_temp = 1
 		else:
 			for arg in self.args:
@@ -1590,6 +1599,9 @@ class SimpleCallNode(ExprNode):
 				self.is_temp = 1
 				if self.type.is_pyobject:
 					self.result_ctype = py_object_type
+		# Check gil
+		if not func_type.nogil:
+			self.gil_check(env)
 	
 	def calculate_result_code(self):
 		return self.c_call_code()

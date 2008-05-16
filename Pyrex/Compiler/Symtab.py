@@ -141,11 +141,13 @@ class Scope:
 	# qualified_name    string             "modname" or "modname.classname"
 	# pystring_entries  [Entry]            String const entries newly used as
 	#                                        Python strings in this scope
+	# nogil             boolean            In a nogil section
 
 	is_py_class_scope = 0
 	is_c_class_scope = 0
 	scope_prefix = ""
 	in_cinclude = 0
+	nogil = 0
 	
 	def __init__(self, name, outer_scope, parent_scope):
 		# The outer_scope is the next scope in the lookup chain.

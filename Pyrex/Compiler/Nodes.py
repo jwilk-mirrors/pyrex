@@ -517,9 +517,11 @@ class FuncDefNode(StatNode, BlockNode):
 				
 	def generate_function_definitions(self, env, code):
 		# Generate C code for header and body of function
+		type = self.entry.type
 		genv = env.global_scope()
 		lenv = LocalScope(name = self.entry.name, outer_scope = genv)
 		lenv.return_type = self.return_type
+		lenv.nogil = type.nogil and not type.with_gil
 		code.init_labels()
 		self.declare_arguments(lenv)
 		self.body.analyse_declarations(lenv)
@@ -2409,6 +2411,12 @@ class GILStatNode(TryFinallyStatNode):
 	#   state   string   'gil' or 'nogil'
 		
 	preserve_exception = 0
+
+	def analyse_expressions(self, env):
+		was_nogil = env.nogil
+		env.nogil = 1
+		TryFinallyStatNode.analyse_expressions(self, env)
+		env.nogil = was_nogil
 
 	def __init__(self, pos, state, body):
 		self.state = state

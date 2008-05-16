@@ -8,5 +8,17 @@ cdef void g(int x) nogil:
 cdef void h(int x) nogil:
 	p()
 
-cdef p():
+cdef object p() nogil:
+	pass
+
+cdef void k() nogil:
+	q()
+	
+cdef void m():
+	q()
+	with nogil:
+		k()
+		q()
+
+cdef void q():
 	pass
