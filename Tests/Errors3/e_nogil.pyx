@@ -15,10 +15,14 @@ cdef void k() nogil:
 	q()
 	
 cdef void m():
+	cdef object obj
+	cdef int i
 	q()
 	with nogil:
 		k()
 		q()
+		i = 42
+		obj = None
 
 cdef void q():
 	pass

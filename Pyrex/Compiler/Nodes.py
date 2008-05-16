@@ -1455,6 +1455,7 @@ class SingleAssignmentNode(AssignmentNode):
 	def analyse_types(self, env, use_temp = 0):
 		self.rhs.analyse_types(env)
 		self.lhs.analyse_target_types(env)
+		self.lhs.gil_assignment_check(env)
 		self.rhs = self.rhs.coerce_to(self.lhs.type, env)
 		if use_temp:
 			self.rhs = self.rhs.coerce_to_temp(env)

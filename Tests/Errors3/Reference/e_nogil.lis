@@ -1,6 +1,8 @@
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:1:5: Function with Python return type cannot be declared nogil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:6:3: Assignment of Python object not allowed without gil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:4:5: Function declared nogil has Python locals or temporaries
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:8:5: Function declared nogil has Python locals or temporaries
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:11:5: Function with Python return type cannot be declared nogil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:15:2: Calling gil-requiring function without gil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:21:3: Calling gil-requiring function without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:25:6: Assignment of Python object not allowed without gil

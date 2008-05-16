@@ -294,6 +294,10 @@ class ExprNode(Node):
 			error(self.pos, "Invalid target for in-place operation")
 			self.type = error_type
 	
+	def gil_assignment_check(self, env):
+		if env.nogil and self.type.is_pyobject:
+			error(self.pos, "Assignment of Python object not allowed without gil")
+	
 	def check_const(self):
 		self.not_const()
 	
