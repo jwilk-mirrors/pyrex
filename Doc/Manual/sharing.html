@@ -19,50 +19,21 @@ for making C declarations, functions and extension types in one Pyrex module ava
 for use in another Pyrex module. These facilities are closely modelled on
 the Python import mechanism, and can be thought of as a compile-time version 
 of it.  
-<h2> Contents</h2>
+<h2><a class="mozTocH2" name="mozTocId699652"></a> Contents</h2><ul id="mozToc"><!--mozToc h2 1 h3 2--><li><a href="#mozTocId989010"> Definition and Implementation files</a><ul><li><a href="#mozTocId411233"> What a Definition File contains</a></li><li><a href="#mozTocId20347"> What an Implementation File contains</a></li></ul></li><li><a href="#mozTocId950993"> The <span style="font-family: monospace;">cimport</span> statement</a><ul><li><a href="#mozTocId559554"> Search paths for definition files</a></li><li><a href="#mozTocId478514"> Using <span style="font-family: monospace;">cimport</span> to resolve naming
+ conflicts</a></li></ul></li><li><a href="#mozTocId937218">Sharing C Functions</a></li><li><a href="#mozTocId825278">Sharing Extension Types</a></li><li><a href="#mozTocId144977">Circular cimports - Forward-declaring cimported names</a></li></ul>
 
    
-<ul>
 
-  <li> <a href="#DefAndImpFiles">Definition and Implementation files</a></li>
-
-       
-  <ul>
-
-  <li> <a href="#WhatDefFileContains">What a Definition File contains</a></li>
-
-   <li> <a href="#WhatImpFileContains">What an Implementation File contains</a></li>
-
-      
-  </ul>
-
-   <li> <a href="#CImportStatement">The <tt>cimport</tt> statement</a></li>
-
-       
-  <ul>
-
-  <li> <a href="#SearchPaths">Search paths for definition files</a></li>
-
-   <li> <a href="#ResolvingNamingConflicts">Using <tt>cimport</tt> to resolve 
-naming conflicts</a></li>
-
-      
-  </ul><li><a href="#Sharing_C_Functions">Sharing C Functions</a>&nbsp;<span style="color: rgb(255, 0, 0);">(New in 0.9.6)</span></li>
-
-   <li> <a href="#Sharing_Extension_Types">Sharing extension types</a></li>
-
-  
-</ul>
 
    
-<h2> <a name="DefAndImpFiles"></a>Definition and Implementation files</h2>
+<h2><a class="mozTocH2" name="mozTocId989010"></a> <a name="DefAndImpFiles"></a>Definition and Implementation files</h2>
 
   A Pyrex module can be split into two parts: a <i>definition file</i> with
  a <tt>.pxd</tt> suffix, containing C declarations that are to be available
  to other Pyrex modules, and an <i>implementation file</i> with a <tt>.pyx</tt>
 suffix, containing everything else. When a module wants to use something
 declared in another module's definition file, it imports it using the <a href="#CImportStatement"><b>cimport</b> statement</a>.  
-<h3> <a name="WhatDefFileContains"></a>What a Definition File contains</h3>
+<h3><a class="mozTocH3" name="mozTocId411233"></a> <a name="WhatDefFileContains"></a>What a Definition File contains</h3>
 
   A definition file can contain:  
 <ul>
@@ -87,13 +58,13 @@ modules; its mere presence in a definition file does that. You only need a
 public declaration if you want to make something available to external C code.</blockquote>
 
    
-<h3> <a name="WhatImpFileContains"></a>What an Implementation File contains</h3>
+<h3><a class="mozTocH3" name="mozTocId20347"></a> <a name="WhatImpFileContains"></a>What an Implementation File contains</h3>
 
   An implementation file can contain any kind of Pyrex statement, although
  there are some restrictions on the implementation part of an extension type 
 if the corresponding definition file also defines that type (see below).
  
-<h2> <a name="CImportStatement"></a>The <tt>cimport</tt> statement</h2>
+<h2><a class="mozTocH2" name="mozTocId950993"></a> <a name="CImportStatement"></a>The <tt>cimport</tt> statement</h2>
 
   The <b>cimport</b> statement is used in a definition or implementation
 file to gain access to names declared in another definition file. Its syntax
@@ -181,7 +152,7 @@ types is covered in more detail <a href="#SharingExtensionTypes">below</a>.
 </p>
 
  
-<h3> <a name="SearchPaths"></a>Search paths for definition files</h3>
+<h3><a class="mozTocH3" name="mozTocId559554"></a> <a name="SearchPaths"></a>Search paths for definition files</h3>
 
   When you <b>cimport</b> a module called <tt>modulename</tt>, the Pyrex
 compiler searches for a file called <tt>modulename.pxd</tt> along the search
@@ -192,7 +163,7 @@ same path, and if found, it is processed before processing the <tt>.pyx</tt>
 file.  </p>
 
  
-<h3> <a name="ResolvingNamingConflicts"></a>Using cimport to resolve naming
+<h3><a class="mozTocH3" name="mozTocId478514"></a> <a name="ResolvingNamingConflicts"></a>Using cimport to resolve naming
  conflicts</h3>
 
   The cimport mechanism provides a clean and simple way to solve the problem
@@ -238,9 +209,9 @@ functions by qualifying them with the name of the module. Here's an example:
    
 <p>You don't need any <tt>c_lunch.pyx</tt> file, because the only things
 defined in <tt>c_lunch.pxd</tt> are extern C entities. There won't be any
-actual <tt>c_lunch</tt> module at run time, but that doesn't matter; the <tt>c_lunch.pxd</tt> file has done its job of providing an additional namespace at compile time.</p><h2><a name="Sharing_C_Functions"></a>Sharing C Functions</h2><p>C
+actual <tt>c_lunch</tt> module at run time, but that doesn't matter; the <tt>c_lunch.pxd</tt> file has done its job of providing an additional namespace at compile time.</p><h2><a class="mozTocH2" name="mozTocId937218"></a><a name="Sharing_C_Functions"></a>Sharing C Functions</h2><p>C
 functions defined at the top level of a module can be made available
-via cimport by putting headers for them in the .pxd file, for example,</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 0);"><pre>volume.pxd</pre></td><td style="font-weight: bold; background-color: rgb(93, 186, 202);"><pre>spammery.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(255, 204, 0);"><pre>cdef float cube(float)</pre></td><td style="background-color: rgb(93, 186, 202);" colspan="1" rowspan="3"><pre>from volume cimport cube<br><br>def menu(description, size):<br>&nbsp; &nbsp; print description, ":", cube(size), \<br>        "cubic metres of spam"<br><br>menu("Entree", 1)<br>menu("Main course", 3)<br>menu("Dessert", 2)</pre></td></tr><tr style="font-weight: bold;"><td style="vertical-align: top; background-color: rgb(153, 204, 51); height: 1px;"><pre>volume.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(153, 204, 51);"><pre>cdef float cube(float x):<br>&nbsp; &nbsp; return x * x * x</pre></td></tr></tbody></table><br><h2><a name="Sharing_Extension_Types"></a>Sharing Extension Types</h2>
+via cimport by putting headers for them in the .pxd file, for example,</p><table style="text-align: left; width: 100%;" border="0" cellpadding="5" cellspacing="2"><tbody><tr><td style="font-weight: bold; background-color: rgb(255, 204, 0);"><pre>volume.pxd</pre></td><td style="font-weight: bold; background-color: rgb(93, 186, 202);"><pre>spammery.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(255, 204, 0);"><pre>cdef float cube(float)</pre></td><td style="background-color: rgb(93, 186, 202);" colspan="1" rowspan="3"><pre>from volume cimport cube<br><br>def menu(description, size):<br>&nbsp; &nbsp; print description, ":", cube(size), \<br>        "cubic metres of spam"<br><br>menu("Entree", 1)<br>menu("Main course", 3)<br>menu("Dessert", 2)</pre></td></tr><tr style="font-weight: bold;"><td style="vertical-align: top; background-color: rgb(153, 204, 51); height: 1px;"><pre>volume.pyx</pre></td></tr><tr><td style="vertical-align: top; background-color: rgb(153, 204, 51);"><pre>cdef float cube(float x):<br>&nbsp; &nbsp; return x * x * x</pre></td></tr></tbody></table><br><h2><a class="mozTocH2" name="mozTocId825278"></a><a name="Sharing_Extension_Types"></a>Sharing Extension Types</h2>
 
   An extension type can be made available via cimport by splitting its definition into two parts, one in
 a definition file and the other in the corresponding implementation file.
@@ -347,7 +318,7 @@ But it doesn't bind the name <tt>Shrubbing</tt> in Landscaping's module namespac
 need to <tt>import</tt> <tt>Shrubbing</tt>.</li>
 
   
-</ul><h2>Circular cimports - Forward-declaring cimported names</h2>If
+</ul><h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports - Forward-declaring cimported names</h2>If
 you have two structs, unions or extension types defined in different
 .pxd files, and they need to refer to each other, you will have to use
 forward declarations. To avoid circular import difficulties that can

@@ -1,3 +1,13 @@
+0.9.8.1
+-------
+
+Modifications:
+
+	- Casting a non-Python pointer type to a Python type no longer
+		generates an incref, unless one is required for other reasons.
+		[Arc Riley]
+
+
 0.9.8
 -----
 

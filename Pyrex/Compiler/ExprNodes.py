@@ -2596,9 +2596,9 @@ class TypecastNode(ExprNode):
 		from_py = self.operand.type.is_pyobject
 		if from_py and not to_py and self.operand.is_ephemeral():
 			error(self.pos, "Casting temporary Python object to non-Python type")
-		if to_py and not from_py:
-			self.result_ctype = py_object_type
-			self.is_temp = 1			
+		#if to_py and not from_py:
+		#	self.result_ctype = py_object_type
+		#	self.is_temp = 1		
 	
 	def check_const(self):
 		self.operand.check_const()
@@ -2609,7 +2609,8 @@ class TypecastNode(ExprNode):
 		return result_code
 	
 	def result_as(self, type):
-		if self.type.is_pyobject and not self.is_temp:
+		#if self.type.is_pyobject and not self.is_temp:
+		if not self.is_temp:
 			#  Optimise away some unnecessary casting
 			return self.operand.result_as(type)
 		else:
@@ -3507,9 +3508,6 @@ class CloneNode(CoercionNode):
 	
 	def calculate_result_code(self):
 		return self.arg.result_code
-	
-	#def result_as_extension_type(self):
-	#	return self.arg.result_as_extension_type()
 	
 	def generate_evaluation_code(self, code):
 		pass
