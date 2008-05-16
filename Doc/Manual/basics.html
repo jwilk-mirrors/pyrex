@@ -10,7 +10,7 @@ variable and type definitions</a></li><ul><li><a href="#mozTocId890190">Forward 
 type conversions</a><ul><li><a href="#mozTocId440941">Caveats
 when using a Python string in a C context</a></li></ul></li><li><a href="#mozTocId834148"> Scope rules</a></li><li><a href="#mozTocId954330"> Statements and expressions</a><ul><li><a href="#mozTocId401576"> Differences between C
 and Pyrex
-expressions</a></li><li><a href="#mozTocId899067">Integer for-loops</a></li></ul></li><li><a href="#mozTocId59332"> </a></li><li><a href="#mozTocId482761">
+expressions</a></li><li><a href="#mozTocId899067">Integer for-loops</a></li></ul></li><li><a href="#mozTocId482761">
 Error return values</a><ul><li><a href="#mozTocId622828"> Checking
 return values of non-Pyrex functions</a></li></ul></li><li><a href="#mozTocId494354"> The include
 statement</a></li><li><a href="#mozTocId849661">Keyword-only arguments</a></li><li><a href="#mozTocId829237">Built-in Names</a><ul><li><a href="#mozTocId813519">Built-in Constants</a></li><li><a href="#mozTocId593628">Built-in Functions</a></li><li><a href="#mozTocId452377">Built-in Types</a></li></ul></li><li><a href="#mozTocId42018">Conditional Compilation</a><ul><li><a href="#mozTocId379306">Compile-Time Definitions</a></li><li><a href="#mozTocId997015">Conditional Statements</a></li></ul></li></ul>This
@@ -226,7 +226,7 @@ then it is
 downwards. (Any other combination is disallowed.)</li></ul>
 Like other Python looping statements, <tt>break</tt> and <tt>continue</tt>
 may be used in the body, and the loop may have an <tt>else</tt>
-clause. <h2><a class="mozTocH2" name="mozTocId59332"></a> <hr width="100%"></h2> <h2><a class="mozTocH2" name="mozTocId482761"></a>
+clause.<br> <h2><hr width="100%"></h2> <h2><a class="mozTocH2" name="mozTocId482761"></a>
 <a name="ExceptionValues"></a>Error return values</h2>
 If you don't do anything special, a function declared with <b>cdef</b>
 that does not return a Python object has no way of reporting Python
