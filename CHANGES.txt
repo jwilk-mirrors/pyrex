@@ -1,6 +1,14 @@
 0.9.8.1
 -------
 
+Enhancements:
+
+	- It is no longer necessary to specify the base class of an
+		extension type in a forward declaration. Also, if the class is
+		defined in a .pxd file, the base class only needs to be specified
+		in the .pxd file, not the .pyx file.
+		[Arc Riley]
+
 Modifications:
 
 	- Casting a non-Python pointer type to a Python type no longer
@@ -9,7 +17,6 @@ Modifications:
 	
 	- Some more checks added for gil-requiring operations performed
 		without the gil held:
-		
 			- Calling a gil-requiring function
 			- Assignment of a Python object
 
