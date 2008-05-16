@@ -517,11 +517,12 @@ class FuncDefNode(StatNode, BlockNode):
 				
 	def generate_function_definitions(self, env, code):
 		# Generate C code for header and body of function
-		type = self.entry.type
 		genv = env.global_scope()
 		lenv = LocalScope(name = self.entry.name, outer_scope = genv)
 		lenv.return_type = self.return_type
-		lenv.nogil = type.nogil and not type.with_gil
+		type = self.entry.type
+		if type.is_cfunction:
+			lenv.nogil = type.nogil and not type.with_gil
 		code.init_labels()
 		self.declare_arguments(lenv)
 		self.body.analyse_declarations(lenv)

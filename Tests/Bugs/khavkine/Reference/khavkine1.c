@@ -56,11 +56,7 @@ static void __pyx_f_9khavkine1_f(void *); /*proto*/
 /* Implementation of khavkine1 */
 
 static void __pyx_f_9khavkine1_f(void *__pyx_v_obj) {
-  PyObject *__pyx_1 = 0;
-  __pyx_1 = (PyObject *)__pyx_v_obj;
-  Py_INCREF(__pyx_1);
-  (((struct __pyx_obj_9khavkine1_T *)__pyx_1)->a[0]) = 1;
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  (((struct __pyx_obj_9khavkine1_T *)__pyx_v_obj)->a[0]) = 1;
 
 }
 

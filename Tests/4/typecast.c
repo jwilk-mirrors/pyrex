@@ -50,18 +50,15 @@ static void __pyx_f_8typecast_f(PyObject *); /*proto*/
 static void __pyx_f_8typecast_f(PyObject *__pyx_v_obj) {
   int __pyx_v_i;
   char *__pyx_v_p;
-  PyObject *__pyx_1 = 0;
   Py_INCREF(__pyx_v_obj);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/typecast.pyx":4 */
   __pyx_v_p = ((char *)__pyx_v_i);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/typecast.pyx":5 */
-  __pyx_1 = (PyObject *)__pyx_v_p;
-  Py_INCREF(__pyx_1);
+  Py_INCREF(((PyObject *)__pyx_v_p));
   Py_DECREF(__pyx_v_obj);
-  __pyx_v_obj = __pyx_1;
-  __pyx_1 = 0;
+  __pyx_v_obj = ((PyObject *)__pyx_v_p);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/typecast.pyx":6 */
   __pyx_v_p = ((char *)__pyx_v_obj);

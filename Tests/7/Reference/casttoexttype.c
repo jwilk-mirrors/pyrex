@@ -69,10 +69,7 @@ static void __pyx_f_13casttoexttype_blarg(void *__pyx_v_y,PyObject *__pyx_v_z) {
   Py_INCREF(__pyx_v_z);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/casttoexttype.pyx":8 */
-  __pyx_1 = (PyObject *)__pyx_v_y;
-  Py_INCREF(__pyx_1);
-  __pyx_f_13casttoexttype_foo(__pyx_1);
-  Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __pyx_f_13casttoexttype_foo(((PyObject *)__pyx_v_y));
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/casttoexttype.pyx":9 */
   __pyx_f_13casttoexttype_foo(__pyx_v_z);
