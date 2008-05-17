@@ -320,22 +320,20 @@ need to <tt>import</tt> <tt>Shrubbing</tt>.</li>
   
 </ul><h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports - Forward-declaring cimported names</h2>If
 you have two structs, unions or extension types defined in different
-.pxd files, and they need to refer to each other, you will have to use
-forward declarations. To avoid circular import difficulties that can
-arise when two .pxd files import each other, there is a special form of
-forward declaration for names that are defined in a different module,
-illustrated by the example below.<br><br><table style="text-align: left; margin-left: 40px;" border="1" cellpadding="5" cellspacing="2"><tbody><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">foo.pxd</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">blarg.pxd</td></tr><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; font-family: monospace; background-color: rgb(255, 204, 24);">cimport blarg<br><br>cdef struct blarg.Eggs<br><br>cdef struct Spam:<br>&nbsp;&nbsp;&nbsp; blarg.Eggs *eggs</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">cimport foo<br><br>cdef struct foo.Spam<br><br>cdef struct Eggs:<br>&nbsp;&nbsp;&nbsp; foo.Spam *spam</td></tr></tbody></table><br>We can't simply say<span style="font-family: monospace;"> from blarg cimport Eggs </span>and<span style="font-family: monospace;"> from foo cimport Spam</span>,
+.pxd files, and they need to refer to each other, there is a potential
+for problems with circular imports. To avoid this, there is a special
+form of cimport statement that also functions as a forward declaration.
+Its use is illustrated in the example below.<br><br><table style="text-align: left; margin-left: 40px;" border="1" cellpadding="5" cellspacing="2"><tbody><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">foo.pxd</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">blarg.pxd</td></tr><tr><td style="vertical-align: top; white-space: nowrap; text-align: left; font-family: monospace; background-color: rgb(255, 204, 24);">from blarg cimport struct Eggs<br><br>cdef struct Spam:<br>&nbsp;&nbsp;&nbsp;&nbsp;Eggs *eggs</td><td style="vertical-align: top; white-space: nowrap; text-align: left; background-color: rgb(255, 204, 24); font-family: monospace;">from foo cimport struct Spam<br><br>cdef struct Eggs:<br>&nbsp;&nbsp;&nbsp;&nbsp;Spam *spam</td></tr></tbody></table><br>We can't simply say<span style="font-family: monospace;"> from blarg cimport Eggs </span>and<span style="font-family: monospace;"> from foo cimport Spam</span>,
 because that would lead to circular import problems analogous to those
 that arise in Python when two modules try to import names from each
-other. The solution is to only cimport the modules themselves, and use
-forward declarations to fill in the names that haven't been defined
-yet, i.e. <span style="font-family: monospace;">blarg.Eggs</span> and <span style="font-family: monospace;">foo.Spam</span>.<br><br>Note
-that any .pyx file is free to cimport anything it wants from either foo
-or blarg. It's only when two .pxd files import each other that circular
-import issues arise
-
-   
-<hr width="100%">Back to the <a href="overview.html">Language Overview</a>
+other. Including the word <span style="font-family: monospace;">struct</span>
+in the cimport statement lets Pyrex know that the type being imported
+is going to be a struct type, so it can proceed before the full
+declaration is available.<br><br>As well as <span style="font-family: monospace;">struct</span>, you can also use <span style="font-family: monospace;">union</span> or <span style="font-family: monospace;">class</span>. If there are multiple struct, union or class names being imported, a separate keyword is required in front of each one, e.g.<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">from somewhere cimport class This, class That, union Other</span><br></div><br>Note
+that any .pyx file is free to cimport anything it wants from any .pxd
+file without needing these declarations. It's only when two .pxd files
+import each other that circular
+import issues arise. <hr width="100%">Back to the <a href="overview.html">Language Overview</a>
 <br>
 
  <br>

@@ -15,7 +15,8 @@ Enhancements:
 	  	from blarg cimport class Foo
 	  	
 	  This simultaneously cimports the name Foo and forward-declares
-	  it as an extension type.
+	  it as an extension type. As well as 'class', you can also use
+	  'struct' or 'union'.
 
 Modifications:
 
