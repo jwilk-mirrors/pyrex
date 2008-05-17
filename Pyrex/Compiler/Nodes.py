@@ -2515,16 +2515,45 @@ class FromCImportStatNode(StatNode):
 	#  from ... cimport statement
 	#
 	#  module_name     string                  Qualified name of module
-	#  imported_names  [(pos, name, as_name)]  Names to be imported
+	#  imported_names  Parsing.ImportedName    Names to be imported
 	
 	def analyse_declarations(self, env):
 		module_scope = env.find_module(self.module_name, self.pos)
 		env.add_imported_module(module_scope)
-		for pos, name, as_name in self.imported_names:
-			entry = module_scope.find(name, pos)
+		for imp in self.imported_names:
+			kind = imp.kind
+			#entry = module_scope.find(imp.name, imp.pos)
+			entry = module_scope.lookup(imp.name)
 			if entry:
-				local_name = as_name or name
-				env.add_imported_entry(local_name, entry, pos)
+				if kind and not self.declaration_matches(entry, kind):
+					entry.redeclared(pos)
+			else:
+				if kind == 'struct' or kind == 'union':
+					entry = module_scope.declare_struct_or_union(imp.name,
+						kind = kind, scope = None, typedef_flag = 0, pos = imp.pos)
+				elif kind == 'class':
+					entry = module_scope.declare_c_class(imp.name, pos = imp.pos,
+						module_name = self.module_name)
+				else:
+					error(imp.pos, "Name '%s' not declared in module '%s'"
+						% (imp.name, self.module_name)) 
+			if entry:
+				local_name = imp.as_name or imp.name
+				env.add_imported_entry(local_name, entry, imp.pos)
+	
+	def declaration_matches(self, entry, kind):
+		if not entry.is_type:
+			return 0
+		type = entry.type
+		if kind == 'class':
+			if not type.is_extension_type:
+				return 0
+		else:
+			if not type.is_struct_or_union:
+				return 0
+			if kind <> type.kind:
+				return 0
+		return 1
 
 	def analyse_expressions(self, env):
 		pass

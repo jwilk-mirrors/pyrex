@@ -870,13 +870,14 @@ def p_from_import_statement(s, level):
 		s.error("cimport statement not allowed in this context")
 	if s.sy == '*':
 		s.error("'import *' not supported")
-	imported_names = [p_imported_name(s)]
+	is_cimport = kind == 'cimport'
+	imported_names = [p_imported_name(s, is_cimport)]
 	while s.sy == ',':
 		s.next()
-		imported_names.append(p_imported_name(s))
+		imported_names.append(p_imported_name(s, is_cimport))
 	if kind == 'cimport':
-		for (name_pos, name, as_name) in imported_names:
-			local_name = as_name or name
+		for imp in imported_names:
+			local_name = imp.as_name or imp.name
 			s.add_type_name(local_name)
 		return Nodes.FromCImportStatNode(pos,
 			module_name = dotted_name,
@@ -884,15 +885,15 @@ def p_from_import_statement(s, level):
 	else:
 		imported_name_strings = []
 		items = []
-		for (name_pos, name, as_name) in imported_names:
+		for imp in imported_names:
 			imported_name_strings.append(
-				ExprNodes.StringNode(name_pos, value = name))
+				ExprNodes.StringNode(imp.pos, value = imp.name))
 			items.append(
 				(name,
-				 ExprNodes.NameNode(name_pos, 
-				 	name = as_name or name)))
+				 ExprNodes.NameNode(imp.pos, 
+				 	name = imp.as_name or name)))
 		import_list = ExprNodes.ListNode(
-			imported_names[0][0], args = imported_name_strings)
+			imported_names[0].pos, args = imported_name_strings)
 		return Nodes.FromImportStatNode(pos,
 			module = ExprNodes.ImportNode(dotted_name_pos,
 				module_name = ExprNodes.StringNode(dotted_name_pos,
@@ -900,11 +901,29 @@ def p_from_import_statement(s, level):
 				name_list = import_list),
 			items = items)
 
-def p_imported_name(s):
+class ImportedName(object):
+	#  pos
+	#  name
+	#  as_name
+	#  kind     'class', 'struct', 'union', None
+	
+	def __init__(self, pos, name, as_name, kind):
+		self.pos = pos
+		self.name = name
+		self.as_name = as_name
+		self.kind = kind
+
+imported_name_kinds = ('class', 'struct', 'union')
+
+def p_imported_name(s, is_cimport):
 	pos = s.position()
+	kind = None
+	if is_cimport and s.systring in imported_name_kinds:
+		kind = s.systring
+		s.next()
 	name = p_ident(s)
 	as_name = p_as_name(s)
-	return (pos, name, as_name)
+	return ImportedName(pos, name, as_name, kind)
 
 def p_dotted_name(s, as_allowed):
 	pos = s.position()
@@ -1794,7 +1813,6 @@ def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 	# s.sy == ident 'struct' or 'union'
 	kind = s.systring
 	s.next()
-#	name = p_ident(s)
 	module_path, name = p_qualified_name(s)
 	cname = p_opt_cname(s)
 	s.add_type_name(name)

@@ -1,7 +1,5 @@
-cimport foo
-
-cdef class foo.Foo
+from foo cimport class Foo
 
 cdef class Blarg:
 	cdef object name
-	cdef foo.Foo f
+	cdef Foo f

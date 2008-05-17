@@ -115,6 +115,10 @@ class Entry:
 		self.pos = pos
 		self.init = init
 
+	def redeclared(self, pos):
+		error(pos, "'%s' does not match previous declaration" % self.name)
+		error(self.pos, "Previous declaration is here")
+
 
 class Scope:
 	# name              string             Unqualified name
@@ -215,7 +219,7 @@ class Scope:
 		# declared.
 		dict = self.entries
 		if name and dict.has_key(name):
-			error(pos, "'%s' redeclared" % name)
+			error(pos, "'%s' already declared" % name)
 		entry = Entry(name, cname, type, pos = pos)
 		entry.in_cinclude = self.in_cinclude
 		if name:
@@ -277,8 +281,10 @@ class Scope:
 				visibility = visibility, defining = scope is not None)
 			self.sue_entries.append(entry)
 		else:
-			if not (entry.is_type and entry.type.is_struct_or_union):
-				error(pos, "'%s' redeclared" % name)
+			if not (entry.is_type and entry.type.is_struct_or_union
+					and entry.type.kind == kind):
+				#error(pos, "'%s' redeclared" % name)
+				entry.redeclared(pos)
 			elif scope and entry.type.scope:
 				error(pos, "'%s' already defined" % name)
 			else:
@@ -694,7 +700,7 @@ class ModuleScope(Scope):
 		if entry not in self.entries:
 			self.entries[name] = entry
 		else:
-			error(pos, "'%s' redeclared" % name)
+			error(pos, "'%s' already declared" % name)
 	
 	def declare_module(self, name, scope, pos):
 		# Declare a cimported module. This is represented as a
@@ -706,7 +712,8 @@ class ModuleScope(Scope):
 			if entry.is_pyglobal and entry.as_module is scope:
 				return entry # Already declared as the same module
 			if not (entry.is_pyglobal and not entry.as_module):
-				error(pos, "'%s' redeclared" % name)
+				#error(pos, "'%s' redeclared" % name)
+				entry.redeclared(pos)
 				return None
 		else:
 			entry = self.declare_var(name, py_object_type, pos)
@@ -764,9 +771,9 @@ class ModuleScope(Scope):
 				return
 		self.utility_code_used.append(new_code)
 	
-	def declare_c_class(self, name, pos, defining, implementing,
-		module_name, base_type, objstruct_cname, typeobj_cname,
-		visibility, typedef_flag, api):
+	def declare_c_class(self, name, pos, defining = 0, implementing = 0,
+		module_name = None, base_type = None, objstruct_cname = None,
+		typeobj_cname = None, visibility = 'private', typedef_flag = 0, api = 0):
 		#
 		#  Look for previous declaration as a type
 		#
@@ -948,7 +955,7 @@ class LocalScope(Scope):
 	def declare_global(self, name, pos):
 		# Pull entry from global scope into local scope.
 		if self.lookup_here(name):
-			error(pos, "'%s' redeclared")
+			error(pos, "'%s' already declared")
 		else:
 			entry = self.global_scope().lookup_target(name)
 			self.entries[name] = entry
@@ -1153,7 +1160,8 @@ class CClassScope(ClassScope):
 		entry = self.lookup_here(name)
 		if entry:
 			if not entry.is_cfunction:
-				error(pos, "'%s' redeclared" % name)
+				#error(pos, "'%s' redeclared" % name)
+				entry.redeclared(pos)
 			else:
 				if defining and entry.func_cname:
 					error(pos, "'%s' already defined" % name)

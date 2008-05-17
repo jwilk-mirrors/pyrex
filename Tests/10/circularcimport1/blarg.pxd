@@ -1,7 +1,7 @@
 cimport foo
 
-cdef class foo.Foo
 cdef struct foo.Spam
+cdef class foo.Foo
 
 cdef struct Eggs:
 	foo.Spam *spam

@@ -8,6 +8,14 @@ Enhancements:
 		defined in a .pxd file, the base class only needs to be specified
 		in the .pxd file, not the .pyx file.
 		[Arc Riley]
+	
+	- There's now an even easier way to forward-declare a struct, union
+	  or extension type in another module:
+	  
+	  	from blarg cimport class Foo
+	  	
+	  This simultaneously cimports the name Foo and forward-declares
+	  it as an extension type.
 
 Modifications:
 
