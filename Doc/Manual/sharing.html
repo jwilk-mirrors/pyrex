@@ -318,7 +318,10 @@ But it doesn't bind the name <tt>Shrubbing</tt> in Landscaping's module namespac
 need to <tt>import</tt> <tt>Shrubbing</tt>.</li>
 
   
-</ul><h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports - Forward-declaring cimported names</h2>If
+</ul>If you are exporting an extension type that has a base class, the
+base class must be declared in the definition part. Repeating the base
+class in the implementation part is not necessary, but if you do, it
+must match the base class in the definition part.<h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports - Forward-declaring cimported names</h2>If
 you have two structs, unions or extension types defined in different
 .pxd files, and they need to refer to each other, there is a potential
 for problems with circular imports. To avoid this, there is a special

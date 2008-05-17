@@ -768,37 +768,7 @@ each other, e.g.
    <tt>&nbsp;&nbsp;&nbsp; cdef Shrubber creator</tt></p>
 
 
- </blockquote>
-
-
-   If you are forward-declaring an exension type that has a base class, you
-must specify the base class in both the forward declaration and its subsequent
-definition, for example,<br>
-
-
-<blockquote><tt>cdef class A(B)<br>
-
-
-  <br>
-
-
-...<br>
-
-
-  <br>
-
-
-cdef class A(B):<br>
-
-
-&nbsp; &nbsp; # attributes and methods</tt><br>
-
-
-</blockquote>
-
-
- 
-<h2><a name="WeakRefs"></a>Making extension types weak-referenceable</h2>
+ </blockquote><h2><a name="WeakRefs"></a>Making extension types weak-referenceable</h2>
 
 By
 default, extension types do not support having weak references made to

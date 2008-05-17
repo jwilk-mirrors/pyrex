@@ -46,7 +46,7 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from blarg */
 
-struct __pyx_t_5blarg_Eggs {
+union __pyx_t_5blarg_Eggs {
   struct __pyx_t_3foo_Spam *spam;
 };
 
@@ -62,7 +62,7 @@ static PyTypeObject *__pyx_ptype_5blarg_Blarg = 0;
 /* Declarations from foo */
 
 struct __pyx_t_3foo_Spam {
-  struct __pyx_t_5blarg_Eggs *eggs;
+  union __pyx_t_5blarg_Eggs *eggs;
 };
 
 struct __pyx_obj_3foo_Foo {

@@ -11,7 +11,7 @@ cdef void h(int x) nogil:
 cdef object p() nogil:
 	pass
 
-cdef void k() nogil:
+cdef void r() nogil:
 	q()
 	
 cdef object m():
@@ -20,7 +20,7 @@ cdef object m():
 	global fred
 	q()
 	with nogil:
-		k()
+		r()
 		q()
 		i = 42
 		obj = None

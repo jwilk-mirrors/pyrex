@@ -4,5 +4,51 @@
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:8:5: Function declared nogil has Python locals or temporaries
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:11:5: Function with Python return type cannot be declared nogil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:15:2: Calling gil-requiring function without gil
-/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:21:3: Calling gil-requiring function without gil
-/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:25:6: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:24:3: Calling gil-requiring function without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:26:6: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:27:2: Constructing Python long int not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:28:2: Constructing complex number not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:29:6: Accessing Python global or builtin not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:30:2: Backquote expression not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:31:9: Python import not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:31:9: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:32:19: Constructing Python list not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:32:7: Python import not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:33:11: Iterating over Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:35:5: Indexing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:36:5: Slicing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:37:7: Converting to Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:37:9: Converting to Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:37:11: Converting to Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:37:5: Constructing Python slice object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:37:5: Indexing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:38:5: Accessing Python attribute not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:39:3: Constructing Python tuple not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:40:2: Constructing Python list not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:41:2: Constructing Python dict not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:42:6: Truth-testing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:42:6: Creating temporary Python reference not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:42:11: Creating temporary Python reference not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:43:7: Python type test not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:44:4: Converting to Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:45:4: Operation not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:46:2: Operation not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:47:4: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:47:8: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:48:3: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:48:10: Creating temporary Python reference not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:48:7: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:48:13: Creating temporary Python reference not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:49:5: Indexing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:49:5: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:50:5: Accessing Python attribute not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:50:5: Assignment of Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:51:2: Python print statement not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:52:2: Deleting Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:53:2: Returning Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:54:2: Raising exception not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:55:8: Truth-testing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:57:11: Truth-testing Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:59:8: Converting to Python object not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:61:2: Try-except statement not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:65:2: Try-finally statement not allowed without gil

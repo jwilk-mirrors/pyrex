@@ -889,9 +889,9 @@ def p_from_import_statement(s, level):
 			imported_name_strings.append(
 				ExprNodes.StringNode(imp.pos, value = imp.name))
 			items.append(
-				(name,
+				(imp.name,
 				 ExprNodes.NameNode(imp.pos, 
-				 	name = imp.as_name or name)))
+				 	name = imp.as_name or imp.name)))
 		import_list = ExprNodes.ListNode(
 			imported_names[0].pos, args = imported_name_strings)
 		return Nodes.FromImportStatNode(pos,

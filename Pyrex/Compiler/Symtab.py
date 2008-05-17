@@ -283,7 +283,6 @@ class Scope:
 		else:
 			if not (entry.is_type and entry.type.is_struct_or_union
 					and entry.type.kind == kind):
-				#error(pos, "'%s' redeclared" % name)
 				entry.redeclared(pos)
 			elif scope and entry.type.scope:
 				error(pos, "'%s' already defined" % name)
@@ -784,12 +783,12 @@ class ModuleScope(Scope):
 				entry = None # Will cause redeclaration and produce an error
 			else:
 				scope = type.scope
-				if typedef_flag and scope.defined:
-					self.check_previous_typedef_flag(entry, typedef_flag, pos)
-				if (scope and scope.defined) or (base_type and type.base_type):
-					if base_type and base_type is not type.base_type:
+				defined = scope and scope.defined
+				definitive = defining or (implementing and not defined)
+				self.check_previous_typedef_flag(entry, typedef_flag, pos)
+				if base_type or definitive:
+					if type.base_type and base_type is not type.base_type:
 						error(pos, "Base type does not match previous declaration")
-				if base_type and not type.base_type:
 					type.base_type = base_type
 		#
 		#  Make a new entry if needed
