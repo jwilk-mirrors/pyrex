@@ -28,6 +28,15 @@ class Node:
 		self.pos = pos
 		self.__dict__.update(kw)
 	
+	gil_message = "Operation"
+	
+	def gil_check(self, env):
+		if env.nogil:
+			self.gil_error()
+	
+	def gil_error(self):
+		error(self.pos, "%s not allowed without gil" % self.gil_message)
+	
 	#
 	#  There are 3 phases of parse tree processing, applied in order to
 	#  all the statements in a given scope-block:
@@ -1526,6 +1535,7 @@ class CascadedAssignmentNode(AssignmentNode):
 		self.coerced_rhs_list = []
 		for lhs in self.lhs_list:
 			lhs.analyse_target_types(env)
+			lhs.gil_assignment_check(env)
 			rhs = CloneNode(self.rhs)
 			rhs = rhs.coerce_to(lhs.type, env)
 			self.coerced_rhs_list.append(rhs)
@@ -1601,6 +1611,9 @@ class PrintStatNode(StatNode):
 			self.args[i] = arg
 			#env.recycle_pending_temps() # TEMPORARY
 		env.use_utility_code(printing_utility_code)
+		self.gil_check(env)
+
+	gil_message = "Python print statement"
 	
 	def generate_execution_code(self, code):
 		for arg in self.args:
@@ -1630,7 +1643,10 @@ class DelStatNode(StatNode):
 			arg.analyse_target_expression(env, None)
 			if not arg.type.is_pyobject:
 				error(arg.pos, "Deletion of non-Python object")
-			#arg.release_target_temp(env)
+			else:
+				self.gil_check(env)
+	
+	gil_message = "Deleting Python object"
 	
 	def generate_execution_code(self, code):
 		for arg in self.args:
@@ -1709,6 +1725,10 @@ class ReturnStatNode(StatNode):
 				and not return_type.is_pyobject
 				and not return_type.is_returncode):
 					error(self.pos, "Return value required")
+		if return_type.is_pyobject:
+			self.gil_check(env)
+	
+	gil_message = "Returning Python object"
 	
 	def generate_execution_code(self, code):
 		if not self.return_type:
@@ -1764,10 +1784,10 @@ class RaiseStatNode(StatNode):
 			self.exc_value.release_temp(env)
 		if self.exc_tb:
 			self.exc_tb.release_temp(env)
-#		if not (self.exc_type or self.exc_value or self.exc_tb):
-#			env.use_utility_code(reraise_utility_code)
-#		else:
 		env.use_utility_code(raise_utility_code)
+		self.gil_check(env)
+	
+	gil_message = "Raising exception"
 	
 	def generate_execution_code(self, code):
 		if self.exc_type:
@@ -1808,6 +1828,9 @@ class ReraiseStatNode(StatNode):
 
 	def analyse_expressions(self, env):
 		env.use_utility_code(raise_utility_code)
+		self.gil_check(env)
+	
+	gil_message = "Raising exception"
 
 	def generate_execution_code(self, code):
 		vars = code.exc_vars
@@ -1833,6 +1856,9 @@ class AssertStatNode(StatNode):
 		self.cond.release_temp(env)
 		if self.value:
 			self.value.release_temp(env)
+		self.gil_check(env)
+	
+	gil_message = "Raising exception"
 	
 	def generate_execution_code(self, code):
 		code.putln("#ifndef PYREX_WITHOUT_ASSERTIONS")
@@ -1902,7 +1928,6 @@ class IfClauseNode(Node):
 		self.condition = \
 			self.condition.analyse_temp_boolean_expression(env)
 		self.condition.release_temp(env)
-		#env.recycle_pending_temps() # TEMPORARY
 		self.body.analyse_expressions(env)
 	
 	def generate_execution_code(self, code, end_label):
@@ -2127,6 +2152,7 @@ class TryExceptStatNode(StatNode):
 			except_clause.analyse_declarations(env)
 		if self.else_clause:
 			self.else_clause.analyse_declarations(env)
+		self.gil_check(env)
 	
 	def analyse_expressions(self, env):
 		self.body.analyse_expressions(env)
@@ -2135,6 +2161,9 @@ class TryExceptStatNode(StatNode):
 			except_clause.analyse_expressions(env)
 		if self.else_clause:
 			self.else_clause.analyse_expressions(env)
+		self.gil_check(env)
+	
+	gil_message = "Try-except statement"
 	
 	def generate_execution_code(self, code):
 		old_error_label = code.new_error_label()
@@ -2203,7 +2232,7 @@ class ExceptClauseNode(Node):
 		for var in self.exc_vars:
 			env.release_temp(var)
 		env.use_utility_code(get_exception_utility_code)
-	
+
 	def generate_handling_code(self, code, end_label):
 		code.mark_pos(self.pos)
 		if self.pattern:
@@ -2272,15 +2301,10 @@ class TryFinallyStatNode(StatNode):
 	def analyse_expressions(self, env):
 		self.body.analyse_expressions(env)
 		self.cleanup_list = env.free_temp_entries[:]
-		#self.exc_vars = (
-		#	env.allocate_temp(PyrexTypes.py_object_type),
-		#	env.allocate_temp(PyrexTypes.py_object_type),
-		#	env.allocate_temp(PyrexTypes.py_object_type))
-		#self.lineno_var = \
-		#	env.allocate_temp(PyrexTypes.c_int_type)
 		self.finally_clause.analyse_expressions(env)
-		#for var in self.exc_vars:
-		#	env.release_temp(var)
+		self.gil_check(env)
+	
+	gil_message = "Try-finally statement"
 	
 	def generate_execution_code(self, code):
 		old_error_label = code.error_label
@@ -2414,17 +2438,20 @@ class GILStatNode(TryFinallyStatNode):
 		
 	preserve_exception = 0
 
-	def analyse_expressions(self, env):
-		was_nogil = env.nogil
-		env.nogil = 1
-		TryFinallyStatNode.analyse_expressions(self, env)
-		env.nogil = was_nogil
-
 	def __init__(self, pos, state, body):
 		self.state = state
 		TryFinallyStatNode.__init__(self, pos,
 			body = body,
 			finally_clause = GILExitNode(pos, state = state))
+
+	def analyse_expressions(self, env):
+		was_nogil = env.nogil
+		env.nogil = 1
+		TryFinallyStatNode.analyse_expressions(self, env)
+		env.nogil = was_nogil
+	
+	def gil_check(self, env):
+		pass
 
 	def generate_execution_code(self, code):
 		code.putln("/*with %s:*/ {" % self.state)
@@ -2435,19 +2462,6 @@ class GILStatNode(TryFinallyStatNode):
 			code.putln("Py_UNBLOCK_THREADS")
 		TryFinallyStatNode.generate_execution_code(self, code)
 		code.putln("}")
-
-#class GILEntryNode(StatNode):
-#	#  state   string   'gil' or 'nogil'
-#
-#	def analyse_expressions(self, env):
-#		pass
-#
-#	def generate_execution_code(self, code):
-#		if self.state == 'gil':
-#			code.putln("PyGILState_STATE _save = PyGILState_Ensure();")
-#		else:
-#			code.putln("PyThreadState *_save;")
-#			code.putln("Py_UNBLOCK_THREADS")
 
 
 class GILExitNode(StatNode):

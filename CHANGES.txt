@@ -15,10 +15,8 @@ Modifications:
 		generates an incref, unless one is required for other reasons.
 		[Arc Riley]
 	
-	- Some more checks added for gil-requiring operations performed
-		without the gil held:
-			- Calling a gil-requiring function
-			- Assignment of a Python object
+	- More checks added for gil-requiring operations performed without
+		holding the gil.
 
 
 0.9.8
