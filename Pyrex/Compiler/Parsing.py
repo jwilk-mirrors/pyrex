@@ -11,6 +11,26 @@ import ExprNodes
 from ModuleNode import ModuleNode
 from Errors import warning, error, InternalError
 
+
+class Ctx(object):
+	#  Parsing context
+	level = 'other'
+	visibility = 'private'
+	cdef_flag = 0
+	ctypedef_flag = 0
+	api = 0
+	
+	def __init__(self, **kwds):
+		self.__dict__.update(kwds)
+	
+	def __call__(self, **kwds):
+		ctx = Ctx()
+		d = ctx.__dict__
+		d.update(self.__dict__)
+		d.update(kwds)
+		return ctx
+
+
 def p_ident(s, message = "Expected an identifier"):
 	if s.sy == 'IDENT':
 		name = s.systring
@@ -36,9 +56,7 @@ def p_ident_list(s):
 #------------------------------------------
 
 def p_binop_expr(s, ops, p_sub_expr):
-	#print "p_binop_expr:", ops, p_sub_expr ###
 	n1 = p_sub_expr(s)
-	#print "p_binop_expr(%s):" % p_sub_expr, s.sy ###
 	while s.sy in ops:
 		op = s.sy
 		pos = s.position()
@@ -50,7 +68,6 @@ def p_binop_expr(s, ops, p_sub_expr):
 #test: and_test ('or' and_test)* | lambdef
 
 def p_simple_expr(s):
-	#return p_binop_expr(s, ('or',), p_and_test)
 	return p_rassoc_binop_expr(s, ('or',), p_and_test)
 
 def p_rassoc_binop_expr(s, ops, p_subexpr):
@@ -855,7 +872,7 @@ def p_import_statement(s):
 		stats.append(stat)
 	return Nodes.StatListNode(pos, stats = stats)
 
-def p_from_import_statement(s, level):
+def p_from_import_statement(s, ctx):
 	# s.sy == 'from'
 	pos = s.position()
 	s.next()
@@ -866,7 +883,7 @@ def p_from_import_statement(s, level):
 		s.next()
 	else:
 		s.error("Expected 'import' or 'cimport'")
-	if kind == 'cimport' and level not in ('module', 'module_pxd'):
+	if kind == 'cimport' and ctx.level not in ('module', 'module_pxd'):
 		s.error("cimport statement not allowed in this context")
 	if s.sy == '*':
 		s.error("'import *' not supported")
@@ -1074,50 +1091,6 @@ def p_old_style_integer_for_statement(s, target):
 		body = body,
 		else_clause = else_clause)
 
-#def p_for_statement(s):
-#	# s.sy == 'for'
-#	pos = s.position()
-#	s.next()
-#	target = p_for_target(s)
-#	if s.sy == 'in':
-#		s.next()
-#		iterator = p_for_iterator(s)
-#		body = p_suite(s)
-#		else_clause = p_else_clause(s)
-#		return Nodes.ForInStatNode(pos, 
-#			target = target,
-#			iterator = iterator,
-#			body = body,
-#			else_clause = else_clause)
-#	elif s.sy == 'from':
-#		s.next()
-#		bound1 = p_bit_expr(s)
-#		rel1 = p_for_from_relation(s)
-#		name2_pos = s.position()
-#		name2 = p_ident(s)
-#		rel2_pos = s.position()
-#		rel2 = p_for_from_relation(s)
-#		bound2 = p_bit_expr(s)
-#		if not target.is_name:
-#			error(target.pos, 
-#				"Target of for-from statement must be a variable name")
-#		elif name2 <> target.name:
-#			error(name2_pos,
-#				"Variable name in for-from range does not match target")
-#		if rel1[0] <> rel2[0]:
-#			error(rel2_pos,
-#				"Relation directions in for-from do not match")
-#		body = p_suite(s)
-#		else_clause = p_else_clause(s)
-#		return Nodes.ForFromStatNode(pos,
-#			target = target,
-#			bound1 = bound1,
-#			relation1 = rel1,
-#			relation2 = rel2,
-#			bound2 = bound2,
-#			body = body,
-#			else_clause = else_clause)
-
 def p_inequality_relation(s):
 	if s.sy in inequality_relations:
 		op = s.sy
@@ -1188,7 +1161,7 @@ def p_except_clause(s):
 	return Nodes.ExceptClauseNode(pos,
 		pattern = exc_type, target = exc_value, body = body)
 
-def p_include_statement(s, level):
+def p_include_statement(s, ctx):
 	pos = s.position()
 	s.next() # 'include'
 	_, include_file_name = p_string_literal(s)
@@ -1200,7 +1173,7 @@ def p_include_statement(s, level):
 			f = open(include_file_path, "rU")
 			s2 = PyrexScanner(f, include_file_path, parent_scanner = s)
 			try:
-				tree = p_statement_list(s2, level)
+				tree = p_statement_list(s2, ctx)
 			finally:
 				f.close()
 			return tree
@@ -1221,7 +1194,7 @@ def p_with_statement(s):
 	else:
 		s.error("Only 'with nogil' implemented")
 	
-def p_simple_statement(s, level):
+def p_simple_statement(s, ctx):
 	if s.sy == 'global':
 		node = p_global_statement(s)
 	elif s.sy == 'print':
@@ -1237,13 +1210,13 @@ def p_simple_statement(s, level):
 	elif s.sy == 'raise':
 		node = p_raise_statement(s)
 	elif s.sy == 'cimport':
-		if level not in ('module', 'module_pxd'):
+		if ctx.level not in ('module', 'module_pxd'):
 			s.error("cimport statement not allowed in this context")
 		node = p_import_statement(s)
 	elif s.sy == 'import':
 		node = p_import_statement(s)
 	elif s.sy == 'from':
-		node = p_from_import_statement(s, level)
+		node = p_from_import_statement(s, ctx)
 	elif s.sy == 'assert':
 		node = p_assert_statement(s)
 	elif s.sy == 'pass':
@@ -1252,17 +1225,17 @@ def p_simple_statement(s, level):
 		node = p_expression_or_assignment(s)
 	return node
 
-def p_simple_statement_list(s, level):
+def p_simple_statement_list(s, ctx):
 	# Parse a series of simple statements on one line
 	# separated by semicolons.
-	stat = p_simple_statement(s, level)
+	stat = p_simple_statement(s, ctx)
 	if s.sy == ';':
 		stats = [stat]
 		while s.sy == ';':
 			s.next()
 			if s.sy in ('NEWLINE', 'EOF'):
 				break
-			stats.append(p_simple_statement(s, level))
+			stats.append(p_simple_statement(s, ctx))
 		stat = Nodes.StatListNode(stats[0].pos, stats = stats)
 	s.expect_newline("Syntax error in simple statement list")
 	return stat
@@ -1287,7 +1260,7 @@ def p_DEF_statement(s):
 	s.expect_newline()
 	return Nodes.PassStatNode(pos)
 
-def p_IF_statement(s, level, cdef_flag, visibility, api):
+def p_IF_statement(s, ctx):
 	pos = s.position()
 	saved_eval = s.compile_time_eval
 	current_eval = saved_eval
@@ -1297,7 +1270,7 @@ def p_IF_statement(s, level, cdef_flag, visibility, api):
 		s.next() # 'IF' or 'ELIF'
 		expr = p_compile_time_expr(s)
 		s.compile_time_eval = current_eval and bool(expr.compile_time_value(denv))
-		body = p_suite(s, level, cdef_flag, visibility, api = api)
+		body = p_suite(s, ctx)
 		if s.compile_time_eval:
 			result = body
 			current_eval = 0
@@ -1306,7 +1279,7 @@ def p_IF_statement(s, level, cdef_flag, visibility, api):
 	if s.sy == 'ELSE':
 		s.next()
 		s.compile_time_eval = current_eval
-		body = p_suite(s, level, cdef_flag, visibility, api = api)
+		body = p_suite(s, ctx)
 		if current_eval:
 			result = body
 	if not result:
@@ -1314,27 +1287,28 @@ def p_IF_statement(s, level, cdef_flag, visibility, api):
 	s.compile_time_eval = saved_eval
 	return result
 
-def p_statement(s, level, cdef_flag = 0, visibility = 'private', api = 0):
+def p_statement(s, ctx):
+	cdef_flag = ctx.cdef_flag
 	if s.sy == 'ctypedef':
-		if level not in ('module', 'module_pxd'):
+		if ctx.level not in ('module', 'module_pxd'):
 			s.error("ctypedef statement not allowed here")
-		if api:
+		if ctx.api:
 			error(s.pos, "'api' not allowed with 'ctypedef'")
-		return p_ctypedef_statement(s, level, visibility, api)
+		return p_ctypedef_statement(s, ctx)
 	elif s.sy == 'DEF':
 		return p_DEF_statement(s)
 	elif s.sy == 'IF':
-		return p_IF_statement(s, level, cdef_flag, visibility, api)
+		return p_IF_statement(s, ctx)
 	else:
 		if s.sy == 'cdef':
 			cdef_flag = 1
 			s.next()
 		if cdef_flag:
-			if level not in ('module', 'module_pxd', 'function', 'c_class', 'c_class_pxd'):
+			if ctx.level not in ('module', 'module_pxd', 'function', 'c_class', 'c_class_pxd'):
 				s.error('cdef statement not allowed here')
-			return p_cdef_statement(s, level, visibility, api)
+			return p_cdef_statement(s, ctx)
 		else:
-			if api:
+			if ctx.api:
 				error(s.pos, "'api' not allowed with this statement")
 			if s.sy == 'def':
 				if level not in ('module', 'class', 'c_class', 'property'):
@@ -1345,15 +1319,15 @@ def p_statement(s, level, cdef_flag = 0, visibility = 'private', api = 0):
 					s.error("class definition not allowed here")
 				return p_class_statement(s)
 			elif s.sy == 'include':
-				#if level not in ('module', 'module_pxd'):
+				#if ctx.level not in ('module', 'module_pxd'):
 				#	s.error("include statement not allowed here")
-				return p_include_statement(s, level)
-			elif level == 'c_class' and s.sy == 'IDENT' and s.systring == 'property':
+				return p_include_statement(s, ctx)
+			elif ctx.level == 'c_class' and s.sy == 'IDENT' and s.systring == 'property':
 				return p_property_decl(s)
-			elif s.sy == 'pass' and level <> 'property':
+			elif s.sy == 'pass' and ctx.level <> 'property':
 				return p_pass_statement(s, with_newline = 1)
 			else:
-				if level in ('c_class', 'c_class_pxd', 'property'):
+				if ctx.level in ('c_class', 'c_class_pxd', 'property'):
 					s.error("Executable statement not allowed here")
 				if s.sy == 'if':
 					return p_if_statement(s)
@@ -1366,23 +1340,20 @@ def p_statement(s, level, cdef_flag = 0, visibility = 'private', api = 0):
 				elif s.sy == 'with':
 					return p_with_statement(s)
 				else:
-					return p_simple_statement_list(s, level)
+					return p_simple_statement_list(s, ctx)
 
-def p_statement_list(s, level,
-		cdef_flag = 0, visibility = 'private', api = 0):
+def p_statement_list(s, ctx):
 	# Parse a series of statements separated by newlines.
 	pos = s.position()
 	stats = []
 	while s.sy not in ('DEDENT', 'EOF'):
-		stats.append(p_statement(s, level,
-			cdef_flag = cdef_flag, visibility = visibility, api = api))
+		stats.append(p_statement(s, ctx))
 	if len(stats) == 1:
 		return stats[0]
 	else:
 		return Nodes.StatListNode(pos, stats = stats)
 
-def p_suite(s, level = 'other', cdef_flag = 0,
-		visibility = 'private', with_doc = 0, with_pseudo_doc = 0, api = 0):
+def p_suite(s, ctx, with_doc = 0, with_pseudo_doc = 0):
 	pos = s.position()
 	s.expect(':')
 	doc = None
@@ -1392,17 +1363,13 @@ def p_suite(s, level = 'other', cdef_flag = 0,
 		s.expect_indent()
 		if with_doc or with_pseudo_doc:
 			doc = p_doc_string(s)
-		body = p_statement_list(s, 
-			level = level,
-			cdef_flag = cdef_flag, 
-			visibility = visibility,
-			api = api)
+		body = p_statement_list(s, ctx)
 		s.expect_dedent()
 	else:
-		if api:
+		if ctx.api:
 			error(s.pos, "'api' not allowed with this statement")
-		if level in ('module', 'class', 'function', 'other'):
-			body = p_simple_statement_list(s, level)
+		if ctx.level in ('module', 'class', 'function', 'other'):
+			body = p_simple_statement_list(s, ctx)
 		else:
 			body = p_pass_statement(s)
 			s.expect_newline("Syntax error in declarations")
@@ -1638,20 +1605,6 @@ def p_exception_value_clause(s):
 
 c_arg_list_terminators = ('*', '**', '.', ')')
 
-#def p_c_arg_list(s, in_pyfunc, cmethod_flag = 0, nonempty_declarators = 0,
-#		kw_only = 0):
-#	args = []
-#	if s.sy not in c_arg_list_terminators:
-#		args.append(p_c_arg_decl(s, in_pyfunc, cmethod_flag,
-#			nonempty = nonempty_declarators, kw_only = kw_only))
-#		while s.sy == ',':
-#			s.next()
-#			if s.sy in c_arg_list_terminators:
-#				break
-#			args.append(p_c_arg_decl(s, in_pyfunc), nonempty = nonempty_declarators,
-#				kw_only = kw_only)
-#	return args
-
 def p_c_arg_list(s, in_pyfunc, cmethod_flag = 0, nonempty_declarators = 0,
 		kw_only = 0):
 	#  Comma-separated list of C argument declarations, possibly empty.
@@ -1706,52 +1659,53 @@ def p_api(s):
 	else:
 		return 0
 
-def p_cdef_statement(s, level, visibility = 'private', api = 0):
+def p_cdef_statement(s, ctx):
+	ctx = ctx(cdef_flag = 1)
 	pos = s.position()
-	visibility = p_visibility(s, visibility)
-	api = api or p_api(s)
+	ctx.visibility = p_visibility(s, ctx.visibility)
+	ctx.api = ctx.api or p_api(s)
 	if api:
-		if visibility not in ('private', 'public'):
+		if ctx.visibility not in ('private', 'public'):
 			error(pos, "Cannot combine 'api' with '%s'" % visibility)
-	if visibility == 'extern' and s.sy == 'from':
-			return p_cdef_extern_block(s, level, pos)
+	if ctx.visibility == 'extern' and s.sy == 'from':
+			return p_cdef_extern_block(s, ctx, pos)
 	elif s.sy == ':':
-		return p_cdef_block(s, level, visibility, api)
+		return p_cdef_block(s, ctx)
 	elif s.sy == 'class':
-		if level not in ('module', 'module_pxd'):
+		if ctx.level not in ('module', 'module_pxd'):
 			error(pos, "Extension type definition not allowed here")
 		#if api:
 		#	error(pos, "'api' not allowed with extension class")
-		return p_c_class_definition(s, level, pos, visibility = visibility, api = api)
+		return p_c_class_definition(s, pos, ctx)
 	elif s.sy == 'IDENT' and s.systring in struct_union_or_enum:
-		if level not in ('module', 'module_pxd'):
+		if ctx.level not in ('module', 'module_pxd'):
 			error(pos, "C struct/union/enum definition not allowed here")
-		#if visibility == 'public':
+		#if ctx.visibility == 'public':
 		#	error(pos, "Public struct/union/enum definition not implemented")
-		#if api:
+		#if ctx.api:
 		#	error(pos, "'api' not allowed with '%s'" % s.systring)
 		if s.systring == "enum":
-			return p_c_enum_definition(s, pos, level, visibility)
+			return p_c_enum_definition(s, pos, ctx)
 		else:
-			return p_c_struct_or_union_definition(s, pos, level, visibility)
+			return p_c_struct_or_union_definition(s, pos, ctx)
 	elif s.sy == 'pass':
 		node = p_pass_statement(s)
 		s.expect_newline('Expected a newline')
 		return node
 	else:
-		return p_c_func_or_var_declaration(s, level, pos, visibility, api)
+		return p_c_func_or_var_declaration(s, pos, ctx)
 
-def p_cdef_block(s, level, visibility, api):
-	return p_suite(s, level, cdef_flag = 1, visibility = visibility, api = api)
+def p_cdef_block(s, ctx):
+	return p_suite(s, ctx(cdef_flag = 1))
 
-def p_cdef_extern_block(s, level, pos):
+def p_cdef_extern_block(s, pos, ctx):
 	include_file = None
 	s.expect('from')
 	if s.sy == '*':
 		s.next()
 	else:
 		_, include_file = p_string_literal(s)
-	body = p_suite(s, level, cdef_flag = 1, visibility = 'extern')
+	body = p_suite(s, ctx(cdef_flag = 1, visibility = 'extern'))
 	return Nodes.CDefExternNode(pos,
 		include_file = include_file,
 		body = body)
@@ -1760,7 +1714,7 @@ struct_union_or_enum = (
 	"struct", "union", "enum"
 )
 
-def p_c_enum_definition(s, pos, level, visibility, typedef_flag = 0):
+def p_c_enum_definition(s, pos, ctx):
 	# s.sy == ident 'enum'
 	s.next()
 	if s.sy == 'IDENT':
@@ -1782,9 +1736,10 @@ def p_c_enum_definition(s, pos, level, visibility, typedef_flag = 0):
 		while s.sy not in ('DEDENT', 'EOF'):
 			p_c_enum_line(s, items)
 		s.expect_dedent()
-	return Nodes.CEnumDefNode(pos, name = name, cname = cname,
-		items = items, typedef_flag = typedef_flag, visibility = visibility,
-		in_pxd = level == 'module_pxd')
+	return Nodes.CEnumDefNode(pos, name = name, cname = cname, items = items,
+		typedef_flag = ctx.typedef_flag,
+		visibility = ctx.visibility,
+		in_pxd = ctx.level == 'module_pxd')
 
 def p_c_enum_line(s, items):
 	if s.sy <> 'pass':
@@ -1809,7 +1764,7 @@ def p_c_enum_item(s, items):
 	items.append(Nodes.CEnumDefItemNode(pos, 
 		name = name, cname = cname, value = value))
 
-def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
+def p_c_struct_or_union_definition(s, pos, ctx):
 	# s.sy == ident 'struct' or 'union'
 	kind = s.systring
 	s.next()
@@ -1825,7 +1780,7 @@ def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 		while s.sy <> 'DEDENT':
 			if s.sy <> 'pass':
 				attributes.append(
-					p_c_func_or_var_declaration(s, level = 'other', pos = s.position()))
+					p_c_func_or_var_declaration(s, pos = s.position(), ctx(level = 'other'))
 			else:
 				s.next()
 				s.expect_newline("Expected a newline")
@@ -1835,8 +1790,9 @@ def p_c_struct_or_union_definition(s, pos, level, visibility, typedef_flag = 0):
 	return Nodes.CStructOrUnionDefNode(pos, 
 		name = name, cname = cname, module_path = module_path,
 		kind = kind, attributes = attributes,
-		typedef_flag = typedef_flag, visibility = visibility,
-		in_pxd = level == 'module_pxd')
+		typedef_flag = ctx.typedef_flag,
+		visibility = ctx.visibility,
+		in_pxd = ctx.level == 'module_pxd')
 
 def p_visibility(s, prev_visibility):
 	pos = s.position()
@@ -1849,8 +1805,8 @@ def p_visibility(s, prev_visibility):
 		s.next()
 	return visibility
 
-def p_c_func_or_var_declaration(s, level, pos, visibility = 'private', api = 0):
-	cmethod_flag = level in ('c_class', 'c_class_pxd')
+def p_c_func_or_var_declaration(s, pos, ctx):
+	cmethod_flag = ctx.level in ('c_class', 'c_class_pxd')
 	base_type = p_c_base_type(s)
 	declarator = p_c_declarator(s, cmethod_flag = cmethod_flag, nonempty = 1)
 	if s.sy == ':':
@@ -1858,11 +1814,11 @@ def p_c_func_or_var_declaration(s, level, pos, visibility = 'private', api = 0):
 			s.error("C function definition not allowed here")
 		suite = p_suite(s, 'function', with_pseudo_doc = 1)
 		result = Nodes.CFuncDefNode(pos,
-			visibility = visibility,
+			visibility = ctx.visibility,
 			base_type = base_type,
 			declarator = declarator, 
 			body = suite,
-			api = api)
+			api = ctx.api)
 	else:
 		#if api:
 		#	error(pos, "'api' not allowed with variable declaration")
@@ -1875,34 +1831,33 @@ def p_c_func_or_var_declaration(s, level, pos, visibility = 'private', api = 0):
 			declarators.append(declarator)
 		s.expect_newline("Syntax error in C variable declaration")
 		result = Nodes.CVarDefNode(pos, 
-			visibility = visibility,
+			visibility = ctx.visibility,
 			base_type = base_type, 
 			declarators = declarators,
-			in_pxd = level == 'module_pxd',
-			api = api)
+			in_pxd = ctx.level == 'module_pxd',
+			api = ctx.api)
 	return result
 
-def p_ctypedef_statement(s, level, visibility = 'private', api = 0):
+def p_ctypedef_statement(s, ctx):
 	# s.sy == 'ctypedef'
 	pos = s.position()
 	s.next()
 	visibility = p_visibility(s, visibility)
 	if s.sy == 'class':
-		return p_c_class_definition(s, level, pos,
-			visibility = visibility, typedef_flag = 1, api = api)
+		return p_c_class_definition(s, pos, ctx(typedef_flag = 1))
 	elif s.sy == 'IDENT' and s.systring in ('struct', 'union', 'enum'):
 		if s.systring == 'enum':
-			return p_c_enum_definition(s, pos, level, visibility, typedef_flag = 1)
+			return p_c_enum_definition(s, pos, ctx(typedef_flag = 1))
 		else:
-			return p_c_struct_or_union_definition(s, pos, level, visibility,
-				typedef_flag = 1)
+			return p_c_struct_or_union_definition(s, pos, ctx(typedef_flag = 1))
 	else:
 		base_type = p_c_base_type(s)
 		declarator = p_c_declarator(s, is_type = 1, nonempty = 1)
 		s.expect_newline("Syntax error in ctypedef statement")
 		return Nodes.CTypeDefNode(pos,
-			base_type = base_type, declarator = declarator, visibility = visibility,
-			in_pxd = level == 'module_pxd')
+			base_type = base_type, declarator = declarator,
+			visibility = ctx.visibility,
+			in_pxd = ctx.level == 'module_pxd')
 
 def p_def_statement(s):
 	# s.sy == 'def'
@@ -1966,19 +1921,10 @@ def p_qualified_name(s):
 		name = p_ident(s)
 	return path, name
 
-def p_c_class_definition(s, level, pos, 
-		visibility = 'private', typedef_flag = 0, api = 0):
+def p_c_class_definition(s, pos, ctx):
 	# s.sy == 'class'
 	s.next()
 	module_path, class_name = p_qualified_name(s)
-#	module_path = []
-#	class_name = p_ident(s)
-#	while s.sy == '.':
-#		s.next()
-#		module_path.append(class_name)
-#		class_name = p_ident(s)
-	#if module_path and visibility <> 'extern':
-	#	error(pos, "Qualified class name only allowed for 'extern' C class")
 	if module_path and s.sy == 'IDENT' and s.systring == 'as':
 		s.next()
 		as_name = p_ident(s)
@@ -1992,22 +1938,16 @@ def p_c_class_definition(s, level, pos,
 	if s.sy == '(':
 		s.next()
 		base_class_path, base_class_name = p_qualified_name(s)
-#		base_class_path = [p_ident(s)]
-#		while s.sy == '.':
-#			s.next()
-#			base_class_path.append(p_ident(s))
 		if s.sy == ',':
 			s.error("C class may only have one base class")
 		s.expect(')')
-#		base_class_module = ".".join(base_class_path[:-1])
-#		base_class_name = base_class_path[-1]
 		base_class_module = ".".join(base_class_path)
 	if s.sy == '[':
-		if visibility not in ('public', 'extern'):
+		if ctx.visibility not in ('public', 'extern'):
 			error(s.position(), "Name options only allowed for 'public' or 'extern' C class")
 		objstruct_name, typeobj_name = p_c_class_options(s)
 	if s.sy == ':':
-		if level == 'module_pxd':
+		if ctx.level == 'module_pxd':
 			body_level = 'c_class_pxd'
 		else:
 			body_level = 'c_class'
@@ -2016,23 +1956,23 @@ def p_c_class_definition(s, level, pos,
 		s.expect_newline("Syntax error in C class definition")
 		doc = None
 		body = None
-	if visibility == 'extern':
+	if ctx.visibility == 'extern':
 		if not module_path:
 			error(pos, "Module name required for 'extern' C class")
 		if typeobj_name:
 			error(pos, "Type object name specification not allowed for 'extern' C class")
-	elif visibility == 'public':
+	elif ctx.visibility == 'public':
 		if not objstruct_name:
 			error(pos, "Object struct name specification required for 'public' C class")
 		if not typeobj_name:
 			error(pos, "Type object name specification required for 'public' C class")
 	else:
-		if api:
+		if ctx.api:
 			error(pos, "Only 'public' C class can be declared 'api'")
 	return Nodes.CClassDefNode(pos,
-		visibility = visibility,
-		typedef_flag = typedef_flag,
-		api = api,
+		visibility = ctx.visibility,
+		typedef_flag = ctx.typedef_flag,
+		api = ctx.api,
 		module_name = ".".join(module_path),
 		class_name = class_name,
 		as_name = as_name,
@@ -2040,7 +1980,7 @@ def p_c_class_definition(s, level, pos,
 		base_class_name = base_class_name,
 		objstruct_name = objstruct_name,
 		typeobj_name = typeobj_name,
-		in_pxd = level == 'module_pxd',
+		in_pxd = ctx.level == 'module_pxd',
 		doc = doc,
 		body = body)
 
@@ -2087,7 +2027,7 @@ def p_module(s, pxd):
 		level = 'module_pxd'
 	else:
 		level = 'module'
-	body = p_statement_list(s, level)
+	body = p_statement_list(s, Ctx(level = level))
 	if s.sy <> 'EOF':
 		s.error("Syntax error in statement [%s,%s]" % (
 			repr(s.sy), repr(s.systring)))
