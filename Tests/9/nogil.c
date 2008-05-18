@@ -27,6 +27,7 @@
 #define __PYX_EXTERN_C extern
 #endif
 #include <math.h>
+#include "nogil.h"
 
 
 typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
@@ -53,7 +54,7 @@ static void __pyx_f_5nogil_h(PyObject *); /*proto*/
 static void __pyx_f_5nogil_f(int __pyx_v_x) {
   int __pyx_v_y;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":6 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":9 */
   __pyx_v_y = 42;
 
 }
@@ -61,14 +62,17 @@ static void __pyx_f_5nogil_f(int __pyx_v_x) {
 static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
   void *__pyx_v_p;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":10 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":13 */
   g2(__pyx_v_x);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":11 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":14 */
   g2(((PyObject *)__pyx_v_p));
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":12 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":15 */
   __pyx_v_p = ((void *)__pyx_v_x);
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":16 */
+  e();
 
 }
 
@@ -88,7 +92,7 @@ PyMODINIT_FUNC initnogil(void) {
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":8 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":11 */
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("nogil");

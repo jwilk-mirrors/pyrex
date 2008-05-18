@@ -27,6 +27,7 @@
 #define __PYX_EXTERN_C extern
 #endif
 #include <math.h>
+#include "nogil.h"
 
 
 typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
@@ -69,6 +70,9 @@ static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":12 */
   __pyx_v_p = ((void *)__pyx_v_x);
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":16 */
+  e();
 
 }
 

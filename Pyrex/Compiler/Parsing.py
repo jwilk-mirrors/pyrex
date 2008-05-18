@@ -17,8 +17,9 @@ class Ctx(object):
 	level = 'other'
 	visibility = 'private'
 	cdef_flag = 0
-	ctypedef_flag = 0
+	typedef_flag = 0
 	api = 0
+	nogil = 0
 	
 	def __init__(self, **kwds):
 		self.__dict__.update(kwds)
@@ -1311,11 +1312,11 @@ def p_statement(s, ctx):
 			if ctx.api:
 				error(s.pos, "'api' not allowed with this statement")
 			if s.sy == 'def':
-				if level not in ('module', 'class', 'c_class', 'property'):
+				if ctx.level not in ('module', 'class', 'c_class', 'property'):
 					s.error('def statement not allowed here')
 				return p_def_statement(s)
 			elif s.sy == 'class':
-				if level <> 'module':
+				if ctx.level <> 'module':
 					s.error("class definition not allowed here")
 				return p_class_statement(s)
 			elif s.sy == 'include':
@@ -1353,7 +1354,7 @@ def p_statement_list(s, ctx):
 	else:
 		return Nodes.StatListNode(pos, stats = stats)
 
-def p_suite(s, ctx, with_doc = 0, with_pseudo_doc = 0):
+def p_suite(s, ctx = Ctx(), with_doc = 0, with_pseudo_doc = 0):
 	pos = s.position()
 	s.expect(':')
 	doc = None
@@ -1485,7 +1486,7 @@ def p_opt_cname(s):
 		cname = None
 	return cname
 
-def p_c_declarator(s, empty = 0, is_type = 0, cmethod_flag = 0, nonempty = 0,
+def p_c_declarator(s, ctx = Ctx(), empty = 0, is_type = 0, cmethod_flag = 0, nonempty = 0,
 		calling_convention_allowed = 0):
 	# If empty is true, the declarator must be empty. If nonempty is true,
 	# the declarator must be nonempty. Otherwise we don't care.
@@ -1496,9 +1497,9 @@ def p_c_declarator(s, empty = 0, is_type = 0, cmethod_flag = 0, nonempty = 0,
 		s.next()
 		if s.sy == ')' or looking_at_type(s):
 			base = Nodes.CNameDeclaratorNode(pos, name = "", cname = None)
-			result = p_c_func_declarator(s, pos, base, cmethod_flag)
+			result = p_c_func_declarator(s, pos, ctx, base, cmethod_flag)
 		else:
-			result = p_c_declarator(s, empty, is_type, cmethod_flag, nonempty,
+			result = p_c_declarator(s, ctx, empty, is_type, cmethod_flag, nonempty,
 				calling_convention_allowed = 1)
 			s.expect(')')
 	else:
@@ -1512,7 +1513,7 @@ def p_c_declarator(s, empty = 0, is_type = 0, cmethod_flag = 0, nonempty = 0,
 			result = p_c_array_declarator(s, result)
 		else: # sy == '('
 			s.next()
-			result = p_c_func_declarator(s, pos, result, cmethod_flag)
+			result = p_c_func_declarator(s, pos, ctx, result, cmethod_flag)
 		cmethod_flag = 0
 	return result
 
@@ -1526,7 +1527,7 @@ def p_c_array_declarator(s, base):
 	s.expect(']')
 	return Nodes.CArrayDeclaratorNode(pos, base = base, dimension = dim)
 
-def p_c_func_declarator(s, pos, base, cmethod_flag):
+def p_c_func_declarator(s, pos, ctx, base, cmethod_flag):
 	#  Opening paren has already been skipped
 	args = p_c_arg_list(s, in_pyfunc = 0, cmethod_flag = cmethod_flag,
 		nonempty_declarators = 0)
@@ -1538,19 +1539,21 @@ def p_c_func_declarator(s, pos, base, cmethod_flag):
 	return Nodes.CFuncDeclaratorNode(pos, 
 		base = base, args = args, has_varargs = ellipsis,
 		exception_value = exc_val, exception_check = exc_check,
-		nogil = nogil or with_gil, with_gil = with_gil)
+		nogil = nogil or ctx.nogil or with_gil, with_gil = with_gil)
 
 def p_c_simple_declarator(s, empty, is_type, cmethod_flag, nonempty):
 	pos = s.position()
 	calling_convention = p_calling_convention(s)
 	if s.sy == '*':
 		s.next()
-		base = p_c_declarator(s, empty, is_type, cmethod_flag, nonempty)
+		base = p_c_declarator(s, empty = empty, is_type = is_type,
+			cmethod_flag = cmethod_flag, nonempty = nonempty)
 		result = Nodes.CPtrDeclaratorNode(pos, 
 			base = base)
 	elif s.sy == '**': # scanner returns this as a single token
 		s.next()
-		base = p_c_declarator(s, empty, is_type, cmethod_flag, nonempty)
+		base = p_c_declarator(s, empty = empty, is_type = is_type,
+			cmethod_flag = cmethod_flag, nonempty = nonempty)
 		result = Nodes.CPtrDeclaratorNode(pos,
 			base = Nodes.CPtrDeclaratorNode(pos,
 				base = base))
@@ -1664,12 +1667,14 @@ def p_cdef_statement(s, ctx):
 	pos = s.position()
 	ctx.visibility = p_visibility(s, ctx.visibility)
 	ctx.api = ctx.api or p_api(s)
-	if api:
+	if ctx.api:
 		if ctx.visibility not in ('private', 'public'):
 			error(pos, "Cannot combine 'api' with '%s'" % visibility)
 	if ctx.visibility == 'extern' and s.sy == 'from':
-			return p_cdef_extern_block(s, ctx, pos)
-	elif s.sy == ':':
+		return p_cdef_extern_block(s, pos, ctx)
+	if p_nogil(s):
+		ctx.nogil = 1
+	if s.sy == ':':
 		return p_cdef_block(s, ctx)
 	elif s.sy == 'class':
 		if ctx.level not in ('module', 'module_pxd'):
@@ -1705,7 +1710,10 @@ def p_cdef_extern_block(s, pos, ctx):
 		s.next()
 	else:
 		_, include_file = p_string_literal(s)
-	body = p_suite(s, ctx(cdef_flag = 1, visibility = 'extern'))
+	ctx = ctx(cdef_flag = 1, visibility = 'extern')
+	if p_nogil(s):
+		ctx.nogil = 1
+	body = p_suite(s, ctx)
 	return Nodes.CDefExternNode(pos,
 		include_file = include_file,
 		body = body)
@@ -1777,10 +1785,11 @@ def p_c_struct_or_union_definition(s, pos, ctx):
 		s.expect('NEWLINE')
 		s.expect_indent()
 		attributes = []
+		body_ctx = Ctx()
 		while s.sy <> 'DEDENT':
 			if s.sy <> 'pass':
-				attributes.append(
-					p_c_func_or_var_declaration(s, pos = s.position(), ctx(level = 'other'))
+				attributes.append(p_c_func_or_var_declaration(s,
+					s.position(), body_ctx))
 			else:
 				s.next()
 				s.expect_newline("Expected a newline")
@@ -1808,11 +1817,11 @@ def p_visibility(s, prev_visibility):
 def p_c_func_or_var_declaration(s, pos, ctx):
 	cmethod_flag = ctx.level in ('c_class', 'c_class_pxd')
 	base_type = p_c_base_type(s)
-	declarator = p_c_declarator(s, cmethod_flag = cmethod_flag, nonempty = 1)
+	declarator = p_c_declarator(s, ctx, cmethod_flag = cmethod_flag, nonempty = 1)
 	if s.sy == ':':
-		if level not in ('module', 'c_class'):
+		if ctx.level not in ('module', 'c_class'):
 			s.error("C function definition not allowed here")
-		suite = p_suite(s, 'function', with_pseudo_doc = 1)
+		suite = p_suite(s, Ctx(level = 'function'), with_pseudo_doc = 1)
 		result = Nodes.CFuncDefNode(pos,
 			visibility = ctx.visibility,
 			base_type = base_type,
@@ -1842,14 +1851,15 @@ def p_ctypedef_statement(s, ctx):
 	# s.sy == 'ctypedef'
 	pos = s.position()
 	s.next()
-	visibility = p_visibility(s, visibility)
+	visibility = p_visibility(s, ctx.visibility)
+	ctx = ctx(typedef_flag = 1, visibility = visibility)
 	if s.sy == 'class':
-		return p_c_class_definition(s, pos, ctx(typedef_flag = 1))
+		return p_c_class_definition(s, pos, ctx)
 	elif s.sy == 'IDENT' and s.systring in ('struct', 'union', 'enum'):
 		if s.systring == 'enum':
-			return p_c_enum_definition(s, pos, ctx(typedef_flag = 1))
+			return p_c_enum_definition(s, pos, ctx)
 		else:
-			return p_c_struct_or_union_definition(s, pos, ctx(typedef_flag = 1))
+			return p_c_struct_or_union_definition(s, pos, ctx)
 	else:
 		base_type = p_c_base_type(s)
 		declarator = p_c_declarator(s, is_type = 1, nonempty = 1)
@@ -1885,7 +1895,7 @@ def p_def_statement(s):
 	s.expect(')')
 	if p_nogil(s):
 		error(s.pos, "Python function cannot be declared nogil")
-	doc, body = p_suite(s, 'function', with_doc = 1)
+	doc, body = p_suite(s, Ctx(level = 'function'), with_doc = 1)
 	return Nodes.DefNode(pos, name = name, args = args, 
 		star_arg = star_arg, starstar_arg = starstar_arg,
 		doc = doc, body = body)
@@ -1906,7 +1916,7 @@ def p_class_statement(s):
 		s.expect(')')
 	else:
 		base_list = []
-	doc, body = p_suite(s, 'class', with_doc = 1)
+	doc, body = p_suite(s, Ctx(level = 'class'), with_doc = 1)
 	return Nodes.PyClassDefNode(pos,
 		name = class_name,
 		bases = ExprNodes.TupleNode(pos, args = base_list),
@@ -1951,7 +1961,7 @@ def p_c_class_definition(s, pos, ctx):
 			body_level = 'c_class_pxd'
 		else:
 			body_level = 'c_class'
-		doc, body = p_suite(s, body_level, with_doc = 1)
+		doc, body = p_suite(s, Ctx(level = body_level), with_doc = 1)
 	else:
 		s.expect_newline("Syntax error in C class definition")
 		doc = None
@@ -2007,7 +2017,7 @@ def p_property_decl(s):
 	pos = s.position()
 	s.next() # 'property'
 	name = p_ident(s)
-	doc, body = p_suite(s, 'property', with_doc = 1)
+	doc, body = p_suite(s, Ctx(level = 'property'), with_doc = 1)
 	return Nodes.PropertyNode(pos, name = name, doc = doc, body = body)
 
 def p_doc_string(s):

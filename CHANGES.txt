@@ -1,3 +1,14 @@
+0.9.8.2
+-------
+
+Enhancements:
+
+	- A block of external functions can be declared nogil at once.
+	
+			cdef extern from "somewhere.h" nogil:
+				...
+
+
 0.9.8.1
 -------
 
