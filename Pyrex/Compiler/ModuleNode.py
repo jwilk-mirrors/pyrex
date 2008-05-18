@@ -328,10 +328,15 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	def generate_declarations_for_module(self, env, code, definition):
 		code.putln("")
 		code.putln("/* Declarations from %s */" % env.qualified_name)
+		#code.putln("/* generate_type_predeclarations */") ###
 		self.generate_type_predeclarations(env, code)
+		#code.putln("/* generate_type_definitions */") ###
 		self.generate_type_definitions(env, code, definition)
+		#code.putln("/* generate_global_declarations */") ###
 		self.generate_global_declarations(env, code, definition)
+		#code.putln("/* generate_cfunction_predeclarations */") ###
 		self.generate_cfunction_predeclarations(env, code, definition)
+		#code.putln("/* end generate_declarations_for_module */") ###
 
 	def generate_type_predeclarations(self, env, code):
 		pass
@@ -523,9 +528,12 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			if definition or entry.defined_in_pxd:
 				code.putln("static PyTypeObject *%s = 0;" % 
 					entry.type.typeptr_cname)
+		#code.putln("/* var_entries */") ###
 		code.put_var_declarations(env.var_entries, static = 1, 
 			dll_linkage = "DL_EXPORT", definition = definition)
-		code.put_var_declarations(env.default_entries, static = 1)
+		if definition:
+			#code.putln("/* default_entries */") ###
+			code.put_var_declarations(env.default_entries, static = 1)
 	
 	def generate_cfunction_predeclarations(self, env, code, definition):
 		for entry in env.cfunc_entries:
