@@ -262,9 +262,12 @@ an importing function called <span style="font-weight: bold;">import_foo__spam()
 Between Pyrex Modules</a>) to make the module's public interface available by all three methods.<br><br><hr style="width: 100%; height: 2px;"><h2><a name="Acquiring_and_Releasing_the_GIL"></a>Acquiring and Releasing the GIL</h2>Pyrex
 provides facilities for releasing the Global Interpreter Lock (GIL)
 before calling C code, and for acquiring the GIL in functions that are
-to be called back from C code that is executed without the GIL.<br><h3>Releasing the GIL</h3>You can release the GIL around a section of code using the<span style="font-family: monospace; font-weight: bold;"> with nogil </span>statement:<br><pre style="margin-left: 40px;">with nogil:<br>   &lt;code to be executed with the GIL released&gt;<br></pre>Code in the body of the statement <span style="font-style: italic;">must not manipulate Python objects</span>, and must
+to be called back from C code that is executed without the GIL.<br><h3>Releasing the GIL</h3>You can release the GIL around a section of code using the<span style="font-family: monospace; font-weight: bold;"> with nogil </span>statement:<br><pre style="margin-left: 40px;">with nogil:<br>   &lt;code to be executed with the GIL released&gt;<br></pre>Code in the body of the statement <span style="font-style: italic;">must not manipulate Python objects</span>,
+and must
 not call anything that manipulates Python objects without first
-re-acquiring the GIL. <span style="font-weight: bold;">Pyrex currently does not check this.</span><br><br><span style="font-weight: bold;">Note</span>:
+re-acquiring the GIL. Pyrex attempts to check that these restrictions
+are being followed as far as it can, but it may not catch all possible
+forms of violation<span style="font-weight: bold;"></span>.<br><br>Any external C functions called inside the block must be declared as <span style="font-family: monospace;">nogil</span> (<a href="#nogil">see below</a>).<br><br><span style="font-weight: bold;">Note</span>:
 It may be safe to do some things with Python objects under some
 circumstances. Provided steps are taken (such as adequate locking) to
 ensure that the objects involved cannot be deallocated by Python code
@@ -273,11 +276,8 @@ attributes of an extension type, and to pass references to Python
 objects to another function that is safe to call with the GIL released.<br><br>However, in the absence of such locking, it is not safe to do <span style="font-style: italic;">anything</span> with Python objects with the GIL released -- not even look at them.<br><h3>Acquiring the GIL</h3>A
 C function that is to be used as a callback from C code that is executed
 without the GIL needs to acquire the GIL before it can manipulate
-Python objects. This can be done by specifying<span style="font-family: monospace; font-weight: bold;"> with gil </span>in the function header:<br><pre style="margin-left: 40px;">cdef void my_callback(void *data) with gil:<br>    ...<br></pre><h3>Declaring a function as callable without the GIL</h3>You can specify <span style="font-family: monospace; font-weight: bold;">nogil</span> in a C function header or function type to declare that it is safe to call without the GIL. <br><pre style="margin-left: 40px;">cdef void my_gil_free_func(int spam) nogil:<br>    ...</pre>If you are implementing such a function in Pyrex, it cannot have any Python local variables, it cannot return a
-Python type, and the same restrictions apply to the body of the function as for a<span style="font-family: monospace;"> with nogil </span>block.
-Some of these restrictions are currently checked by Pyrex, but not all.
-It is possible that more stringent checking will be performed in the
-future.<br><br>Declaring a function<span style="font-family: monospace;"> with gil </span>also implicitly makes its signature<span style="font-family: monospace;"> nogil</span>.<br><br>
+Python objects. This can be done by specifying<span style="font-family: monospace; font-weight: bold;"> with gil </span>in the function header:<br><pre style="margin-left: 40px;">cdef void my_callback(void *data) with gil:<br>    ...<br></pre><h3><a name="nogil"></a>Declaring a function as callable without the GIL</h3>You can specify <span style="font-family: monospace; font-weight: bold;">nogil</span> in a C function header or function type to declare that it is safe to call without the GIL. Examples:<br><br><div style="margin-left: 40px;"><span style="font-family: monospace;">cdef extern int swizzle_the_knob() nogil</span><br></div><pre style="margin-left: 40px;">cdef void my_gil_free_func(int spam) nogil:<br>    ...</pre>If you are implementing such a function in Pyrex, it cannot have any Python local variables, it cannot return a
+Python type, and the same restrictions apply to the body of the function as for a<span style="font-family: monospace;"> with nogil </span>block.<br><br>Declaring a function<span style="font-family: monospace;"> with gil </span>also implicitly makes its signature<span style="font-family: monospace;"> nogil</span>.<br><br>
 <hr style="width: 100%; height: 2px;"><span style="font-weight: bold;">Footnotes</span>
 <hr width="100%"><a name="Footnote1"></a>1.
 A problem with const

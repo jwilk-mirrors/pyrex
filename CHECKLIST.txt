@@ -8,3 +8,5 @@ Release Checklist
 * make test_setup
 
 * Check version number in Makefile
+
+* Update news in web page

@@ -20,7 +20,7 @@ for use in another Pyrex module. These facilities are closely modelled on
 the Python import mechanism, and can be thought of as a compile-time version 
 of it.  
 <h2><a class="mozTocH2" name="mozTocId699652"></a> Contents</h2><ul id="mozToc"><!--mozToc h2 1 h3 2--><li><a href="#mozTocId989010"> Definition and Implementation files</a><ul><li><a href="#mozTocId411233"> What a Definition File contains</a></li><li><a href="#mozTocId20347"> What an Implementation File contains</a></li></ul></li><li><a href="#mozTocId950993"> The <span style="font-family: monospace;">cimport</span> statement</a><ul><li><a href="#mozTocId559554"> Search paths for definition files</a></li><li><a href="#mozTocId478514"> Using <span style="font-family: monospace;">cimport</span> to resolve naming
- conflicts</a></li></ul></li><li><a href="#mozTocId937218">Sharing C Functions</a></li><li><a href="#mozTocId825278">Sharing Extension Types</a></li><li><a href="#mozTocId144977">Circular cimports - Forward-declaring cimported names</a></li></ul>
+ conflicts</a></li></ul></li><li><a href="#mozTocId937218">Sharing C Functions</a></li><li><a href="#mozTocId825278">Sharing Extension Types</a></li><li><a href="#mozTocId144977">Circular cimports</a></li></ul>
 
    
 
@@ -321,7 +321,7 @@ need to <tt>import</tt> <tt>Shrubbing</tt>.</li>
 </ul>If you are exporting an extension type that has a base class, the
 base class must be declared in the definition part. Repeating the base
 class in the implementation part is not necessary, but if you do, it
-must match the base class in the definition part.<h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports - Forward-declaring cimported names</h2>If
+must match the base class in the definition part.<h2><a class="mozTocH2" name="mozTocId144977"></a><a name="CircularCImports"></a>Circular cimports</h2>If
 you have two structs, unions or extension types defined in different
 .pxd files, and they need to refer to each other, there is a potential
 for problems with circular imports. To avoid this, there is a special
