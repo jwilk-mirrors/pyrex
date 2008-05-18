@@ -16,6 +16,13 @@ Bug fixes:
 	- Improved error message for C method signature mismatch between
 		a class and its base class.
 
+Bug workarounds:
+
+	- Multiple source files passed to Main.compile are being compiled
+		in separate contexts for the time being until I can sort out a
+		problem. You probably won't notice any difference except that
+		there will be no speed advantage over compiling them separately.
+
 
 0.9.8.1
 -------

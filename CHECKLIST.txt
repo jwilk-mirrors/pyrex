@@ -10,3 +10,11 @@ Release Checklist
 * Check version number in Makefile
 
 * Update news in web page
+
+* Commit changes
+
+* Tag release
+
+* make tar
+
+* make upload
