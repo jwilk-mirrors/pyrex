@@ -2,7 +2,8 @@ cdef extern object g(object x) nogil
 cdef extern void g2(object x) nogil
 
 cdef extern from "nogil.h" nogil:
-	void e()
+	void e1()
+	int *e2()
 
 cdef void f(int x) nogil:
 	cdef int y
@@ -13,4 +14,5 @@ cdef void h(object x) nogil:
 	g2(x)
 	g2(<object>p)
 	p = <void *>x
-	e()
+	e1()
+	e2()

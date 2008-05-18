@@ -1499,11 +1499,12 @@ def p_c_declarator(s, ctx = Ctx(), empty = 0, is_type = 0, cmethod_flag = 0, non
 			base = Nodes.CNameDeclaratorNode(pos, name = "", cname = None)
 			result = p_c_func_declarator(s, pos, ctx, base, cmethod_flag)
 		else:
-			result = p_c_declarator(s, ctx, empty, is_type, cmethod_flag, nonempty,
+			result = p_c_declarator(s, ctx, empty = empty, is_type = is_type,
+				cmethod_flag = cmethod_flag, nonempty = nonempty,
 				calling_convention_allowed = 1)
 			s.expect(')')
 	else:
-		result = p_c_simple_declarator(s, empty, is_type, cmethod_flag, nonempty)
+		result = p_c_simple_declarator(s, ctx, empty, is_type, cmethod_flag, nonempty)
 	if not calling_convention_allowed and result.calling_convention and s.sy <> '(':
 		error(s.position(), "%s on something that is not a function"
 			% result.calling_convention)
@@ -1529,7 +1530,7 @@ def p_c_array_declarator(s, base):
 
 def p_c_func_declarator(s, pos, ctx, base, cmethod_flag):
 	#  Opening paren has already been skipped
-	args = p_c_arg_list(s, in_pyfunc = 0, cmethod_flag = cmethod_flag,
+	args = p_c_arg_list(s, ctx, cmethod_flag = cmethod_flag,
 		nonempty_declarators = 0)
 	ellipsis = p_optional_ellipsis(s)
 	s.expect(')')
@@ -1541,18 +1542,18 @@ def p_c_func_declarator(s, pos, ctx, base, cmethod_flag):
 		exception_value = exc_val, exception_check = exc_check,
 		nogil = nogil or ctx.nogil or with_gil, with_gil = with_gil)
 
-def p_c_simple_declarator(s, empty, is_type, cmethod_flag, nonempty):
+def p_c_simple_declarator(s, ctx, empty, is_type, cmethod_flag, nonempty):
 	pos = s.position()
 	calling_convention = p_calling_convention(s)
 	if s.sy == '*':
 		s.next()
-		base = p_c_declarator(s, empty = empty, is_type = is_type,
+		base = p_c_declarator(s, ctx, empty = empty, is_type = is_type,
 			cmethod_flag = cmethod_flag, nonempty = nonempty)
 		result = Nodes.CPtrDeclaratorNode(pos, 
 			base = base)
 	elif s.sy == '**': # scanner returns this as a single token
 		s.next()
-		base = p_c_declarator(s, empty = empty, is_type = is_type,
+		base = p_c_declarator(s, ctx, empty = empty, is_type = is_type,
 			cmethod_flag = cmethod_flag, nonempty = nonempty)
 		result = Nodes.CPtrDeclaratorNode(pos,
 			base = Nodes.CPtrDeclaratorNode(pos,
@@ -1608,14 +1609,14 @@ def p_exception_value_clause(s):
 
 c_arg_list_terminators = ('*', '**', '.', ')')
 
-def p_c_arg_list(s, in_pyfunc, cmethod_flag = 0, nonempty_declarators = 0,
+def p_c_arg_list(s, ctx = Ctx(), in_pyfunc = 0, cmethod_flag = 0, nonempty_declarators = 0,
 		kw_only = 0):
 	#  Comma-separated list of C argument declarations, possibly empty.
 	#  May have a trailing comma.
 	args = []
 	is_self_arg = cmethod_flag
 	while s.sy not in c_arg_list_terminators:
-		args.append(p_c_arg_decl(s, in_pyfunc, is_self_arg,
+		args.append(p_c_arg_decl(s, ctx, in_pyfunc, is_self_arg,
 			nonempty = nonempty_declarators, kw_only = kw_only))
 		if s.sy <> ',':
 			break
@@ -1630,12 +1631,12 @@ def p_optional_ellipsis(s):
 	else:
 		return 0
 
-def p_c_arg_decl(s, in_pyfunc, cmethod_flag = 0, nonempty = 0, kw_only = 0):
+def p_c_arg_decl(s, ctx, in_pyfunc, cmethod_flag = 0, nonempty = 0, kw_only = 0):
 	pos = s.position()
 	not_none = 0
 	default = None
 	base_type = p_c_base_type(s, cmethod_flag)
-	declarator = p_c_declarator(s, nonempty = nonempty)
+	declarator = p_c_declarator(s, ctx, nonempty = nonempty)
 	if s.sy == 'not':
 		s.next()
 		if s.sy == 'IDENT' and s.systring == 'None':
@@ -1836,7 +1837,7 @@ def p_c_func_or_var_declaration(s, pos, ctx):
 			s.next()
 			if s.sy == 'NEWLINE':
 				break
-			declarator = p_c_declarator(s, cmethod_flag = cmethod_flag, nonempty = 1)
+			declarator = p_c_declarator(s, ctx, cmethod_flag = cmethod_flag, nonempty = 1)
 			declarators.append(declarator)
 		s.expect_newline("Syntax error in C variable declaration")
 		result = Nodes.CVarDefNode(pos, 
@@ -1862,7 +1863,7 @@ def p_ctypedef_statement(s, ctx):
 			return p_c_struct_or_union_definition(s, pos, ctx)
 	else:
 		base_type = p_c_base_type(s)
-		declarator = p_c_declarator(s, is_type = 1, nonempty = 1)
+		declarator = p_c_declarator(s, ctx, is_type = 1, nonempty = 1)
 		s.expect_newline("Syntax error in ctypedef statement")
 		return Nodes.CTypeDefNode(pos,
 			base_type = base_type, declarator = declarator,

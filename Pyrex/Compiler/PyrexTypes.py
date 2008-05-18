@@ -580,6 +580,8 @@ class CFuncType(CType):
 			return 0
 		if not self.same_calling_convention_as(other_type):
 			return 0
+		if self.nogil <> other_type.nogil:
+			return 0
 		return 1
 	
 	def same_calling_convention_as(self, other):
@@ -610,20 +612,22 @@ class CFuncType(CType):
 		arg_decl_code = string.join(arg_decl_list, ",")
 		if not arg_decl_code and not pyrex:
 			arg_decl_code = "void"
-		exc_clause = ""
+		trailer = ""
 		if (pyrex or for_display) and not self.return_type.is_pyobject:
 			if self.exception_value and self.exception_check:
-				exc_clause = " except? %s" % self.exception_value
+				trailer = " except? %s" % self.exception_value
 			elif self.exception_value:
-				exc_clause = " except %s" % self.exception_value
+				trailer = " except %s" % self.exception_value
 			elif self.exception_check:
-				exc_clause = " except *"
+				trailer = " except *"
+			if self.nogil:
+				trailer += " nogil"
 		cc = self.calling_convention_prefix()
 		if (not entity_code and cc) or entity_code.startswith("*"):
 			entity_code = "(%s%s)" % (cc, entity_code)
 			cc = ""
 		return self.return_type.declaration_code(
-			"%s%s(%s)%s" % (cc, entity_code, arg_decl_code, exc_clause),
+			"%s%s(%s)%s" % (cc, entity_code, arg_decl_code, trailer),
 			for_display, dll_linkage, pyrex)
 	
 	def function_header_code(self, func_name, arg_code):
