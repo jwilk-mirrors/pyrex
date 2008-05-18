@@ -1159,14 +1159,13 @@ class CClassScope(ClassScope):
 		entry = self.lookup_here(name)
 		if entry:
 			if not entry.is_cfunction:
-				#error(pos, "'%s' redeclared" % name)
 				entry.redeclared(pos)
 			else:
 				if defining and entry.func_cname:
 					error(pos, "'%s' already defined" % name)
-				#print "CClassScope.declare_cfunction: checking signature" ###
 				if not entry.type.same_as(type, as_cmethod = 1):
 					error(pos, "Signature does not match previous declaration")
+					error(entry.pos, "Previous declaration is here")
 		else:
 			if self.defined:
 				error(pos,
@@ -1206,8 +1205,8 @@ class CClassScope(ClassScope):
 				entry.is_variable = 1
 				self.inherited_var_entries.append(entry)
 		for base_entry in base_scope.cfunc_entries:
-			entry = self.add_cfunction(base_entry.name, base_entry.type, None,
-				adapt(base_entry.cname), base_entry.visibility)
+			entry = self.add_cfunction(base_entry.name, base_entry.type,
+				base_entry.pos, adapt(base_entry.cname), base_entry.visibility)
 			entry.is_inherited = 1
 	
 

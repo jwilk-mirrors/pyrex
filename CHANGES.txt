@@ -8,6 +8,14 @@ Enhancements:
 			cdef extern from "somewhere.h" nogil:
 				...
 
+Bug fixes:
+	
+	-	The nogil attribute was not being checked for a match when
+		comparing function signatures.
+	
+	- Improved error message for C method signature mismatch between
+		a class and its base class.
+
 
 0.9.8.1
 -------

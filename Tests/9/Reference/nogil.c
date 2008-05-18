@@ -71,8 +71,11 @@ static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":12 */
   __pyx_v_p = ((void *)__pyx_v_x);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":16 */
-  e();
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":17 */
+  e1();
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":18 */
+  e2();
 
 }
 

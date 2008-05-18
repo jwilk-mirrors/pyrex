@@ -1,1 +1,2 @@
-void e(void);
+void e1(void);
+void *e2(void);
