@@ -39,19 +39,18 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
-
-static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
-
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
+
+static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cdefexternblock */
 
 static PyTypeObject *__pyx_ptype_15cdefexternblock_runny = 0;
 static struct runny_obj *__pyx_v_15cdefexternblock_r;
@@ -109,26 +108,6 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
-}
-
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
-	PyObject *result;
-	result = PyObject_GetAttr(dict, name);
-	if (!result)
-		PyErr_SetObject(PyExc_NameError, name);
-	return result;
-}
-
-static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-	if (!type) {
-		PyErr_Format(PyExc_SystemError, "Missing type object");
-		return 0;
-	}
-	if (obj == Py_None || PyObject_TypeCheck(obj, type))
-		return 1;
-	PyErr_Format(PyExc_TypeError, "Cannot convert %s to %s",
-		obj->ob_type->tp_name, type->tp_name);
-	return 0;
 }
 
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
@@ -189,6 +168,26 @@ bad:
 }
 #endif
 
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
+	PyObject *result;
+	result = PyObject_GetAttr(dict, name);
+	if (!result)
+		PyErr_SetObject(PyExc_NameError, name);
+	return result;
+}
+
+static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
+	if (!type) {
+		PyErr_Format(PyExc_SystemError, "Missing type object");
+		return 0;
+	}
+	if (obj == Py_None || PyObject_TypeCheck(obj, type))
+		return 1;
+	PyErr_Format(PyExc_TypeError, "Cannot convert %s to %s",
+		obj->ob_type->tp_name, type->tp_name);
+	return 0;
+}
+
 #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
@@ -246,3 +245,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cdefexternblock */
+
+/* Declarations from implementation of cdefexternblock */

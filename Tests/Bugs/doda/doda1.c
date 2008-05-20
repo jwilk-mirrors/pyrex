@@ -42,7 +42,6 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from doda1 */
 
 struct __pyx_obj_5doda1_Spam {
   PyObject_HEAD
@@ -319,3 +318,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from doda1 */
+
+/* Declarations from implementation of doda1 */

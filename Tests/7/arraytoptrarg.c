@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from arraytoptrarg */
 
 static void __pyx_f_13arraytoptrarg_f1(char **); /*proto*/
 static void __pyx_f_13arraytoptrarg_f2(char **); /*proto*/
@@ -146,3 +145,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from arraytoptrarg */
+
+/* Declarations from implementation of arraytoptrarg */

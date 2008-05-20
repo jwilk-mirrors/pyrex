@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from lepage_2 */
 
 typedef struct {
   void (*f)(void *);
@@ -137,3 +136,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from lepage_2 */
+
+/* Declarations from implementation of lepage_2 */

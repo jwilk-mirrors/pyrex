@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from dermody1b */
 
 __PYX_EXTERN_C DL_EXPORT(void) foo(void); /*proto*/
 static void __pyx_f_9dermody1b_blarg(void); /*proto*/
@@ -159,3 +158,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from dermody1b */
+
+/* Declarations from implementation of dermody1b */

@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from inplace_ops */
 
 static int __pyx_f_11inplace_ops_f(void); /*proto*/
 
@@ -209,3 +208,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from inplace_ops */
+
+/* Declarations from implementation of inplace_ops */

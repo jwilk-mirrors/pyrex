@@ -42,7 +42,6 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ishimoto3 */
 
 struct __pyx_obj_9ishimoto3_C1 {
   PyObject_HEAD
@@ -482,3 +481,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ishimoto3 */
+
+/* Declarations from implementation of ishimoto3 */

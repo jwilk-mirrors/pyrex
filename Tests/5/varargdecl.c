@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from varargdecl */
 
 static PyObject *__pyx_f_10varargdecl_grail(char *,...); /*proto*/
 
@@ -141,3 +140,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from varargdecl */
+
+/* Declarations from implementation of varargdecl */

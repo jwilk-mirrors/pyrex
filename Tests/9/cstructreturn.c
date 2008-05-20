@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cstructreturn */
 
 typedef struct {
   int blarg;
@@ -172,3 +171,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cstructreturn */
+
+/* Declarations from implementation of cstructreturn */

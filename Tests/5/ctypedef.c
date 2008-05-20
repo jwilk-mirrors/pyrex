@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ctypedef */
 
 typedef int *__pyx_t_8ctypedef_IntPtr;
 
@@ -141,3 +140,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ctypedef */
+
+/* Declarations from implementation of ctypedef */

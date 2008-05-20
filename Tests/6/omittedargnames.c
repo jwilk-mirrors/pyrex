@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from omittedargnames */
 
 __PYX_EXTERN_C DL_EXPORT(void) spam(int,char *); /*proto*/
 
@@ -134,3 +133,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from omittedargnames */
+
+/* Declarations from implementation of omittedargnames */

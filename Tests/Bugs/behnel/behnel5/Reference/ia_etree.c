@@ -59,6 +59,17 @@ struct LxmlElement {
   struct __pyx_t_4tree_xmlNode *_c_node;
 };
 
+
+__PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlDocumentType;
+
+__PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlElementType;
+
+
+static PyTypeObject *__pyx_ptype_8ia_etree__BaseParser = 0;
+static PyTypeObject *__pyx_ptype_8ia_etree__Document = 0;
+static PyTypeObject *__pyx_ptype_8ia_etree__Element = 0;
+static PyObject *__pyx_f_8ia_etree_getAttributeValue(struct LxmlElement *,PyObject *,PyObject *); /*proto*/
+
 struct __pyx_t_8ia_etree_Foo {
   int spam;
 };
@@ -74,16 +85,7 @@ struct __pyx_obj_8ia_etree__BaseParser {
 };
 
 
-__PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlDocumentType;
-
-__PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlElementType;
-
-
-static PyTypeObject *__pyx_ptype_8ia_etree__BaseParser = 0;
-static PyTypeObject *__pyx_ptype_8ia_etree__Document = 0;
-static PyTypeObject *__pyx_ptype_8ia_etree__Element = 0;
 static PyTypeObject *__pyx_ptype_8ia_etree_Vorpal = 0;
-static PyObject *__pyx_f_8ia_etree_getAttributeValue(struct LxmlElement *,PyObject *,PyObject *); /*proto*/
 
 
 /* Implementation of ia_etree */

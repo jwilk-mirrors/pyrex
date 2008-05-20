@@ -42,7 +42,6 @@ static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from builtinslice */
 
 static int __pyx_f_12builtinslice_f(void); /*proto*/
 
@@ -224,3 +223,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from builtinslice */
+
+/* Declarations from implementation of builtinslice */

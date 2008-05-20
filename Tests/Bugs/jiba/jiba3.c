@@ -42,7 +42,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from jiba3 */
 
 struct __pyx_obj_5jiba3_Position {
   PyObject_HEAD
@@ -802,3 +801,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from jiba3 */
+
+/* Declarations from implementation of jiba3 */

@@ -20,6 +20,8 @@ class CCodeWriter:
 	# filename_table   {string : int}  for finding filename table indexes
 	# filename_list    [string]        filenames in filename table order
 	# exc_vars         (string * 3)    exception variables for reraise, or None
+	# utility_code     {int : int}     id to utility_list index
+	# utility_list     list            utility code used
 	
 	in_try_finally = 0
 	
@@ -34,6 +36,17 @@ class CCodeWriter:
 		self.filename_table = {}
 		self.filename_list = []
 		self.exc_vars = None
+		self.utility_code = {}
+		self.utility_list = []
+	
+	def use_utility_code(self, uc):
+		i = id(uc)
+		if i not in self.utility_code:
+			self.utility_code[i] = len(self.utility_list)
+			self.utility_list.append(uc)
+	
+	def utility_code_used(self):
+		return self.utility_list
 	
 	def putln(self, code = ""):
 		if self.marker and self.bol:

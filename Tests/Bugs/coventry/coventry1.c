@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from coventry1 */
 
 struct __pyx_obj_9coventry1_Tst {
   PyObject_HEAD
@@ -300,3 +299,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from coventry1 */
+
+/* Declarations from implementation of coventry1 */

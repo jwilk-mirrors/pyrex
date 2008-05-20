@@ -44,7 +44,6 @@ static int __Pyx_PrintNewline(void); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from altet1 */
 
 static blarg __pyx_v_6altet1_globvar;
 
@@ -205,3 +204,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from altet1 */
+
+/* Declarations from implementation of altet1 */

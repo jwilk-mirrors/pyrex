@@ -40,8 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from pointdexter1_a */
-
 struct __pyx_obj_14pointdexter1_a_A {
   PyObject_HEAD
   int length;
@@ -49,6 +47,7 @@ struct __pyx_obj_14pointdexter1_a_A {
 
 
 static PyTypeObject *__pyx_ptype_14pointdexter1_a_A = 0;
+
 
 
 /* Implementation of pointdexter1_a */
@@ -299,3 +298,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from pointdexter1_a */
+
+/* Declarations from implementation of pointdexter1_a */

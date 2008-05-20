@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from complexbasetype */
 
 __PYX_EXTERN_C int *spam[42];
 __PYX_EXTERN_C int *grail[42];
@@ -146,3 +145,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from complexbasetype */
+
+/* Declarations from implementation of complexbasetype */

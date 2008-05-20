@@ -44,8 +44,6 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from vector */
-
 struct __pyx_obj_6vector_Vector {
   PyObject_HEAD
   float x;
@@ -57,14 +55,13 @@ struct __pyx_obj_6vector_Vector {
 
 static PyTypeObject *__pyx_ptype_6vector_Vector = 0;
 
-/* Declarations from point */
-
 struct __pyx_obj_5point_Point {
   struct __pyx_obj_6vector_Vector __pyx_base;
 };
 
 
 static PyTypeObject *__pyx_ptype_5point_Point = 0;
+
 
 
 /* Implementation of point */
@@ -342,3 +339,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from vector */
+
+/* Declarations from point */
+
+/* Declarations from implementation of point */

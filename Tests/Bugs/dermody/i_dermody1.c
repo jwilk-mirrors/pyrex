@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from i_dermody1 */
 
 __PYX_EXTERN_C DL_EXPORT(void) foo(void); /*proto*/
 
@@ -138,3 +137,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from i_dermody1 */
+
+/* Declarations from implementation of i_dermody1 */

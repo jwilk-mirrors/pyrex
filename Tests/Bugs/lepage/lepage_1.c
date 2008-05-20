@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from lepage_1 */
 
 struct __pyx_obj_8lepage_1_A {
   PyObject_HEAD
@@ -310,3 +309,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from lepage_1 */
+
+/* Declarations from implementation of lepage_1 */

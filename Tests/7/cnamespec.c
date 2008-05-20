@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cnamespec */
 
 struct c_foo {
   int c_i;
@@ -168,3 +167,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cnamespec */
+
+/* Declarations from implementation of cnamespec */

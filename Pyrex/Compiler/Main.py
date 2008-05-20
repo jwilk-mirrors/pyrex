@@ -16,7 +16,7 @@ import Parsing
 import Version
 from Errors import PyrexError, CompileError, error
 from Scanning import PyrexScanner
-from Symtab import BuiltinScope, ModuleScope
+from Symtab import BuiltinScope, DefinitionScope, ImplementationScope
 from Pyrex.Utils import set, replace_suffix, modification_time, \
 	file_newer_than, castrate_file
 
@@ -29,7 +29,7 @@ class Context:
 	#  the root of the module import namespace and the list
 	#  of directories to search for include files.
 	#
-	#  modules               {string : ModuleScope}
+	#  modules               {string : DefinitionScope}
 	#  include_directories   [string]
 	
 	def __init__(self, include_directories):
@@ -195,7 +195,7 @@ class Context:
 		# Find a top-level module, creating a new one if needed.
 		scope = self.lookup_submodule(name)
 		if not scope:
-			scope = ModuleScope(name, 
+			scope = DefinitionScope(name, 
 				parent_module = None, context = self)
 			self.modules[name] = scope
 		return scope
@@ -295,19 +295,14 @@ class Context:
 			else:
 				c_suffix = ".c"
 			result.c_file = replace_suffix(source, c_suffix)
-		#c_stat = None
-		#if result.c_file:
-		#	try:
-		#		c_stat = os.stat(result.c_file)
-		#	except EnvironmentError:
-		#		pass
 		module_name = self.extract_module_name(source)
 		initial_pos = (source, 1, 0)
-		scope = self.find_module(module_name, pos = initial_pos, need_pxd = 0)
+		def_scope = self.find_module(module_name, pos = initial_pos, need_pxd = 0)
+		imp_scope = ImplementationScope(def_scope)
 		errors_occurred = False
 		try:
-			tree = self.parse(source, scope, pxd = 0)
-			tree.process_implementation(scope, options, result)
+			tree = self.parse(source, imp_scope, pxd = 0)
+			tree.process_implementation(imp_scope, options, result)
 		except CompileError:
 			errors_occurred = True
 		Errors.close_listing_file()
@@ -458,7 +453,7 @@ def compile_multiple(sources, options):
 				result = context.compile(source, options)
 				# Compiling multiple sources in one context doesn't quite
 				# work properly yet.
-				context = Context(options.include_path) # to be removed later
+				#context = Context(options.include_path) # to be removed later
 				results.add(source, result)
 			processed.add(source)
 			if recursive:

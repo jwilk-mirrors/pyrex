@@ -40,8 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ewing8 */
-
 typedef struct __pyx_t_6ewing8_Foo __pyx_t_6ewing8_FooType;
 
 typedef struct __pyx_obj_6ewing8_Blarg *__pyx_t_6ewing8_BlargType;
@@ -58,6 +56,7 @@ struct __pyx_obj_6ewing8_Blarg {
 
 
 static PyTypeObject *__pyx_ptype_6ewing8_Blarg = 0;
+
 
 
 /* Implementation of ewing8 */
@@ -309,3 +308,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ewing8 */
+
+/* Declarations from implementation of ewing8 */

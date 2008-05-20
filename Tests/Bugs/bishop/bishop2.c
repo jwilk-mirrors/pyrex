@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from bishop2 */
 
 struct __pyx_obj_7bishop2_foo {
   PyObject_HEAD
@@ -290,3 +289,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from bishop2 */
+
+/* Declarations from implementation of bishop2 */

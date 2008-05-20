@@ -42,7 +42,6 @@ static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb);
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from builtinconst */
 
 static int __pyx_f_12builtinconst_f(void); /*proto*/
 
@@ -490,3 +489,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from builtinconst */
+
+/* Declarations from implementation of builtinconst */

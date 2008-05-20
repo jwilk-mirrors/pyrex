@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from sizeof */
 
 struct __pyx_t_6sizeof_Spam {
   char *grail;
@@ -160,3 +159,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from sizeof */
+
+/* Declarations from implementation of sizeof */

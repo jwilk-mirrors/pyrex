@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extpropertyall */
 
 struct __pyx_obj_14extpropertyall_Spam {
   PyObject_HEAD
@@ -327,3 +326,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extpropertyall */
+
+/* Declarations from implementation of extpropertyall */

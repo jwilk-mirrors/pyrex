@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extdescrdel */
 
 struct __pyx_obj_11extdescrdel_Foo {
   PyObject_HEAD
@@ -297,3 +296,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extdescrdel */
+
+/* Declarations from implementation of extdescrdel */

@@ -46,7 +46,6 @@ static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from traceback */
 
 static int __pyx_f_9traceback_grail(void); /*proto*/
 
@@ -293,3 +292,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from traceback */
+
+/* Declarations from implementation of traceback */

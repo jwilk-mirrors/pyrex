@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from return */
 
 static void __pyx_f_6return_g(void); /*proto*/
 static int __pyx_f_6return_h(PyObject *); /*proto*/
@@ -194,3 +193,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from return */
+
+/* Declarations from implementation of return */

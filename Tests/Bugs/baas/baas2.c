@@ -45,7 +45,6 @@ static int __Pyx_PrintNewline(void); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from baas2 */
 
 
 
@@ -274,3 +273,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from baas2 */
+
+/* Declarations from implementation of baas2 */

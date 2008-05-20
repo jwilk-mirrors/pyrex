@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from coercearraytoptr */
 
 struct __pyx_t_16coercearraytoptr_Grail {
   char silly[42];
@@ -153,3 +152,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from coercearraytoptr */
+
+/* Declarations from implementation of coercearraytoptr */

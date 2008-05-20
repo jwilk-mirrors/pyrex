@@ -43,7 +43,6 @@ static int __Pyx_PrintNewline(void); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from dietachmayer1 */
 
 
 
@@ -205,3 +204,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from dietachmayer1 */
+
+/* Declarations from implementation of dietachmayer1 */

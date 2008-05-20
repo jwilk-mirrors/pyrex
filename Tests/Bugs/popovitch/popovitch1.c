@@ -42,10 +42,7 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from popovitch1_pxd */
 
-
-/* Declarations from popovitch1 */
 
 
 
@@ -140,3 +137,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from popovitch1_pxd */
+
+/* Declarations from popovitch1 */
+
+/* Declarations from implementation of popovitch1 */

@@ -46,7 +46,6 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from fromimport */
 
 
 
@@ -296,3 +295,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from fromimport */
+
+/* Declarations from implementation of fromimport */

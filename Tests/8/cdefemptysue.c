@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cdefemptysue */
 
 __PYX_EXTERN_C struct spam s;
 __PYX_EXTERN_C eggs e;
@@ -139,3 +138,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cdefemptysue */
+
+/* Declarations from implementation of cdefemptysue */

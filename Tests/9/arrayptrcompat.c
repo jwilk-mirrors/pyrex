@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from arrayptrcompat */
 
 enum __pyx_t_14arrayptrcompat_E {
   __pyx_e_14arrayptrcompat_z
@@ -173,3 +172,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from arrayptrcompat */
+
+/* Declarations from implementation of arrayptrcompat */

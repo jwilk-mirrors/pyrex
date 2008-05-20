@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from withnogil */
 
 static PyObject *__pyx_f_9withnogil_f(PyObject *); /*proto*/
 static PyObject *__pyx_f_9withnogil_g(void); /*proto*/
@@ -195,3 +194,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from withnogil */
+
+/* Declarations from implementation of withnogil */

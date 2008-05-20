@@ -44,7 +44,6 @@ static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from intindex */
 
 static int __pyx_f_8intindex_f(void); /*proto*/
 
@@ -210,3 +209,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from intindex */
+
+/* Declarations from implementation of intindex */

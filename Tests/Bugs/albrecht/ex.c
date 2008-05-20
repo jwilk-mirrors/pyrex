@@ -40,16 +40,9 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ring.integer */
 
 
-/* Declarations from ring.rational */
 
-
-/* Declarations from ring */
-
-
-/* Declarations from ex */
 
 
 
@@ -144,3 +137,13 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ring.integer */
+
+/* Declarations from ring.rational */
+
+/* Declarations from ring */
+
+/* Declarations from ex */
+
+/* Declarations from implementation of ex */

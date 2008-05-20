@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extsetattr */
 
 struct __pyx_obj_10extsetattr_Spam {
   PyObject_HEAD
@@ -298,3 +297,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extsetattr */
+
+/* Declarations from implementation of extsetattr */

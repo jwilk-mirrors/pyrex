@@ -42,7 +42,6 @@ static int __Pyx_ExportFunction(char *n, void *f, char *s); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ia_cdefblock */
 
 struct __pyx_t_12ia_cdefblock_PrivFoo {
   int i;
@@ -341,3 +340,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ia_cdefblock */
+
+/* Declarations from implementation of ia_cdefblock */

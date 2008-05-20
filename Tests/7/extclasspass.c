@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extclasspass */
 
 struct __pyx_obj_12extclasspass_Eggs {
   PyObject_HEAD
@@ -275,3 +274,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extclasspass */
+
+/* Declarations from implementation of extclasspass */

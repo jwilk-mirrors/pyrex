@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from watts2 */
 
 static int __pyx_v_6watts2_x;
 
@@ -137,3 +136,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from watts2 */
+
+/* Declarations from implementation of watts2 */

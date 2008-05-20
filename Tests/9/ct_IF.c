@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ct_IF */
 
 static void __pyx_f_5ct_IF_f(void); /*proto*/
 static void __pyx_f_5ct_IF_g(void); /*proto*/
@@ -162,3 +161,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ct_IF */
+
+/* Declarations from implementation of ct_IF */

@@ -42,7 +42,6 @@ static int __Pyx_GetStarArgs(PyObject **args, PyObject **kwds, char *kwd_list[],
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from starargs */
 
 
 
@@ -347,3 +346,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from starargs */
+
+/* Declarations from implementation of starargs */

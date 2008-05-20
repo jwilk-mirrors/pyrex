@@ -42,7 +42,6 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from specmethextarg */
 
 struct __pyx_obj_14specmethextarg_Spam {
   PyObject_HEAD
@@ -312,3 +311,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from specmethextarg */
+
+/* Declarations from implementation of specmethextarg */

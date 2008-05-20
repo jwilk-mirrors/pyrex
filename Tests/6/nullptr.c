@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from nullptr */
 
 static char *__pyx_v_7nullptr_p1;
 static int *__pyx_v_7nullptr_p2;
@@ -148,3 +147,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from nullptr */
+
+/* Declarations from implementation of nullptr */

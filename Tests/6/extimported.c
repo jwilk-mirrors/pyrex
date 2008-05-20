@@ -44,7 +44,6 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extimported */
 
 struct __pyx_obj_11extimported_Ham {
   PyObject_HEAD
@@ -199,3 +198,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extimported */
+
+/* Declarations from implementation of extimported */

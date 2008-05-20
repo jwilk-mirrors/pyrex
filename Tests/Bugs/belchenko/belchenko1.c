@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from belchenko1 */
 
 static int __pyx_f_10belchenko1__is_aligned(void *); /*proto*/
 
@@ -147,3 +146,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from belchenko1 */
+
+/* Declarations from implementation of belchenko1 */

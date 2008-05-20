@@ -180,11 +180,9 @@ class Scope:
 		self.imported_c_classes = {}
 		self.temp_entries = []
 		self.free_temp_entries = []
-		#self.pending_temp_entries = [] # TEMPORARY
 		self.temp_counter = 1
 		self.cname_to_entry = {}
 		self.pow_function_used = 0
-		self.string_to_entry = {}
 		self.pystring_entries = []
 	
 	def __str__(self):
@@ -518,8 +516,8 @@ class Scope:
 		return [entry for entry in self.temp_entries
 			if entry not in self.free_temp_entries]
 	
-	def use_utility_code(self, new_code):
-		self.global_scope().use_utility_code(new_code)
+#	def use_utility_code(self, new_code):
+#		self.global_scope().use_utility_code(new_code)
 	
 	def generate_library_function_declarations(self, code):
 		# Generate extern decls for C library funcs used.
@@ -599,27 +597,16 @@ class ModuleScope(Scope):
 	# #module_dict_cname   string             C name of module dict object
 	# method_table_cname   string             C name of method table
 	# doc                  string             Module doc string
-	# doc_cname            string             C name of module doc string
-	# const_counter        integer            Counter for naming constants
-	# utility_code_used    [string]           Utility code to be included
-	# default_entries      [Entry]            Function argument default entries
 	# python_include_files [string]           Standard  Python headers to be included
 	# include_files        [string]           Other C headers to be included
-	# string_to_entry      {string : Entry}   Map string const to entry
 	# context              Context
-	# parent_module        Scope              Parent in the import namespace
-	# module_entries       {string : Entry}   For cimport statements
 	# pxd_file_loaded      boolean            Corresponding .pxd file has been processed
 	# cimported_modules    [ModuleScope]      Modules imported with cimport
-	# intern_map           {string : string}  Mapping from Python names to interned strs
-	# interned_names       [string]           Interned names pending generation of declarations
-	# all_pystring_entries [Entry]            Python string consts from all scopes
 	# types_imported       {PyrexType : 1}    Set of types for which import code generated
 	# type_names           {string : 1}       Set of type names (used during parsing)
 	# pyrex_include_files  [string]           Pyrex sources included with 'include'
 
 	def __init__(self, name, parent_module, context):
-		self.parent_module = parent_module
 		outer_scope = context.find_submodule("__builtin__")
 		Scope.__init__(self, name, outer_scope, parent_module)
 		self.module_name = name
@@ -628,24 +615,16 @@ class ModuleScope(Scope):
 		self.module_dict_cname = Naming.moddict_cname
 		self.method_table_cname = Naming.methtable_cname
 		self.doc = ""
-		self.doc_cname = Naming.moddoc_cname
-		self.const_counter = 1
-		self.utility_code_used = []
-		self.default_entries = []
-		self.module_entries = {}
 		self.python_include_files = ["Python.h", "structmember.h"]
 		self.include_files = []
 		self.type_names = self.outer_scope.type_names.copy()
 		self.pxd_file_loaded = 0
 		self.cimported_modules = []
-		self.intern_map = {}
-		self.interned_names = []
-		self.all_pystring_entries = []
 		self.types_imported = {}
 		self.pyrex_include_files = []
 	
-	def qualifying_scope(self):
-		return self.parent_module
+#	def qualifying_scope(self):
+#		return self.parent_module
 	
 	def global_scope(self):
 		return self
@@ -664,34 +643,13 @@ class ModuleScope(Scope):
 			self.interned_names.append(name)
 		return cname
 
-	def find_module(self, module_name, pos):
-		# Find a module in the import namespace, interpreting
-		# relative imports relative to this module's parent.
-		# Finds and parses the module's .pxd file if the module
-		# has not been referenced before.
-		return self.global_scope().context.find_module(
-			module_name, relative_to = self.parent_module, pos = pos)
-	
-	def find_submodule(self, name):
-		# Find and return scope for a submodule of this module,
-		# creating a new empty one if necessary. Doesn't parse .pxd.
-		scope = self.lookup_submodule(name)
-		if not scope:
-			scope = ModuleScope(name, 
-				parent_module = self, context = self.context)
-			self.module_entries[name] = scope
-		return scope
-	
-	def lookup_submodule(self, name):
-		# Return scope for submodule of this module, or None.
-		return self.module_entries.get(name, None)
-	
 	def add_include_file(self, filename):
 		if filename not in self.python_include_files \
 			and filename not in self.include_files:
 				self.include_files.append(filename)
 	
 	def add_imported_module(self, scope):
+		#print "add_imported_module:", scope, "to", self ###
 		if scope not in self.cimported_modules:
 			self.cimported_modules.append(scope)
 	
@@ -762,13 +720,13 @@ class ModuleScope(Scope):
 		self.const_counter = n + 1
 		return "%s%d" % (Naming.const_prefix, n)
 	
-	def use_utility_code(self, new_code):
-		#  Add string to list of utility code to be included,
-		#  if not already there (tested using 'is').
-		for old_code in self.utility_code_used:
-			if old_code is new_code:
-				return
-		self.utility_code_used.append(new_code)
+#	def use_utility_code(self, new_code):
+#		#  Add string to list of utility code to be included,
+#		#  if not already there (tested using 'is').
+#		for old_code in self.utility_code_used:
+#			if old_code is new_code:
+#				return
+#		self.utility_code_used.append(new_code)
 	
 	def declare_c_class(self, name, pos, defining = 0, implementing = 0,
 		module_name = None, base_type = None, objstruct_cname = None,
@@ -776,6 +734,7 @@ class ModuleScope(Scope):
 		#
 		#  Look for previous declaration as a type
 		#
+		#print "declare_c_class:", name, "in", self ###
 		entry = self.lookup_here(name)
 		if entry:
 			type = entry.type
@@ -877,7 +836,8 @@ class ModuleScope(Scope):
 	def check_c_classes(self):
 		# Performs post-analysis checking and finishing up of extension types
 		# being implemented in this module. This is called only for the main
-		# .pyx file scope, not for cimported .pxd scopes.
+		# .pyx file scope and its associated .pxd scope, not for cimported .pxd
+		# scopes.
 		#
 		# Checks all extension types declared in this scope to
 		# make sure that:
@@ -918,6 +878,86 @@ class ModuleScope(Scope):
 				#print "ModuleScope.check_c_classes: allocating vtable cname for", self ###
 				type.vtable_cname = self.mangle(Naming.vtable_prefix, entry.name)
 	
+
+class DefinitionScope(ModuleScope):
+	#  Scope for the definition part of a module (.pxd).
+	#
+	# parent_module        Scope              Parent in the import namespace
+	# module_entries       {string : Entry}   For cimport statements
+
+	def __init__(self, name, parent_module, context):
+		ModuleScope.__init__(self, name, parent_module, context)
+		self.parent_module = parent_module
+		self.module_entries = {}
+
+	def find_module(self, module_name, pos):
+		# Find a module in the import namespace, interpreting
+		# relative imports relative to this module's parent.
+		# Finds and parses the module's .pxd file if the module
+		# has not been referenced before.
+		return self.global_scope().context.find_module(
+			module_name, relative_to = self.parent_module, pos = pos)
+	
+	def find_submodule(self, name):
+		# Find and return the definition scope for a submodule of this module,
+		# creating a new empty one if necessary. Doesn't parse .pxd.
+		scope = self.lookup_submodule(name)
+		if not scope:
+			scope = DefinitionScope(name, 
+				parent_module = self, context = self.context)
+			self.module_entries[name] = scope
+		return scope
+	
+	def lookup_submodule(self, name):
+		# Return scope for submodule of this module, or None.
+		return self.module_entries.get(name, None)
+	
+
+class ImplementationScope(ModuleScope):
+	#  This scope is used to keep the names declared only in the implementation
+	#  part of a module from being seen by other modules that cimport this
+	#  module. Also holds information that is only relevant for the
+	#  implementation part. When declaring or looking up a name, this scope
+	#  behaves as though it and its corresponding definition_scope were a single
+	#  scope.
+	#
+	#  definition_scope  ModuleScope  Scope holding definitions from corresponding .pxd
+	# doc_cname            string             C name of module doc string
+	# const_counter        integer            Counter for naming constants
+	# #utility_code_used    [string]           Utility code to be included
+	# default_entries      [Entry]            Function argument default entries
+	# string_to_entry      {string : Entry}   Map string const to entry
+	# intern_map           {string : string}  Mapping from Python names to interned strs
+	# interned_names       [string]           Interned names pending generation of declarations
+	# all_pystring_entries [Entry]            Python string consts from all scopes
+
+	def __init__(self, def_scope):
+		ModuleScope.__init__(self, def_scope.name, def_scope.parent_scope,
+			def_scope.context)
+		self.definition_scope = def_scope
+		self.doc_cname = Naming.moddoc_cname
+		self.type_names = def_scope.type_names.copy()
+		self.const_counter = 1
+		#self.utility_code_used = []
+		self.default_entries = []
+		self.string_to_entry = {}
+		self.intern_map = {}
+		self.interned_names = []
+		self.all_pystring_entries = []
+
+	def lookup_here(self, name):
+		entry = Scope.lookup_here(self, name)
+		if not entry:
+			entry = self.definition_scope.lookup_here(name)
+		return entry
+
+	def find_module(self, module_name, pos):
+		return self.definition_scope.find_module(module_name, pos)
+
+	def check_c_classes(self):
+		self.definition_scope.check_c_classes()
+		ModuleScope.check_c_classes(self)
+
 
 class LocalScope(Scope):
 

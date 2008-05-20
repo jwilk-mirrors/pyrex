@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ishimoto4 */
 
 static void __stdcall __pyx_f_9ishimoto4_f(void); /*proto*/
 
@@ -138,3 +137,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ishimoto4 */
+
+/* Declarations from implementation of ishimoto4 */

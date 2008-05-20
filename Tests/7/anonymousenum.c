@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from anonymousenum */
 
 enum  {
   __pyx_e_13anonymousenum_spam = 42,
@@ -142,3 +141,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from anonymousenum */
+
+/* Declarations from implementation of anonymousenum */

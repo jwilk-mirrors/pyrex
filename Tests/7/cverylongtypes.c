@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cverylongtypes */
 
 __PYX_EXTERN_C short s;
 __PYX_EXTERN_C long l;
@@ -139,3 +138,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cverylongtypes */
+
+/* Declarations from implementation of cverylongtypes */

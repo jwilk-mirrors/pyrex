@@ -42,7 +42,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extcmethcall */
 
 struct __pyx_obj_12extcmethcall_Spam {
   PyObject_HEAD
@@ -495,3 +494,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extcmethcall */
+
+/* Declarations from implementation of extcmethcall */

@@ -44,7 +44,6 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from concatcstrings */
 
 
 
@@ -183,3 +182,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from concatcstrings */
+
+/* Declarations from implementation of concatcstrings */

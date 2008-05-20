@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from plex2 */
 
 struct __pyx_obj_5plex2_Spam {
   PyObject_HEAD
@@ -295,3 +294,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from plex2 */
+
+/* Declarations from implementation of plex2 */

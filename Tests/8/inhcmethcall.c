@@ -42,7 +42,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from inhcmethcall */
 
 struct __pyx_obj_12inhcmethcall_Parrot {
   PyObject_HEAD
@@ -480,3 +479,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from inhcmethcall */
+
+/* Declarations from implementation of inhcmethcall */

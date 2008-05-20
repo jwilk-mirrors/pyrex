@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from hammond1 */
 
 typedef enum {
   __pyx_e_8hammond1_AAA
@@ -155,3 +154,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from hammond1 */
+
+/* Declarations from implementation of hammond1 */

@@ -40,8 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from fwddeclcclass */
-
 struct __pyx_obj_13fwddeclcclass_Widget {
   PyObject_HEAD
   struct __pyx_obj_13fwddeclcclass_Container *parent;
@@ -55,6 +53,7 @@ struct __pyx_obj_13fwddeclcclass_Container {
 
 static PyTypeObject *__pyx_ptype_13fwddeclcclass_Widget = 0;
 static PyTypeObject *__pyx_ptype_13fwddeclcclass_Container = 0;
+
 static struct __pyx_obj_13fwddeclcclass_Widget *__pyx_v_13fwddeclcclass_w;
 static struct __pyx_obj_13fwddeclcclass_Container *__pyx_v_13fwddeclcclass_c;
 
@@ -452,3 +451,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from fwddeclcclass */
+
+/* Declarations from implementation of fwddeclcclass */

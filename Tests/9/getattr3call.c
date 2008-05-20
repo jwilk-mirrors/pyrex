@@ -42,7 +42,6 @@ static PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from getattr3call */
 
 static int __pyx_f_12getattr3call_f(PyObject *,PyObject *,PyObject *); /*proto*/
 
@@ -177,3 +176,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from getattr3call */
+
+/* Declarations from implementation of getattr3call */

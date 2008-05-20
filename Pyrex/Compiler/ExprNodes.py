@@ -874,10 +874,10 @@ class NameNode(AtomicExprNode):
 			self.result_ctype = py_object_type
 		if entry.is_pyglobal or entry.is_builtin:
 			self.is_temp = 1
-			if Options.intern_names:
-				env.use_utility_code(get_name_interned_utility_code)
-			else:
-				env.use_utility_code(get_name_utility_code)
+#			if Options.intern_names:
+#				env.use_utility_code(get_name_interned_utility_code)
+#			else:
+#				env.use_utility_code(get_name_utility_code)
 			self.gil_check(env)
 	
 	gil_message = "Accessing Python global or builtin"
@@ -946,8 +946,8 @@ class NameNode(AtomicExprNode):
 		entry = self.entry
 		if entry:
 			entry.used = 1
-			if entry.utility_code:
-				env.use_utility_code(entry.utility_code)
+#			if entry.utility_code:
+#				env.use_utility_code(entry.utility_code)
 		
 	def calculate_result_code(self):
 		entry = self.entry
@@ -960,12 +960,15 @@ class NameNode(AtomicExprNode):
 		entry = self.entry
 		if entry is None:
 			return # There was an error earlier
+		if entry.utility_code:
+			code.use_utility_code(entry.utility_code)
 		if entry.is_pyglobal or entry.is_builtin:
 			if entry.is_builtin:
 				namespace = Naming.builtins_cname
 			else: # entry.is_pyglobal
 				namespace = entry.namespace_cname
 			if Options.intern_names:
+				code.use_utility_code(get_name_interned_utility_code)
 				code.putln(
 					'%s = __Pyx_GetName(%s, %s); if (!%s) %s' % (
 					self.result_code,
@@ -974,6 +977,7 @@ class NameNode(AtomicExprNode):
 					self.result_code, 
 					code.error_goto(self.pos)))
 			else:
+				code.use_utility_code(get_name_utility_code)
 				code.putln(
 					'%s = __Pyx_GetName(%s, "%s"); if (!%s) %s' % (
 					self.result_code,
@@ -1095,7 +1099,7 @@ class ImportNode(ExprNode):
 		self.type = py_object_type
 		self.gil_check(env)
 		self.is_temp = 1
-		env.use_utility_code(import_utility_code)
+#		env.use_utility_code(import_utility_code)
 	
 	gil_message = "Python import"
 	
@@ -1104,6 +1108,7 @@ class ImportNode(ExprNode):
 			name_list_code = self.name_list.py_result()
 		else:
 			name_list_code = "0"
+		code.use_utility_code(import_utility_code)
 		code.putln(
 			"%s = __Pyx_Import(%s, %s); if (!%s) %s" % (
 				self.result_code,
@@ -1250,12 +1255,13 @@ class IndexNode(ExprNode):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
 		if self.base.type.is_pyobject:
-			if self.index.type.is_int:
-				if getting:
-					env.use_utility_code(getitem_int_utility_code)
-				if setting:
-					env.use_utility_code(setitem_int_utility_code)
-			else:
+#			if self.index.type.is_int:
+#				if getting:
+#					env.use_utility_code(getitem_int_utility_code)
+#				if setting:
+#					env.use_utility_code(setitem_int_utility_code)
+#			else:
+			if not self.index.type.is_int:
 				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
 			self.gil_check(env)
@@ -1295,6 +1301,7 @@ class IndexNode(ExprNode):
 	def generate_result_code(self, code):
 		if self.type.is_pyobject:
 			if self.index.type.is_int:
+				code.use_utility_code(getitem_int_utility_code)
 				function = "__Pyx_GetItemInt"
 				index_code = self.index.result_code
 			else:
@@ -1311,6 +1318,7 @@ class IndexNode(ExprNode):
 	
 	def generate_setitem_code(self, value_code, code):
 		if self.index.type.is_int:
+			code.use_utility_code(setitem_int_utility_code)
 			function = "__Pyx_SetItemInt"
 			index_code = self.index.result_code
 		else:
@@ -2165,7 +2173,7 @@ class SequenceNode(ExprNode):
 			self.unpacked_items.append(unpacked_item)
 			self.coerced_unpacked_items.append(coerced_unpacked_item)
 		self.type = py_object_type
-		env.use_utility_code(unpacking_utility_code)
+#		env.use_utility_code(unpacking_utility_code)
 	
 	def allocate_target_temps(self, env, rhs):
 		self.iterator.allocate_temps(env)
@@ -2198,6 +2206,7 @@ class SequenceNode(ExprNode):
 		rhs.generate_disposal_code(code)
 		for i in range(len(self.args)):
 			item = self.unpacked_items[i]
+			code.use_utility_code(unpacking_utility_code)
 			unpack_code = "__Pyx_UnpackItem(%s)" % (
 				self.iterator.py_result())
 			code.putln(
@@ -2371,7 +2380,7 @@ class ClassNode(ExprNode):
 		self.type = py_object_type
 		self.gil_check(env)
 		self.is_temp = 1
-		env.use_utility_code(create_class_utility_code);
+#		env.use_utility_code(create_class_utility_code)
 	
 	gil_message = "Constructing Python class"
 	
@@ -2382,6 +2391,7 @@ class ClassNode(ExprNode):
 					self.dict.py_result(),
 					self.doc.py_result(),
 					code.error_goto(self.pos)))
+		code.use_utility_code(create_class_utility_code)
 		code.putln(
 			'%s = __Pyx_CreateClass(%s, %s, %s, "%s"); if (!%s) %s' % (
 				self.result_code,
@@ -3434,7 +3444,7 @@ class PyTypeTestNode(CoercionNode):
 		CoercionNode.__init__(self, arg)
 		self.type = dst_type
 		self.result_ctype = arg.ctype()
-		env.use_utility_code(type_test_utility_code)
+#		env.use_utility_code(type_test_utility_code)
 		self.gil_check(env)
 	
 	gil_message = "Python type test"
@@ -3450,6 +3460,7 @@ class PyTypeTestNode(CoercionNode):
 	
 	def generate_result_code(self, code):
 		if self.type.typeobj_is_available():
+			code.use_utility_code(type_test_utility_code)
 			code.putln(
 				"if (!__Pyx_TypeTest(%s, %s)) %s" % (
 					self.arg.py_result(),

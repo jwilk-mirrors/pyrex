@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extern */
 
 __PYX_EXTERN_C int i;
 __PYX_EXTERN_C char *s[];
@@ -154,3 +153,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extern */
+
+/* Declarations from implementation of extern */

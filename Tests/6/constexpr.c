@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from constexpr */
 
 enum __pyx_t_9constexpr_Grail {
   __pyx_e_9constexpr_k = 42
@@ -146,3 +145,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from constexpr */
+
+/* Declarations from implementation of constexpr */

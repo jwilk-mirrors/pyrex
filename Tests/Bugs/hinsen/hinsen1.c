@@ -47,7 +47,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from hinsen1 */
 
 struct __pyx_obj_7hinsen1_SpamAndEggs {
   PySpamObject __pyx_base;
@@ -376,3 +375,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from hinsen1 */
+
+/* Declarations from implementation of hinsen1 */

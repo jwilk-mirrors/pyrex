@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extdelslice */
 
 struct __pyx_obj_11extdelslice_Spam {
   PyObject_HEAD
@@ -296,3 +295,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extdelslice */
+
+/* Declarations from implementation of extdelslice */

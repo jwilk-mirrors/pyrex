@@ -41,15 +41,11 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from t_config */
-
 struct __pyx_t_8t_config_pyalpm_list {
   char *pkgname;
   struct __pyx_t_8t_config_pyalpm_list *next;
 };
 
-
-/* Declarations from config */
 
 struct __pyx_obj_6config_config {
   PyObject_HEAD
@@ -59,6 +55,7 @@ struct __pyx_obj_6config_config {
 
 
 static PyTypeObject *__pyx_ptype_6config_config = 0;
+
 
 
 /* Implementation of config */
@@ -368,3 +365,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from t_config */
+
+/* Declarations from config */
+
+/* Declarations from implementation of config */

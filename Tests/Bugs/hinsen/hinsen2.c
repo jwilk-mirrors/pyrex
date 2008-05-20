@@ -42,7 +42,6 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from hinsen2 */
 
 struct __pyx_obj_7hinsen2_vector {
   PyObject_HEAD
@@ -324,3 +323,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from hinsen2 */
+
+/* Declarations from implementation of hinsen2 */

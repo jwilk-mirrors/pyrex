@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from nogil */
 
 __PYX_EXTERN_C DL_EXPORT(PyObject) *g(PyObject *); /*proto*/
 __PYX_EXTERN_C DL_EXPORT(void) g2(PyObject *); /*proto*/
@@ -168,3 +167,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from nogil */
+
+/* Declarations from implementation of nogil */

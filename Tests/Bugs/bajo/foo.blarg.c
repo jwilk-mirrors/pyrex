@@ -38,15 +38,14 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+
 static PyObject *__Pyx_CreateClass(PyObject *bases, PyObject *dict, PyObject *name, char *modname); /*proto*/
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
-
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from foo.blarg */
 
 struct __pyx_obj_3foo_5blarg_e {
   PyObject_HEAD
@@ -277,6 +276,16 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
+static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_InternFromString(t->s);
+		if (!*t->p)
+			return -1;
+		++t;
+	}
+	return 0;
+}
+
 static PyObject *__Pyx_CreateClass(
 	PyObject *bases, PyObject *dict, PyObject *name, char *modname)
 {
@@ -300,16 +309,6 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	if (!result)
 		PyErr_SetObject(PyExc_NameError, name);
 	return result;
-}
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
 }
 
 #include "compile.h"
@@ -369,3 +368,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from foo.blarg */
+
+/* Declarations from implementation of foo.blarg */

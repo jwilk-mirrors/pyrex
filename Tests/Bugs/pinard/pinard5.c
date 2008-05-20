@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from pinard5 */
 
 struct __pyx_obj_7pinard5_Tri {
   PyObject_HEAD
@@ -476,3 +475,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from pinard5 */
+
+/* Declarations from implementation of pinard5 */

@@ -44,7 +44,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ewing5 */
 
 static char *__pyx_f_6ewing5_f(void); /*proto*/
 
@@ -226,3 +225,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ewing5 */
+
+/* Declarations from implementation of ewing5 */

@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from use_etree_h */
 
 
 
@@ -134,3 +133,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from use_etree_h */
+
+/* Declarations from implementation of use_etree_h */

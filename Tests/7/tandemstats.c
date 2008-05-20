@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from tandemstats */
 
 static int __pyx_v_11tandemstats_i;
 static int __pyx_v_11tandemstats_j;
@@ -162,3 +161,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from tandemstats */
+
+/* Declarations from implementation of tandemstats */

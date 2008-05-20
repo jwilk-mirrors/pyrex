@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from withgil */
 
 static void __pyx_f_7withgil_f(void); /*proto*/
 static PyObject *__pyx_f_7withgil_g(PyObject *); /*proto*/
@@ -180,3 +179,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from withgil */
+
+/* Declarations from implementation of withgil */

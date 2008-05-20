@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cfuncdef */
 
 static void __pyx_f_8cfuncdef_ftang(void); /*proto*/
 static int __pyx_f_8cfuncdef_foo(int,char); /*proto*/
@@ -176,3 +175,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cfuncdef */
+
+/* Declarations from implementation of cfuncdef */

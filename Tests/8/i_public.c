@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from i_public */
 
 struct sandwich {
   PyObject_HEAD
@@ -289,3 +288,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from i_public */
+
+/* Declarations from implementation of i_public */

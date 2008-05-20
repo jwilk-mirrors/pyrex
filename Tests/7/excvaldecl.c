@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from excvaldecl */
 
 static int __pyx_f_10excvaldecl_spam(void); /*proto*/
 static float __pyx_f_10excvaldecl_eggs(void); /*proto*/
@@ -183,3 +182,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from excvaldecl */
+
+/* Declarations from implementation of excvaldecl */

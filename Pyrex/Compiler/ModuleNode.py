@@ -5,6 +5,7 @@
 import os, time
 from cStringIO import StringIO
 from PyrexTypes import CPtrType, py_object_type, typecast
+from Pyrex.Utils import set
 
 #  Following is set by Testing.py to suppress filename/date comments
 #  in generated files, so as not to produce spurious changes in test
@@ -41,8 +42,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		env.check_c_classes()
 		self.body.analyse_expressions(env)
 		env.return_type = PyrexTypes.c_void_type
-		self.referenced_modules = []
-		self.find_referenced_modules(env, self.referenced_modules, {})
+		self.referenced_modules = self.find_referenced_modules(env)
 		if self.has_imported_c_functions():
 			self.module_temp_cname = env.allocate_temp_pyobject()
 			env.release_temp(self.module_temp_cname)
@@ -60,26 +60,32 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_dep_file(self, env, result):
 		modules = self.referenced_modules
-		if len(modules) > 1 or env.pyrex_include_files:
+		includes = set(env.pyrex_include_files)
+		for module in modules:
+			for include in module.pyrex_include_files:
+				includes.add(include)
+		if len(modules) > 1 or includes:
+			include_list = list(includes)
+			include_list.sort()
 			dep_file = replace_suffix(result.c_file, ".dep")
 			f = open(dep_file, "w")
 			try:
-				for module in modules:
-					if module is not env:
-						f.write("cimport %s\n" % module.qualified_name)
-					for path in module.pyrex_include_files:
-						f.write("include %s\n" % path)
+				for module in modules[:-1]:
+					f.write("cimport %s\n" % module.qualified_name)
+				for path in include_list:
+					f.write("include %s\n" % path)
 			finally:
 				f.close()
 	
 	def generate_h_code(self, env, options, result):
-		def h_entries(entries, pxd = 0):
+		def pub(entries): #, pxd = 0):
 			return [entry for entry in entries
-				if entry.visibility == 'public' or pxd and entry.defined_in_pxd]
-		h_types = h_entries(env.type_entries)
-		h_vars = h_entries(env.var_entries)
-		h_funcs = h_entries(env.cfunc_entries)
-		h_extension_types = h_entries(env.c_class_entries)
+				if entry.visibility == 'public'] # or pxd and entry.defined_in_pxd]
+		denv = env.definition_scope
+		h_types = pub(denv.type_entries) + pub(env.type_entries)
+		h_vars = pub(denv.var_entries) + pub(env.var_entries)
+		h_funcs = pub(denv.cfunc_entries) + pub(env.cfunc_entries)
+		h_extension_types = pub(denv.c_class_entries) + pub(env.c_class_entries)
 		if h_types or h_vars or h_funcs or h_extension_types:
 			result.h_file = replace_suffix(result.c_file, ".h")
 			h_code = Code.CCodeWriter(open_new_file(result.h_file))
@@ -128,13 +134,14 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		return env.qualified_name.replace(".", "__")
 	
 	def generate_api_code(self, env, result):
+		denv = env.definition_scope
 		api_funcs = []
 		public_extension_types = []
 		has_api_extension_types = 0
-		for entry in env.cfunc_entries:
+		for entry in denv.cfunc_entries + env.cfunc_entries:
 			if entry.api:
 				api_funcs.append(entry)
-		for entry in env.c_class_entries:
+		for entry in denv.c_class_entries + env.c_class_entries:
 			if entry.visibility == 'public':
 				public_extension_types.append(entry)
 			if entry.api:
@@ -213,10 +220,11 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		i_code.dedent()
 	
 	def generate_c_code(self, env, result):
-		modules = self.referenced_modules
 		code = Code.CCodeWriter(StringIO())
 		code.h = Code.CCodeWriter(StringIO())
 		code.init_labels()
+		
+		modules = self.referenced_modules
 		self.generate_module_preamble(env, modules, code.h)
 
 		code.putln("")
@@ -234,9 +242,18 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		self.generate_filename_table(code)
 		self.generate_utility_functions(env, code)
 
+		denv = env.definition_scope
 		for module in modules:
+			code.putln("")
+			code.putln("/* Declarations from %s */" % module.qualified_name)
 			self.generate_declarations_for_module(module, code.h,
-				definition = module is env)
+				implementation = module is denv)
+
+		code.putln("")
+		code.putln("/* Declarations from implementation of %s */" %
+			env.qualified_name)
+		self.generate_declarations_for_module(env, code.h, implementation = 1)
+		self.generate_default_value_declarations(env, code.h)
 
 		f = open_new_file(result.c_file)
 		f.write(code.h.f.getvalue())
@@ -245,12 +262,33 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		f.close()
 		result.c_file_generated = 1
 	
-	def find_referenced_modules(self, env, module_list, modules_seen):
-		if env not in modules_seen:
-			modules_seen[env] = 1
-			for imported_module in env.cimported_modules:
-				self.find_referenced_modules(imported_module, module_list, modules_seen)
-			module_list.append(env)
+	def find_referenced_modules(self, env):
+		#  Given the ImplementationScope, find the DefinitionScopes of all
+		#  modules cimported, directly or indirectly. Includes this module's
+		#  DefinitionScope as the last entry in the list.
+		denv = env.definition_scope
+		module_list = []
+		modules_seen = set()
+		def add_module(module):
+			if module not in modules_seen:
+				modules_seen.add(module)
+				add_modules(module.cimported_modules)
+				module_list.append(module)
+		def add_modules(modules):
+			for module in modules:
+				add_module(module)
+		modules_seen.add(denv)
+		add_modules(denv.cimported_modules)
+		add_modules(env.cimported_modules)
+		module_list.append(denv)
+		#self.print_referenced_modules(module_list) ###
+		return module_list
+	
+	def print_referenced_modules(self, module_list):
+		print "find_referenced_modules: result =",
+		for m in module_list:
+			print m,
+		print
 		
 	def generate_module_preamble(self, env, cimported_modules, code):
 		comment = "Generated by Pyrex"
@@ -290,9 +328,16 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln('static int %s;' % Naming.lineno_cname)
 		code.putln('static char *%s;' % Naming.filename_cname)
 		code.putln('static char **%s;' % Naming.filetable_cname)
-		if env.doc:
+		doc = None
+		doc1 = env.definition_scope.doc
+		doc2 = env.doc
+		if doc1 and doc2:
+			doc = "%s\\n%s" % (doc1, doc2)
+		else:
+			doc = doc1 or doc2
+		if doc:
 			code.putln('')
-			code.putln('static char %s[] = "%s";' % (env.doc_cname, env.doc))
+			code.putln('static char %s[] = "%s";' % (env.doc_cname, doc))
 	
 	def generate_extern_c_macro_definition(self, code):
 		name = Naming.extern_c_macro
@@ -325,18 +370,11 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			code.putln("0")
 		code.putln("};")
 	
-	def generate_declarations_for_module(self, env, code, definition):
-		code.putln("")
-		code.putln("/* Declarations from %s */" % env.qualified_name)
-		#code.putln("/* generate_type_predeclarations */") ###
+	def generate_declarations_for_module(self, env, code, implementation):
 		self.generate_type_predeclarations(env, code)
-		#code.putln("/* generate_type_definitions */") ###
-		self.generate_type_definitions(env, code, definition)
-		#code.putln("/* generate_global_declarations */") ###
-		self.generate_global_declarations(env, code, definition)
-		#code.putln("/* generate_cfunction_predeclarations */") ###
-		self.generate_cfunction_predeclarations(env, code, definition)
-		#code.putln("/* end generate_declarations_for_module */") ###
+		self.generate_type_definitions(env, code) #, implementation)
+		self.generate_global_declarations(env, code, implementation)
+		self.generate_cfunction_predeclarations(env, code, implementation)
 
 	def generate_type_predeclarations(self, env, code):
 		pass
@@ -358,14 +396,16 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				elif type.is_extension_type:
 					self.generate_obj_struct_definition(type, code)
 	
-	def generate_type_definitions(self, env, code, definition):
-		if definition:
-			type_entries = env.type_entries
-		else:
-			type_entries = []
-			for entry in env.type_entries:
-				if entry.defined_in_pxd:
-					type_entries.append(entry)
+	def generate_type_definitions(self, env, code): #, implementation):
+		#print "generate_type_definitions:", env ###
+#		if definition:
+#			type_entries = env.type_entries
+#		else:
+#			type_entries = []
+#			for entry in env.type_entries:
+#				if entry.defined_in_pxd:
+#					type_entries.append(entry)
+		type_entries = env.type_entries
 		self.generate_type_header_code(type_entries, code)
 		for entry in env.c_class_entries:
 			if not entry.in_cinclude:
@@ -522,29 +562,31 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 					attr.type.declaration_code(attr.cname))
 		code.putln(footer)
 	
-	def generate_global_declarations(self, env, code, definition):
+	def generate_global_declarations(self, env, code, implementation):
 		code.putln("")
 		for entry in env.c_class_entries:
-			if definition or entry.defined_in_pxd:
+			if implementation or entry.defined_in_pxd:
 				code.putln("static PyTypeObject *%s = 0;" % 
 					entry.type.typeptr_cname)
 		#code.putln("/* var_entries */") ###
 		code.put_var_declarations(env.var_entries, static = 1, 
-			dll_linkage = "DL_EXPORT", definition = definition)
-		if definition:
-			#code.putln("/* default_entries */") ###
-			code.put_var_declarations(env.default_entries, static = 1)
+			dll_linkage = "DL_EXPORT", definition = implementation)
 	
-	def generate_cfunction_predeclarations(self, env, code, definition):
+	def generate_default_value_declarations(self, env, code):
+		#code.putln("/* default_entries */") ###
+		code.put_var_declarations(env.default_entries, static = 1)
+	
+	def generate_cfunction_predeclarations(self, env, code, implementation):
 		for entry in env.cfunc_entries:
-			if not entry.in_cinclude and (definition
-					or entry.defined_in_pxd or entry.visibility == 'extern'):
+			if not entry.in_cinclude:
+					# and (definition or entry.defined_in_pxd or
+					# entry.visibility == 'extern'):
 				if entry.visibility in ('public', 'extern'):
 					dll_linkage = "DL_EXPORT"
 				else:
 					dll_linkage = None
 				type = entry.type
-				if not definition and entry.defined_in_pxd:
+				if not implementation: #and entry.defined_in_pxd:
 					type = CPtrType(type)
 				header = type.declaration_code(entry.cname, 
 					dll_linkage = dll_linkage)
@@ -558,7 +600,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_typeobj_definitions(self, env, code):
 		full_module_name = env.qualified_name
-		for entry in env.c_class_entries:
+		denv = env.definition_scope
+		for entry in denv.c_class_entries + env.c_class_entries:
 			#print "generate_typeobj_definitions:", entry.name
 			#print "...visibility =", entry.visibility
 			if entry.visibility <> 'extern':
@@ -1126,9 +1169,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		if entry.visibility == 'public':
 			header = "DL_EXPORT(PyTypeObject) %s = {"
 		else:
-			#header = "statichere PyTypeObject %s = {"
 			header = "PyTypeObject %s = {"
-		#code.putln(header % scope.parent_type.typeobj_cname)
 		code.putln(header % type.typeobj_cname)
 		code.putln(
 			"PyObject_HEAD_INIT(0)")
@@ -1251,6 +1292,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("static void %s(void); /*proto*/" % Naming.fileinit_cname)
 
 	def generate_module_init_func(self, imported_modules, env, code):
+		denv = env.definition_scope
 		code.putln("")
 		header = "PyMODINIT_FUNC init%s(void)" % env.module_name
 		code.putln("%s; /*proto*/" % header)
@@ -1274,7 +1316,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		self.generate_global_init_code(env, code)
 		
 		#code.putln("/*--- Function export code ---*/")
-		self.generate_c_function_export_code(env, code)
+		self.generate_pxd_function_export_code(env, code)
+		self.generate_api_function_export_code(env, code)
 
 		#code.putln("/*--- Function import code ---*/")
 		for module in imported_modules:
@@ -1293,7 +1336,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.put_label(code.error_label)
 		code.put_var_xdecrefs(env.temp_entries)
 		code.putln('__Pyx_AddTraceback("%s");' % (env.qualified_name))
-		env.use_utility_code(Nodes.traceback_utility_code)
+		code.use_utility_code(Nodes.traceback_utility_code)
 		code.putln('}')
 	
 	def generate_filename_init_call(self, code):
@@ -1334,7 +1377,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_intern_code(self, env, code):
 		if env.intern_map:
-			env.use_utility_code(Nodes.init_intern_tab_utility_code);
+			code.use_utility_code(Nodes.init_intern_tab_utility_code);
 			code.putln(
 				"if (__Pyx_InternStrings(%s) < 0) %s;" % (
 					Naming.intern_tab_cname,
@@ -1342,7 +1385,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_string_init_code(self, env, code):
 		if env.all_pystring_entries:
-			env.use_utility_code(Nodes.init_string_tab_utility_code)
+			code.use_utility_code(Nodes.init_string_tab_utility_code)
 			code.putln(
 				"if (__Pyx_InitStrings(%s) < 0) %s;" % (
 					Naming.stringtab_cname,
@@ -1355,23 +1398,36 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			if entry.visibility <> 'extern':
 				if entry.type.is_pyobject:
 					code.put_init_var_to_py_none(entry)
-
-	def generate_c_function_export_code(self, env, code):
-		# Generate code to create PyCFunction wrappers for exported C functions.
+	
+	def generate_pxd_function_export_code(self, env, code):
+		denv = env.definition_scope
+		for entry in denv.cfunc_entries:
+			self.generate_c_function_export_code(env, entry, code)
+	
+	def generate_api_function_export_code(self, env, code):
 		for entry in env.cfunc_entries:
-			if entry.api or entry.defined_in_pxd:
-				env.use_utility_code(function_export_utility_code)
-				signature = entry.type.signature_string()
-				code.putln('if (__Pyx_ExportFunction("%s", (void*)%s, "%s") < 0) %s' % (
-					entry.name,
-					entry.cname,
-					signature, 
-					code.error_goto(self.pos)))
+			if entry.api:
+				self.generate_c_function_export_code(env, entry, code)
+
+#	def generate_c_function_export_code(self, env, code):
+#		# Generate code to create PyCFunction wrappers for exported C functions.
+#		for entry in env.cfunc_entries:
+#			if entry.api or entry.defined_in_pxd:
+	
+	def generate_c_function_export_code(self, env, entry, code):
+		code.use_utility_code(function_export_utility_code)
+		signature = entry.type.signature_string()
+		code.putln('if (__Pyx_ExportFunction("%s", (void*)%s, "%s") < 0) %s' % (
+			entry.name,
+			entry.cname,
+			signature, 
+			code.error_goto(self.pos)))
 	
 	def generate_type_import_code_for_module(self, module, env, code):
 		# Generate type import code for all exported extension types in
 		# an imported module.
 		#if module.c_class_entries:
+		#print "generate_type_import_code_for_module:", module ###
 		for entry in module.c_class_entries:
 			if entry.defined_in_pxd:
 				self.generate_type_import_code(env, entry.type, entry.pos, code)
@@ -1383,8 +1439,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			if entry.defined_in_pxd:
 				entries.append(entry)
 		if entries:
-			env.use_utility_code(import_module_utility_code)
-			env.use_utility_code(function_import_utility_code)
+			code.use_utility_code(import_module_utility_code)
+			code.use_utility_code(function_import_utility_code)
 			temp = self.module_temp_cname
 			code.putln(
 				'%s = __Pyx_ImportModule("%s"); if (!%s) %s' % (
@@ -1405,7 +1461,9 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	def generate_type_init_code(self, env, code):
 		# Generate type import code for extern extension types
 		# and type ready code for non-extern ones.
-		for entry in env.c_class_entries:
+		#print "generate_type_init_code:", env ###
+		denv = env.definition_scope
+		for entry in denv.c_class_entries + env.c_class_entries:
 			if entry.visibility == 'extern':
 				self.generate_type_import_code(env, entry.type, entry.pos, code)
 			else:
@@ -1419,15 +1477,16 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		if base_type and base_type.module_name <> env.qualified_name:
 			self.generate_type_import_code(env, base_type, self.pos, code)
 	
-	def use_type_import_utility_code(self, env):
+	def use_type_import_utility_code(self, code):
 		import ExprNodes
-		env.use_utility_code(type_import_utility_code)
-		env.use_utility_code(import_module_utility_code)
+		code.use_utility_code(type_import_utility_code)
+		code.use_utility_code(import_module_utility_code)
 	
 	def generate_type_import_code(self, env, type, pos, code):
 		# If not already done, generate code to import the typeobject of an
 		# extension type defined in another module, and extract its C method
 		# table pointer if any.
+		#print "generate_type_import_code:", type ###
 		if type in env.types_imported:
 			return
 		if type.typedef_flag:
@@ -1435,14 +1494,14 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		else:
 			objstruct = "struct %s" % type.objstruct_cname
 		self.generate_type_import_call(type, code, code.error_goto(pos))
-		self.use_type_import_utility_code(env)
+		self.use_type_import_utility_code(code)
 		if type.vtabptr_cname:
 			code.putln(
 				"if (__Pyx_GetVtable(%s->tp_dict, &%s) < 0) %s" % (
 					type.typeptr_cname,
 					type.vtabptr_cname,
 					code.error_goto(pos)))
-			env.use_utility_code(Nodes.get_vtable_utility_code)
+			code.use_utility_code(Nodes.get_vtable_utility_code)
 		env.types_imported[type] = 1
 	
 	def generate_type_import_call(self, type, code, error_code):
@@ -1478,7 +1537,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 							typeobj_cname,
 							type.vtabptr_cname,
 							code.error_goto(entry.pos)))
-					env.use_utility_code(Nodes.set_vtable_utility_code)
+					code.use_utility_code(Nodes.set_vtable_utility_code)
 				code.putln(
 					'if (PyObject_SetAttrString(%s, "%s", (PyObject *)&%s) < 0) %s' % (
 						Naming.module_cname,
@@ -1537,7 +1596,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("%s = %s;" % 
 			(Naming.filetable_cname, Naming.filenames_cname))
 		code.putln("}")
-		for utility_code in env.utility_code_used:
+		#for utility_code in env.utility_code_used:
+		for utility_code in code.utility_code_used():
 			code.h.put(utility_code[0])
 			code.put(utility_code[1])
 

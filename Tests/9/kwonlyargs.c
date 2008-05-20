@@ -42,7 +42,6 @@ static int __Pyx_GetStarArgs(PyObject **args, PyObject **kwds, char *kwd_list[],
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from kwonlyargs */
 
 static PyObject *__pyx_k1;
 static PyObject *__pyx_k2;
@@ -566,3 +565,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from kwonlyargs */
+
+/* Declarations from implementation of kwonlyargs */

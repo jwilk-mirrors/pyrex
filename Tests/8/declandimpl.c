@@ -40,8 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from declandimpl */
-
 struct __pyx_t_11declandimpl_Sandwich {
   int i;
   char *s;
@@ -54,6 +52,7 @@ struct __pyx_obj_11declandimpl_Tomato {
 
 
 static PyTypeObject *__pyx_ptype_11declandimpl_Tomato = 0;
+
 __PYX_EXTERN_C struct __pyx_t_11declandimpl_Sandwich butty;
 static struct __pyx_obj_11declandimpl_Tomato *__pyx_v_11declandimpl_supertom;
 
@@ -302,3 +301,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from declandimpl */
+
+/* Declarations from implementation of declandimpl */

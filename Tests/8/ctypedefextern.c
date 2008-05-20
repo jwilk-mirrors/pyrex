@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ctypedefextern */
 
 static void __pyx_f_14ctypedefextern_spam(void); /*proto*/
 
@@ -146,3 +145,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ctypedefextern */
+
+/* Declarations from implementation of ctypedefextern */

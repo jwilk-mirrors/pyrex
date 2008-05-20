@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from include */
 
 __PYX_EXTERN_C DL_EXPORT(void) f(void); /*proto*/
 static int __pyx_f_7include_eggs(void); /*proto*/
@@ -160,3 +159,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from include */
+
+/* Declarations from implementation of include */

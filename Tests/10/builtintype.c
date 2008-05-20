@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from builtintype */
 
 static int __pyx_f_11builtintype_f(void); /*proto*/
 
@@ -157,3 +156,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from builtintype */
+
+/* Declarations from implementation of builtintype */

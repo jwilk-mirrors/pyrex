@@ -42,7 +42,6 @@ static int __Pyx_ExportFunction(char *n, void *f, char *s); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from l_capi */
 
 static float f(float); /*proto*/
 
@@ -173,3 +172,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from l_capi */
+
+/* Declarations from implementation of l_capi */

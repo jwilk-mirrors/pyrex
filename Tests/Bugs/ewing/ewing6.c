@@ -42,7 +42,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ewing6 */
 
 struct __pyx_obj_6ewing6_C {
   PyObject_HEAD
@@ -634,3 +633,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ewing6 */
+
+/* Declarations from implementation of ewing6 */

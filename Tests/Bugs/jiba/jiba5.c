@@ -40,13 +40,10 @@ static char **__pyx_f;
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
-
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from jiba5 */
 
 
 
@@ -126,21 +123,6 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	return result;
 }
 
-static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
-	PyTypeObject *t = o->ob_type;
-	int r;
-	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_SetItem(o, i, v);
-	else {
-		PyObject *j = PyInt_FromLong(i);
-		if (!j)
-			return -1;
-		r = PyObject_SetItem(o, j, v);
-		Py_DECREF(j);
-	}
-	return r;
-}
-
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
 	while (t->p) {
 		*t->p = PyString_InternFromString(t->s);
@@ -208,3 +190,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from jiba5 */
+
+/* Declarations from implementation of jiba5 */

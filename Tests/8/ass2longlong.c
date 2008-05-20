@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ass2longlong */
 
 static void __pyx_f_12ass2longlong_spam(void); /*proto*/
 
@@ -184,3 +183,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ass2longlong */
+
+/* Declarations from implementation of ass2longlong */

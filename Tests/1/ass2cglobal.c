@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ass2cglobal */
 
 static int __pyx_v_11ass2cglobal_i;
 static PyObject *__pyx_v_11ass2cglobal_x;
@@ -160,3 +159,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ass2cglobal */
+
+/* Declarations from implementation of ass2cglobal */

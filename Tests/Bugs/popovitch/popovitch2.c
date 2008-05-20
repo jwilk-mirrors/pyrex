@@ -40,11 +40,8 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from popovitch2_pxd */
+__PYX_EXTERN_C DL_EXPORT(int) (*get_T9MAXCDBMATCHES)(void); /*proto*/
 
-__PYX_EXTERN_C DL_EXPORT(int) get_T9MAXCDBMATCHES(void); /*proto*/
-
-/* Declarations from popovitch2 */
 
 
 
@@ -161,3 +158,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from popovitch2_pxd */
+
+/* Declarations from popovitch2 */
+
+/* Declarations from implementation of popovitch2 */

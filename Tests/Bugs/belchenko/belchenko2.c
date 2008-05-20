@@ -41,7 +41,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from belchenko2 */
 
 
 
@@ -175,3 +174,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from belchenko2 */
+
+/* Declarations from implementation of belchenko2 */

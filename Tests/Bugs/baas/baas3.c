@@ -42,7 +42,6 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from baas3 */
 
 struct __pyx_obj_5baas3_MyClass {
   PyObject_HEAD
@@ -325,3 +324,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from baas3 */
+
+/* Declarations from implementation of baas3 */

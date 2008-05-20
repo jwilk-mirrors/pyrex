@@ -38,17 +38,15 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
-
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
-static void __Pyx_AddTraceback(char *funcname); /*proto*/
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-/* Declarations from spam */
+static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 struct __pyx_t_4spam_Spam {
   int i;
@@ -56,9 +54,7 @@ struct __pyx_t_4spam_Spam {
 };
 
 __PYX_EXTERN_C float tons;
-__PYX_EXTERN_C DL_EXPORT(void) eat(struct __pyx_t_4spam_Spam); /*proto*/
-
-/* Declarations from pkg.eggs */
+__PYX_EXTERN_C DL_EXPORT(void) (*eat)(struct __pyx_t_4spam_Spam); /*proto*/
 
 struct __pyx_obj_3pkg_4eggs_Eggs {
   PyObject_HEAD
@@ -67,10 +63,7 @@ struct __pyx_obj_3pkg_4eggs_Eggs {
 
 static PyTypeObject *__pyx_ptype_3pkg_4eggs_Eggs = 0;
 
-/* Declarations from pkg */
 
-
-/* Declarations from cimport */
 
 static struct __pyx_t_4spam_Spam __pyx_v_7cimport_yummy;
 static struct __pyx_obj_3pkg_4eggs_Eggs *__pyx_v_7cimport_fried;
@@ -146,14 +139,6 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
-	PyObject *result;
-	result = PyObject_GetAttr(dict, name);
-	if (!result)
-		PyErr_SetObject(PyExc_NameError, name);
-	return result;
-}
-
 static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
 	while (t->p) {
 		*t->p = PyString_InternFromString(t->s);
@@ -212,6 +197,14 @@ bad:
 }
 #endif
 
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
+	PyObject *result;
+	result = PyObject_GetAttr(dict, name);
+	if (!result)
+		PyErr_SetObject(PyExc_NameError, name);
+	return result;
+}
+
 #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
@@ -269,3 +262,13 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from spam */
+
+/* Declarations from pkg.eggs */
+
+/* Declarations from pkg */
+
+/* Declarations from cimport */
+
+/* Declarations from implementation of cimport */

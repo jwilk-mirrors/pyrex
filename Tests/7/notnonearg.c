@@ -46,7 +46,6 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from notnonearg */
 
 struct Spam {
   PyObject_HEAD
@@ -240,3 +239,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from notnonearg */
+
+/* Declarations from implementation of notnonearg */

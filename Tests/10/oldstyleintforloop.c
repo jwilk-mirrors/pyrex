@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from oldstyleintforloop */
 
 static int __pyx_f_18oldstyleintforloop_f(void); /*proto*/
 
@@ -148,3 +147,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from oldstyleintforloop */
+
+/* Declarations from implementation of oldstyleintforloop */

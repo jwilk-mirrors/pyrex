@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cstruct */
 
 struct __pyx_t_7cstruct_Spam {
   int i;
@@ -161,3 +160,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cstruct */
+
+/* Declarations from implementation of cstruct */

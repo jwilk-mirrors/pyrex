@@ -42,7 +42,6 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from tryfinally */
 
 
 
@@ -347,3 +346,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from tryfinally */
+
+/* Declarations from implementation of tryfinally */

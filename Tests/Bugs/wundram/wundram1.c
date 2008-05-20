@@ -42,7 +42,6 @@ static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from wundram1 */
 
 static unsigned int __pyx_v_8wundram1_ui;
 
@@ -161,3 +160,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from wundram1 */
+
+/* Declarations from implementation of wundram1 */

@@ -44,8 +44,6 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from vector */
-
 struct __pyx_obj_6vector_Vector {
   PyObject_HEAD
   float x;
@@ -57,8 +55,6 @@ struct __pyx_obj_6vector_Vector {
 
 static PyTypeObject *__pyx_ptype_6vector_Vector = 0;
 
-/* Declarations from matrix */
-
 struct __pyx_obj_6matrix_Matrix {
   PyObject_HEAD
   float m[4][4];
@@ -66,6 +62,7 @@ struct __pyx_obj_6matrix_Matrix {
 
 
 static PyTypeObject *__pyx_ptype_6matrix_Matrix = 0;
+
 
 
 /* Implementation of matrix */
@@ -346,3 +343,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from vector */
+
+/* Declarations from matrix */
+
+/* Declarations from implementation of matrix */

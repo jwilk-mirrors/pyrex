@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from maupin2 */
 
 static char *__pyx_v_7maupin2_fred;
 static int __pyx_v_7maupin2_george;
@@ -138,3 +137,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from maupin2 */
+
+/* Declarations from implementation of maupin2 */

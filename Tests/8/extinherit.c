@@ -44,7 +44,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extinherit */
 
 struct __pyx_obj_10extinherit_Parrot {
   PyObject_HEAD
@@ -548,3 +547,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extinherit */
+
+/* Declarations from implementation of extinherit */

@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cunion */
 
 union __pyx_t_6cunion_Spam {
   int i;
@@ -156,3 +155,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cunion */
+
+/* Declarations from implementation of cunion */

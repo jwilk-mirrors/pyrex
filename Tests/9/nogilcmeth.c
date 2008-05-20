@@ -42,7 +42,6 @@ static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from nogilcmeth */
 
 struct __pyx_obj_10nogilcmeth_C {
   PyObject_HEAD
@@ -313,3 +312,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from nogilcmeth */
+
+/* Declarations from implementation of nogilcmeth */

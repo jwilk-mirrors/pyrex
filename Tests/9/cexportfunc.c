@@ -42,10 +42,9 @@ static int __Pyx_ExportFunction(char *n, void *f, char *s); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cexportfunc */
-
 static int __pyx_f_11cexportfunc_f(void); /*proto*/
 static char *__pyx_f_11cexportfunc_g(int,float); /*proto*/
+
 
 
 /* Implementation of cexportfunc */
@@ -183,3 +182,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cexportfunc */
+
+/* Declarations from implementation of cexportfunc */

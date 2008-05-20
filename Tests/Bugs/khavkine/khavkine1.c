@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from khavkine1 */
 
 struct __pyx_obj_9khavkine1_T {
   PyObject_HEAD
@@ -289,3 +288,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from khavkine1 */
+
+/* Declarations from implementation of khavkine1 */

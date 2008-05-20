@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from boolop */
 
 static void __pyx_f_6boolop_foo(PyObject *,PyObject *,PyObject *,PyObject *,PyObject *); /*proto*/
 
@@ -270,3 +269,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from boolop */
+
+/* Declarations from implementation of boolop */

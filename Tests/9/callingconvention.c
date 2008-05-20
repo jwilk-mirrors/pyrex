@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from callingconvention */
 
 __PYX_EXTERN_C int (__stdcall *p)(void);
 __PYX_EXTERN_C DL_EXPORT(int) f(void); /*proto*/
@@ -139,3 +138,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from callingconvention */
+
+/* Declarations from implementation of callingconvention */

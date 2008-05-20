@@ -44,7 +44,6 @@ static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from kartnaller1 */
 
 static PyObject *__pyx_f_11kartnaller1_leek(PyObject *,PyObject *); /*proto*/
 
@@ -215,3 +214,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from kartnaller1 */
+
+/* Declarations from implementation of kartnaller1 */

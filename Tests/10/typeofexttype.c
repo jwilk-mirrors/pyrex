@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from typeofexttype */
 
 struct __pyx_obj_13typeofexttype_Spam {
   PyObject_HEAD
@@ -293,3 +292,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from typeofexttype */
+
+/* Declarations from implementation of typeofexttype */

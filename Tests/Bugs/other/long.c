@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from long */
 
 static void __pyx_f_4long_f(void); /*proto*/
 
@@ -142,3 +141,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from long */
+
+/* Declarations from implementation of long */

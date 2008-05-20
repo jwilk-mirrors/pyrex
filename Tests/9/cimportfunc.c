@@ -44,12 +44,9 @@ static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cexportfunc */
-
 static int (*__pyx_f_11cexportfunc_f)(void); /*proto*/
 static char *(*__pyx_f_11cexportfunc_g)(int,float); /*proto*/
 
-/* Declarations from cimportfunc */
 
 
 
@@ -198,3 +195,9 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cexportfunc */
+
+/* Declarations from cimportfunc */
+
+/* Declarations from implementation of cimportfunc */

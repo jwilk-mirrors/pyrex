@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from magcmp */
 
 static void __pyx_f_6magcmp_foo(void); /*proto*/
 
@@ -153,3 +152,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from magcmp */
+
+/* Declarations from implementation of magcmp */

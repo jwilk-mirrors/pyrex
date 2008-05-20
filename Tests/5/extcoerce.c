@@ -44,7 +44,6 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extcoerce */
 
 struct __pyx_obj_9extcoerce_Grail {
   PyObject_HEAD
@@ -575,3 +574,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extcoerce */
+
+/* Declarations from implementation of extcoerce */

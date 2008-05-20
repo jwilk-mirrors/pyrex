@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from nononetypecheck */
 
 struct __pyx_obj_15nononetypecheck_Spam {
   PyObject_HEAD
@@ -304,3 +303,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from nononetypecheck */
+
+/* Declarations from implementation of nononetypecheck */

@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from pinard7 */
 
 enum __pyx_t_7pinard7_Mode {
   __pyx_e_7pinard7_a = 1,
@@ -312,3 +311,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from pinard7 */
+
+/* Declarations from implementation of pinard7 */

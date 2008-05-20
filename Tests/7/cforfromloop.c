@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from cforfromloop */
 
 static int __pyx_v_12cforfromloop_i;
 static int __pyx_v_12cforfromloop_j;
@@ -212,3 +211,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from cforfromloop */
+
+/* Declarations from implementation of cforfromloop */

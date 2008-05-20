@@ -606,10 +606,10 @@ class FuncDefNode(StatNode, BlockNode):
 							Naming.retval_cname, 
 							err_val))
 			else:
+				code.use_utility_code(unraisable_exception_utility_code)
 				code.putln(
 					'__Pyx_WriteUnraisable("%s");' % 
 						self.entry.qualified_name)
-				env.use_utility_code(unraisable_exception_utility_code)
 				#if not self.return_type.is_void:
 				default_retval = self.return_type.default_value
 				if default_retval:
@@ -833,8 +833,8 @@ class DefNode(FuncDefNode):
 		self.declare_pyfunction(env)
 		self.analyse_signature(env)
 		self.return_type = self.entry.signature.return_type()
-		if self.has_star_or_kwonly_args:
-			env.use_utility_code(get_starargs_utility_code)
+#		if self.has_star_or_kwonly_args:
+#			env.use_utility_code(get_starargs_utility_code)
 	
 	def analyse_signature(self, env):
 		any_type_tests_needed = 0
@@ -870,8 +870,8 @@ class DefNode(FuncDefNode):
 				if arg.is_generic and arg.type.is_extension_type:
 					arg.needs_type_test = 1
 					any_type_tests_needed = 1
-		if any_type_tests_needed:
-			env.use_utility_code(arg_type_test_utility_code)
+#		if any_type_tests_needed:
+#			env.use_utility_code(arg_type_test_utility_code)
 	
 	def bad_signature(self):
 		sig = self.entry.signature
@@ -1104,6 +1104,7 @@ class DefNode(FuncDefNode):
 		nargs = len(self.args) - num_kwonly - self.entry.signature.num_fixed_args()
 		star_arg_addr = self.arg_address(self.star_arg)
 		starstar_arg_addr = self.arg_address(self.starstar_arg)
+		code.use_utility_code(get_starargs_utility_code)
 		code.putln(
 			"if (__Pyx_GetStarArgs(&%s, &%s, %s, %s, %s, %s, %s) < 0) return %s;" % (
 				Naming.args_cname,
@@ -1181,6 +1182,7 @@ class DefNode(FuncDefNode):
 		if arg.type.typeobj_is_available():
 			typeptr_cname = arg.type.typeptr_cname
 			arg_code = "((PyObject *)%s)" % arg.entry.cname
+			code.use_utility_code(arg_type_test_utility_code)
 			code.putln(
 				'if (!__Pyx_ArgTypeTest(%s, %s, %d, "%s")) %s' % (
 					arg_code, 
@@ -1364,8 +1366,9 @@ class CClassDefNode(StatNode):
 	
 	def generate_function_definitions(self, env, code):
 		if self.entry and self.body:
-			self.body.generate_function_definitions(
-				self.entry.type.scope, code)
+#			self.body.generate_function_definitions(
+#				self.entry.type.scope, code)
+			self.body.generate_function_definitions(env, code)
 	
 	def generate_execution_code(self, code):
 		# This is needed to generate evaluation code for
@@ -1382,6 +1385,7 @@ class PropertyNode(StatNode):
 	#  body   StatListNode
 	
 	def analyse_declarations(self, env):
+		print "PropertyNode.analyse_declarations:", env ###
 		entry = env.declare_property(self.name, self.doc, self.pos)
 		if entry:
 			if self.doc:
@@ -1609,8 +1613,7 @@ class PrintStatNode(StatNode):
 			arg.allocate_temps(env)
 			arg.release_temp(env)
 			self.args[i] = arg
-			#env.recycle_pending_temps() # TEMPORARY
-		env.use_utility_code(printing_utility_code)
+#		env.use_utility_code(printing_utility_code)
 		self.gil_check(env)
 
 	gil_message = "Python print statement"
@@ -1618,12 +1621,14 @@ class PrintStatNode(StatNode):
 	def generate_execution_code(self, code):
 		for arg in self.args:
 			arg.generate_evaluation_code(code)
+			code.use_utility_code(printing_utility_code)
 			code.putln(
 				"if (__Pyx_PrintItem(%s) < 0) %s" % (
 					arg.py_result(),
 					code.error_goto(self.pos)))
 			arg.generate_disposal_code(code)
 		if not self.ends_with_comma:
+			code.use_utility_code(printing_utility_code)
 			code.putln(
 				"if (__Pyx_PrintNewline() < 0) %s" %
 					code.error_goto(self.pos))
@@ -1784,7 +1789,7 @@ class RaiseStatNode(StatNode):
 			self.exc_value.release_temp(env)
 		if self.exc_tb:
 			self.exc_tb.release_temp(env)
-		env.use_utility_code(raise_utility_code)
+#		env.use_utility_code(raise_utility_code)
 		self.gil_check(env)
 	
 	gil_message = "Raising exception"
@@ -1806,6 +1811,7 @@ class RaiseStatNode(StatNode):
 		else:
 			tb_code = "0"
 		if self.exc_type or self.exc_value or self.exc_tb:
+			code.use_utility_code(raise_utility_code)
 			code.putln(
 				"__Pyx_Raise(%s, %s, %s);" % (
 					type_code,
@@ -1827,7 +1833,7 @@ class RaiseStatNode(StatNode):
 class ReraiseStatNode(StatNode):
 
 	def analyse_expressions(self, env):
-		env.use_utility_code(raise_utility_code)
+#		env.use_utility_code(raise_utility_code)
 		self.gil_check(env)
 	
 	gil_message = "Raising exception"
@@ -1835,6 +1841,7 @@ class ReraiseStatNode(StatNode):
 	def generate_execution_code(self, code):
 		vars = code.exc_vars
 		if vars:
+			code.use_utility_code(raise_utility_code)
 			code.putln("__Pyx_Raise(%s, %s, %s);" % tuple(vars))
 			code.putln(code.error_goto(self.pos))
 		else:
@@ -2231,7 +2238,7 @@ class ExceptClauseNode(Node):
 		self.body.analyse_expressions(env)
 		for var in self.exc_vars:
 			env.release_temp(var)
-		env.use_utility_code(get_exception_utility_code)
+#		env.use_utility_code(get_exception_utility_code)
 
 	def generate_handling_code(self, code, end_label):
 		code.mark_pos(self.pos)
@@ -2254,6 +2261,7 @@ class ExceptClauseNode(Node):
 		# there is no target, because this also normalises the 
 		# exception and stores it in the thread state.
 		exc_args = "&%s, &%s, &%s" % tuple(self.exc_vars)
+		code.use_utility_code(get_exception_utility_code)
 		code.putln("if (__Pyx_GetException(%s) < 0) %s" % (exc_args,
 			code.error_goto(self.pos)))
 		if self.target:

@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from enumintcompat */
 
 enum __pyx_t_13enumintcompat_E {
   __pyx_e_13enumintcompat_a
@@ -196,3 +195,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from enumintcompat */
+
+/* Declarations from implementation of enumintcompat */

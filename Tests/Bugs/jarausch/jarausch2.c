@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from jarausch2 */
 
 static char __pyx_v_9jarausch2_a[5];
 static void __pyx_f_9jarausch2_foo(void); /*proto*/
@@ -150,3 +149,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from jarausch2 */
+
+/* Declarations from implementation of jarausch2 */

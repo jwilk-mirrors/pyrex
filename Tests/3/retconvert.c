@@ -42,7 +42,6 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from retconvert */
 
 static int __pyx_f_10retconvert_g(void); /*proto*/
 
@@ -192,3 +191,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from retconvert */
+
+/* Declarations from implementation of retconvert */

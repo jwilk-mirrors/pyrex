@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from ewing9 */
 
 struct __pyx_t_6ewing9_xmlDoc {
   int i;
@@ -137,3 +136,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from ewing9 */
+
+/* Declarations from implementation of ewing9 */

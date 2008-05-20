@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from huss2 */
 
 enum __pyx_t_5huss2_Color {
   __pyx_e_5huss2_red,
@@ -166,3 +165,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from huss2 */
+
+/* Declarations from implementation of huss2 */

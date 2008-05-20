@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from forfromelse */
 
 static void __pyx_f_11forfromelse_spam(void); /*proto*/
 
@@ -149,3 +148,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from forfromelse */
+
+/* Declarations from implementation of forfromelse */

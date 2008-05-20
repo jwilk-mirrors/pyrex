@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from altet2 */
 
 struct __pyx_obj_6altet2_C {
   PyObject_HEAD
@@ -285,3 +284,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from altet2 */
+
+/* Declarations from implementation of altet2 */

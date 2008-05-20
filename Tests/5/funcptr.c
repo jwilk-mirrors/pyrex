@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from funcptr */
 
 static int __pyx_f_7funcptr_grail(void); /*proto*/
 
@@ -151,3 +150,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from funcptr */
+
+/* Declarations from implementation of funcptr */

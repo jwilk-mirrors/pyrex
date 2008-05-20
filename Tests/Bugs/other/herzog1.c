@@ -40,11 +40,10 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from herzog1 */
-
 typedef int __pyx_t_7herzog1_int32;
 
 __PYX_EXTERN_C int extern_spam;
+
 __PYX_EXTERN_C __pyx_t_7herzog1_int32 iflag;
 
 
@@ -139,3 +138,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from herzog1 */
+
+/* Declarations from implementation of herzog1 */

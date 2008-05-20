@@ -40,7 +40,6 @@ static char **__pyx_f;
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extforward */
 
 struct __pyx_obj_10extforward_Grail {
   PyObject_HEAD
@@ -444,3 +443,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extforward */
+
+/* Declarations from implementation of extforward */

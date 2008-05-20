@@ -46,7 +46,6 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from extargdefault */
 
 struct __pyx_obj_13extargdefault_Swallow {
   PyObject_HEAD
@@ -242,3 +241,7 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from extargdefault */
+
+/* Declarations from implementation of extargdefault */

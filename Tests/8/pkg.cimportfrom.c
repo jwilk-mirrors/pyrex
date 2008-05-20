@@ -44,17 +44,13 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from spam */
-
 struct __pyx_t_4spam_Spam {
   int i;
   char *s;
 };
 
 __PYX_EXTERN_C float tons;
-__PYX_EXTERN_C DL_EXPORT(void) eat(struct __pyx_t_4spam_Spam); /*proto*/
-
-/* Declarations from pkg.eggs */
+__PYX_EXTERN_C DL_EXPORT(void) (*eat)(struct __pyx_t_4spam_Spam); /*proto*/
 
 struct __pyx_obj_3pkg_4eggs_Eggs {
   PyObject_HEAD
@@ -63,7 +59,6 @@ struct __pyx_obj_3pkg_4eggs_Eggs {
 
 static PyTypeObject *__pyx_ptype_3pkg_4eggs_Eggs = 0;
 
-/* Declarations from pkg.cimportfrom */
 
 __PYX_EXTERN_C struct __pyx_t_4spam_Spam yummy;
 static struct __pyx_obj_3pkg_4eggs_Eggs *__pyx_v_3pkg_11cimportfrom_fried;
@@ -214,3 +209,11 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
+
+/* Declarations from spam */
+
+/* Declarations from pkg.eggs */
+
+/* Declarations from pkg.cimportfrom */
+
+/* Declarations from implementation of pkg.cimportfrom */
