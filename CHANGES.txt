@@ -1,10 +1,20 @@
 0.9.8.3
 -------
 
-Modifications:
+Bug fixes:
 
-	- Compiling multiple source files at once should work as
-		advertised now.
+	- Compiling multiple source files at once should work as advertised
+		now.
+	
+	- Assignment of a nogil function to a non-nogil function pointer
+		is now allowed.
+	
+	- Applying += or -= to a pointer and an integer did not work.
+		[Arc Riley]
+	
+	- Compiling a .pyx file whose name is not a valid module name now
+		reports an error instead of generating invalid C code.
+		[Robert Bradshaw]
 
 
 0.9.8.2

@@ -6,7 +6,7 @@ import sys
 from Pyrex.Utils import open_new_file
 
 
-class PyrexError(Exception):
+class PyrexError(EnvironmentError):
 	pass
 
 
@@ -19,7 +19,7 @@ class CompileError(PyrexError):
 			pos_str = "%s:%d:%d: " % position
 		else:
 			pos_str = ""
-		Exception.__init__(self, pos_str + message)
+		PyrexError.__init__(self, pos_str + message)
 
 
 class InternalError(Exception):

@@ -2,7 +2,7 @@
 #   Pyrex Top Level
 #
 
-import os, sys
+import os, re, sys
 if sys.version_info[:2] < (2, 3):
 	print >>sys.stderr, "Sorry, Pyrex requires Python 2.3 or later"
 	sys.exit(1)
@@ -21,6 +21,9 @@ from Pyrex.Utils import set, replace_suffix, modification_time, \
 	file_newer_than, castrate_file
 
 verbose = 0
+
+module_name_pattern = re.compile(
+	r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")
 
 class Context:
 	#  This class encapsulates the context needed for compiling
@@ -217,18 +220,21 @@ class Context:
 		#  of a source file.
 		dir, filename = os.path.split(path)
 		module_name, _ = os.path.splitext(filename)
-		if "." in module_name:
-			return module_name
-		if module_name == "__init__":
-			dir, module_name = os.path.split(dir)
-		names = [module_name]
-		while self.is_package_dir(dir):
-			parent, package_name = os.path.split(dir)
-			if parent == dir:
-				break
-			names.insert(0, package_name)
-			dir = parent
-		return ".".join(names)
+		if "." not in module_name:
+			if module_name == "__init__":
+				dir, module_name = os.path.split(dir)
+			names = [module_name]
+			while self.is_package_dir(dir):
+				parent, package_name = os.path.split(dir)
+				if parent == dir:
+					break
+				names.insert(0, package_name)
+				dir = parent
+			module_name = ".".join(names)
+		if not module_name_pattern.match(module_name):
+			raise CompileError((path, 0, 0),
+				"'%s' is not a valid module name" % module_name)
+		return module_name
 	
 	def c_file_out_of_date(self, source_path):
 		#print "Checking whether", source_path, "is out of date" ###
@@ -441,19 +447,12 @@ def compile_multiple(sources, options):
 	if timestamps is None:
 		timestamps = recursive
 	verbose = options.verbose or ((recursive or timestamps) and not options.quiet)
-	#print "compile_multiple: recursive =", recursive, "timestamps =", timestamps, \
-	#	"verbose =", verbose ###
 	for source in sources:
 		if source not in processed:
-			#print "compile_multiple: Processing", source ###
 			if not timestamps or context.c_file_out_of_date(source):
-				#print "compile_multiple: Compiling", source ###
 				if verbose:
 					print >>sys.stderr, "Compiling", source
 				result = context.compile(source, options)
-				# Compiling multiple sources in one context doesn't quite
-				# work properly yet.
-				#context = Context(options.include_path) # to be removed later
 				results.add(source, result)
 			processed.add(source)
 			if recursive:
@@ -501,20 +500,11 @@ def main(command_line = 0):
 		sources = args
 	if options.show_version:
 		print >>sys.stderr, "Pyrex version %s" % Version.version
-	#context = Context(options.include_path)
-	#for source in sources:
-	#	try:
-	#		result = context.compile(source, options)
-	#		if result.num_errors > 0:
-	#			any_failures = 1
-	#	except (EnvironmentError, PyrexError), e:
-	#		print >>sys.stderr, e
-	#		any_failures = 1
 	try:
 		result = compile(sources, options)
 		if result.num_errors > 0:
 			any_failures = 1
-	except (EnvironmentError, PyrexError), e:
+	except EnvironmentError, e:
 		print >>sys.stderr, e
 		any_failures = 1
 	if any_failures:

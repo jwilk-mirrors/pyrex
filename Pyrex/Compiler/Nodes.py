@@ -8,7 +8,8 @@ import Code
 from Errors import error, InternalError
 import Naming
 import PyrexTypes
-from PyrexTypes import py_object_type, error_type, CTypedefType, CFuncType
+from PyrexTypes import py_object_type, c_int_type, error_type, \
+	CTypedefType, CFuncType
 from Symtab import ModuleScope, LocalScope, \
 	StructOrUnionScope, PyClassScope, CClassScope
 from Pyrex.Utils import open_new_file, replace_suffix
@@ -1498,14 +1499,18 @@ class AugmentedAssignmentNode(SingleAssignmentNode):
 	#  rhs       ExprNode      Right hand side
 
 	def analyse_types(self, env):
+		op = self.operator
 		self.rhs.analyse_types(env)
 		self.lhs.analyse_inplace_types(env)
 		type = self.lhs.type
 		if type.is_pyobject:
 			type = py_object_type
 		else:
-			if self.operator == "**=":
+			if type.is_ptr and (op == '+=' or op == '-='):
+				type = c_int_type
+			elif op == "**=":
 				error(self.pos, "**= operator not supported for non-Python types")
+				return
 		self.rhs = self.rhs.coerce_to(type, env)
 
 	def allocate_lhs_temps(self, env):
