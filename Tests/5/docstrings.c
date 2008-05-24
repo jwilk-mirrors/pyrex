@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,14 +39,16 @@ static char **__pyx_f;
 
 static char __pyx_mdoc[] = "Welcome to the parrot module. It is currently resting.";
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyObject *__Pyx_CreateClass(PyObject *bases, PyObject *dict, PyObject *name, char *modname); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from docstrings */
+
+
+/* Declarations from implementation of docstrings */
 
 struct __pyx_obj_10docstrings_SuperParrot {
   PyObject_HEAD
@@ -56,15 +57,25 @@ struct __pyx_obj_10docstrings_SuperParrot {
 
 static PyTypeObject *__pyx_ptype_10docstrings_SuperParrot = 0;
 
-
-/* Implementation of docstrings */
-
+static char __pyx_k1[] = "Parrot";
 static char __pyx_k2[] = "Standard Norwegian Blue.";
+static char __pyx_k3[] = "admire_plumage";
 
 static PyObject *__pyx_n_Parrot;
 static PyObject *__pyx_n_admire_plumage;
 
 static PyObject *__pyx_k2p;
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_Parrot, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_admire_plumage, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_k2p, 0, __pyx_k2, sizeof(__pyx_k2)},
+  {0, 0, 0, 0}
+};
+
+
+
+/* Implementation of docstrings */
 
 static PyObject *__pyx_f_10docstrings_zap(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static char __pyx_doc_10docstrings_zap[] = "Wake up polly.";
@@ -97,17 +108,6 @@ static PyObject *__pyx_f_10docstrings_6Parrot_admire_plumage(PyObject *__pyx_sel
   Py_DECREF(__pyx_v_self);
   return __pyx_r;
 }
-
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Parrot, "Parrot"},
-  {&__pyx_n_admire_plumage, "admire_plumage"},
-  {0, 0}
-};
-
-static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_k2p, __pyx_k2, sizeof(__pyx_k2)},
-  {0, 0, 0}
-};
 
 static PyObject *__pyx_tp_new_10docstrings_SuperParrot(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -262,7 +262,6 @@ PyMODINIT_FUNC initdocstrings(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_10docstrings_SuperParrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "SuperParrot", (PyObject *)&__pyx_type_10docstrings_SuperParrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
@@ -303,21 +302,13 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
-}
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
 		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -397,7 +388,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from docstrings */
-
-/* Declarations from implementation of docstrings */

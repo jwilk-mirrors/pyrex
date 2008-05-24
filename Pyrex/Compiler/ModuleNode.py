@@ -220,7 +220,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		i_code.dedent()
 	
 	def generate_c_code(self, env, result):
-		code = Code.CCodeWriter(StringIO())
+		code = Code.MainCCodeWriter(StringIO())
 		code.h = Code.CCodeWriter(StringIO())
 		code.init_labels()
 		
@@ -229,30 +229,33 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 
 		code.putln("")
 		code.putln("/* Implementation of %s */" % env.qualified_name)
-		self.generate_const_definitions(env, code)
-		self.generate_interned_name_decls(env, code)
-		self.generate_py_string_decls(env, code)
+		#self.generate_const_definitions(env, code)
+		#self.generate_interned_name_decls(env, code)
+		#self.generate_py_string_decls(env, code)
 		self.body.generate_function_definitions(env, code)
-		self.generate_interned_name_table(env, code)
-		self.generate_py_string_table(env, code)
+		#self.generate_interned_name_table(env, code)
+		#self.generate_py_string_table(env, code)
 		self.generate_typeobj_definitions(env, code)
 		self.generate_method_table(env, code)
 		self.generate_filename_init_prototype(code)
 		self.generate_module_init_func(modules[:-1], env, code)
 		self.generate_filename_table(code)
-		self.generate_utility_functions(env, code)
+		self.generate_utility_functions(code)
 
 		denv = env.definition_scope
 		for module in modules:
-			code.putln("")
-			code.putln("/* Declarations from %s */" % module.qualified_name)
+			code.h.putln("")
+			code.h.putln("/* Declarations from %s */" % module.qualified_name)
 			self.generate_declarations_for_module(module, code.h,
 				implementation = module is denv)
 
-		code.putln("")
-		code.putln("/* Declarations from implementation of %s */" %
+		code.h.putln("")
+		code.h.putln("/* Declarations from implementation of %s */" %
 			env.qualified_name)
 		self.generate_declarations_for_module(env, code.h, implementation = 1)
+		code.global_state.generate_const_declarations(code.h)
+		#self.generate_interned_name_table(code.interned_strings, code.h)
+		#self.generate_py_string_table(code.py_strings, code.h)
 		self.generate_default_value_declarations(env, code.h)
 
 		f = open_new_file(result.c_file)
@@ -357,18 +360,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			code.putln('#include "%s"' % filename)
 	
 	def generate_filename_table(self, code):
-		code.putln("")
-		code.putln("static char *%s[] = {" % Naming.filenames_cname)
-		if code.filename_list:
-			for filename in code.filename_list:
-				filename = os.path.basename(filename)
-				escaped_filename = filename.replace("\\", "\\\\").replace('"', r'\"')
-				code.putln('"%s",' % 
-					escaped_filename)
-		else:
-			# Some C compilers don't like an empty array
-			code.putln("0")
-		code.putln("};")
+		code.global_state.generate_filename_table(code)
 	
 	def generate_declarations_for_module(self, env, code, implementation):
 		self.generate_type_predeclarations(env, code)
@@ -574,6 +566,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_default_value_declarations(self, env, code):
 		#code.putln("/* default_entries */") ###
+		code.putln("")
 		code.put_var_declarations(env.default_entries, static = 1)
 	
 	def generate_cfunction_predeclarations(self, env, code, implementation):
@@ -1240,53 +1233,91 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				"static struct PyGetSetDef %s[] = {" %
 					env.getset_table_cname)
 			for entry in env.property_entries:
+				if entry.doc:
+					doc_code = code.get_string_const(entry.doc)
+				else:
+					doc_code = "0"
 				code.putln(
 					'{"%s", %s, %s, %s, 0},' % (
 						entry.name,
 						entry.getter_cname or "0",
 						entry.setter_cname or "0",
-						entry.doc_cname or "0"))
+						doc_code))
 			code.putln(
 					"{0, 0, 0, 0, 0}")
 			code.putln(
 				"};")
 	
-	def generate_interned_name_table(self, env, code):
-		items = env.intern_map.items()
-		if items:
-			items.sort()
-			code.putln("")
-			code.putln(
-				"static __Pyx_InternTabEntry %s[] = {" %
-					Naming.intern_tab_cname)
-			for (name, cname) in items:
-				code.putln(
-					'{&%s, "%s"},' % (
-						cname,
-						name))
-			code.putln(
-				"{0, 0}")
-			code.putln(
-				"};")
+#	def generate_interned_name_table(self, env, code):
+#		items = env.intern_map.items()
+#		if items:
+#			items.sort()
+#			code.putln("")
+#			code.putln(
+#				"static __Pyx_InternTabEntry %s[] = {" %
+#					Naming.intern_tab_cname)
+#			for (name, cname) in items:
+#				code.putln(
+#					'{&%s, "%s"},' % (
+#						cname,
+#						name))
+#			code.putln(
+#				"{0, 0}")
+#			code.putln(
+#				"};")
 	
-	def generate_py_string_table(self, env, code):
-		entries = env.all_pystring_entries
-		if entries:
-			code.putln("")
-			code.putln(
-				"static __Pyx_StringTabEntry %s[] = {" %
-					Naming.stringtab_cname)
-			for entry in entries:
-				code.putln(
-					"{&%s, %s, sizeof(%s)}," % (
-						entry.pystring_cname,
-						entry.cname,
-						entry.cname))
-			code.putln(
-				"{0, 0, 0}")
-			code.putln(
-				"};")
+#	def generate_py_string_table(self, env, code):
+#		entries = env.all_pystring_entries
+#		if entries:
+#			code.putln("")
+#			code.putln(
+#				"static __Pyx_StringTabEntry %s[] = {" %
+#					Naming.stringtab_cname)
+#			for entry in entries:
+#				code.putln(
+#					"{&%s, %s, sizeof(%s)}," % (
+#						entry.pystring_cname,
+#						entry.cname,
+#						entry.cname))
+#			code.putln(
+#				"{0, 0, 0}")
+#			code.putln(
+#				"};")
 	
+	def generate_interned_name_table(self, interned_strings, code):
+		code.putln("")
+		code.putln(
+			"static PyObject **%s[] = {" % Naming.intern_tab_cname)
+		for s in interned_strings:
+			code.putln("&%s," % s.py_cname)
+		code.putln("0")
+		code.putln(
+			"};")
+	
+#	def generate_py_string_table(self, py_strings, code):
+#		interned = []
+#		uninterned = []
+#		for s in py_strings:
+#			if s.is_interned:
+#				interned.append(s)
+#			else:
+#				uninterned.append(s)
+#		code.putln("")
+#		code.putln(
+#			"static __Pyx_StringTabEntry %s[] = {" %
+#				Naming.stringtab_cname)
+#		for s in interned + uninterned:
+#			cname = s.cname
+#			code.putln(
+#				"{&%s, %s, sizeof(%s)}," % (
+#					s.py_cname,
+#					cname,
+#					cname))
+#		code.putln(
+#			"{0, 0, 0}")
+#		code.putln(
+#			"};")
+
 	def generate_filename_init_prototype(self, code):
 		code.putln("");
 		code.putln("static void %s(void); /*proto*/" % Naming.fileinit_cname)
@@ -1306,11 +1337,11 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		#code.putln("/*--- Module creation code ---*/")
 		self.generate_module_creation_code(env, code)
 
-		#code.putln("/*--- Intern code ---*/")
-		self.generate_intern_code(env, code)
-
 		#code.putln("/*--- String init code ---*/")
 		self.generate_string_init_code(env, code)
+
+		#code.putln("/*--- Intern code ---*/")
+		#self.generate_intern_code(env, code)
 
 		#code.putln("/*--- Global init code ---*/")
 		self.generate_global_init_code(env, code)
@@ -1375,21 +1406,19 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				Naming.builtins_cname,
 				code.error_goto(self.pos)))
 	
-	def generate_intern_code(self, env, code):
-		if env.intern_map:
-			code.use_utility_code(Nodes.init_intern_tab_utility_code);
-			code.putln(
-				"if (__Pyx_InternStrings(%s) < 0) %s;" % (
-					Naming.intern_tab_cname,
-					code.error_goto(self.pos)))
+#	def generate_intern_code(self, env, code):
+#		code.use_utility_code(Nodes.init_intern_tab_utility_code);
+#		code.putln(
+#			"if (__Pyx_InternStrings(%s) < 0) %s;" % (
+#				Naming.intern_tab_cname,
+#				code.error_goto(self.pos)))
 	
 	def generate_string_init_code(self, env, code):
-		if env.all_pystring_entries:
-			code.use_utility_code(Nodes.init_string_tab_utility_code)
-			code.putln(
-				"if (__Pyx_InitStrings(%s) < 0) %s;" % (
-					Naming.stringtab_cname,
-					code.error_goto(self.pos)))
+		code.use_utility_code(Nodes.init_string_tab_utility_code)
+		code.putln(
+			"if (__Pyx_InitStrings(%s) < 0) %s;" % (
+				Naming.stringtab_cname,
+				code.error_goto(self.pos)))
 	
 	def generate_global_init_code(self, env, code):
 		# Generate code to initialise global PyObject *
@@ -1588,18 +1617,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				"%s = &%s;" % (
 					type.typeptr_cname, type.typeobj_cname))
 	
-	def generate_utility_functions(self, env, code):
-		code.putln("")
-		code.putln("/* Runtime support code */")
-		code.putln("")
-		code.putln("static void %s(void) {" % Naming.fileinit_cname)
-		code.putln("%s = %s;" % 
-			(Naming.filetable_cname, Naming.filenames_cname))
-		code.putln("}")
-		#for utility_code in env.utility_code_used:
-		for utility_code in code.utility_code_used():
-			code.h.put(utility_code[0])
-			code.put(utility_code[1])
+	def generate_utility_functions(self, code):
+		code.global_state.generate_utility_functions(code)
 
 #------------------------------------------------------------------------------------
 #

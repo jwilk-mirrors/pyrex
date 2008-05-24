@@ -50,25 +50,19 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_X, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_slots, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of kostyrka2 */
 
-static char __pyx_k2[] = "";
 
-static PyObject *__pyx_n_X;
-static PyObject *__pyx_n_slots;
 
-static PyObject *__pyx_k2p;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_X, "X"},
-  {&__pyx_n_slots, "slots"},
-  {0, 0}
-};
 
-static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_k2p, __pyx_k2, sizeof(__pyx_k2)},
-  {0, 0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -88,7 +82,6 @@ PyMODINIT_FUNC initkostyrka2(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = PyDict_New(); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_2 = PyTuple_New(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

@@ -69,6 +69,10 @@ static PyTypeObject *__pyx_ptype_12inhcmethcall_Parrot = 0;
 static PyTypeObject *__pyx_ptype_12inhcmethcall_Norwegian = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of inhcmethcall */
 
 static void __pyx_f_12inhcmethcall_6Parrot_describe(struct __pyx_obj_12inhcmethcall_Parrot *__pyx_v_self) {
@@ -373,6 +377,7 @@ PyMODINIT_FUNC initinhcmethcall(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_vtabptr_12inhcmethcall_Parrot = &__pyx_vtable_12inhcmethcall_Parrot;
   *(void(**)(void))&__pyx_vtable_12inhcmethcall_Parrot.describe = (void(*)(void))__pyx_f_12inhcmethcall_6Parrot_describe;
   if (PyType_Ready(&__pyx_type_12inhcmethcall_Parrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

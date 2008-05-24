@@ -58,14 +58,17 @@ struct __pyx_obj_10docstrings_SuperParrot {
 static PyTypeObject *__pyx_ptype_10docstrings_SuperParrot = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_Parrot, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_admire_plumage, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of docstrings */
 
-static char __pyx_k2[] = "Standard Norwegian Blue.";
 
-static PyObject *__pyx_n_Parrot;
-static PyObject *__pyx_n_admire_plumage;
 
-static PyObject *__pyx_k2p;
 
 static PyObject *__pyx_f_10docstrings_zap(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static char __pyx_doc_10docstrings_zap[] = "Wake up polly.";
@@ -99,16 +102,7 @@ static PyObject *__pyx_f_10docstrings_6Parrot_admire_plumage(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Parrot, "Parrot"},
-  {&__pyx_n_admire_plumage, "admire_plumage"},
-  {0, 0}
-};
 
-static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_k2p, __pyx_k2, sizeof(__pyx_k2)},
-  {0, 0, 0}
-};
 
 static PyObject *__pyx_tp_new_10docstrings_SuperParrot(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -263,7 +257,6 @@ PyMODINIT_FUNC initdocstrings(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_10docstrings_SuperParrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "SuperParrot", (PyObject *)&__pyx_type_10docstrings_SuperParrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}

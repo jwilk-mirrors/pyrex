@@ -57,11 +57,15 @@ struct __pyx_t_11inplace_lhs_S {
 static int __pyx_f_11inplace_lhs_f(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_b, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_c, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_g, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of inplace_lhs */
 
-static PyObject *__pyx_n_g;
-static PyObject *__pyx_n_b;
-static PyObject *__pyx_n_c;
 
 static int __pyx_f_11inplace_lhs_f(void) {
   int __pyx_v_i;
@@ -191,12 +195,6 @@ static int __pyx_f_11inplace_lhs_f(void) {
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_b, "b"},
-  {&__pyx_n_c, "c"},
-  {&__pyx_n_g, "g"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -213,7 +211,7 @@ PyMODINIT_FUNC initinplace_lhs(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_lhs.pyx":4 */
   return;

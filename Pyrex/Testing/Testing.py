@@ -408,6 +408,16 @@ def munge_c_line(line):
 	
 	# ------ End of standing hacks -----
 	
+	# HACKS for string const changes
+	
+	if line.startswith("staticchar__pyx_k") \
+		or line.startswith("staticPyObject*__pyx_k") \
+		or line.startswith("staticPyObject*__pyx_n"):
+			line = ""
+	line = re.sub("__pyx_k[0-9]+", "__pyx_kx", line)
+	line = re.sub("__pyx_k[0-9]+p", "__pyx_kxp", line)
+		
+	
 	# ---------- END HACKS ----------
 
 	return line

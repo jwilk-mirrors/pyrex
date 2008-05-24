@@ -82,21 +82,18 @@ static PyObject *(*__pyx_f_8ia_etree_getAttributeValue)(struct LxmlElement *,PyO
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_doc, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_elem, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_ftang, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_zax, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of use_etree */
 
 
-static PyObject *__pyx_n_doc;
-static PyObject *__pyx_n_elem;
-static PyObject *__pyx_n_zax;
-static PyObject *__pyx_n_ftang;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_doc, "doc"},
-  {&__pyx_n_elem, "elem"},
-  {&__pyx_n_ftang, "ftang"},
-  {&__pyx_n_zax, "zax"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -115,7 +112,7 @@ PyMODINIT_FUNC inituse_etree(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = __Pyx_ImportModule("ia_etree"); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (__Pyx_ImportFunction(__pyx_1, "getAttributeValue", (void**)&__pyx_f_8ia_etree_getAttributeValue, "PyObject *(struct LxmlElement *,PyObject *,PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;

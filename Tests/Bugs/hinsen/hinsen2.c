@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,8 +39,14 @@ static char **__pyx_f;
 
 static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed, char *name); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from hinsen2 */
+
+
+/* Declarations from implementation of hinsen2 */
 
 struct __pyx_obj_7hinsen2_vector {
   PyObject_HEAD
@@ -49,6 +54,14 @@ struct __pyx_obj_7hinsen2_vector {
 
 
 static PyTypeObject *__pyx_ptype_7hinsen2_vector = 0;
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of hinsen2 */
@@ -235,6 +248,7 @@ PyMODINIT_FUNC inithinsen2(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_7hinsen2_vector) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "vector", (PyObject *)&__pyx_type_7hinsen2_vector) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_7hinsen2_vector = &__pyx_type_7hinsen2_vector;
@@ -263,6 +277,18 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 	PyErr_Format(PyExc_TypeError,
 		"Argument '%s' has incorrect type (expected %s, got %s)",
 		name, type->tp_name, obj->ob_type->tp_name);
+	return 0;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
 	return 0;
 }
 
@@ -323,7 +349,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from hinsen2 */
-
-/* Declarations from implementation of hinsen2 */

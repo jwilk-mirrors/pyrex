@@ -58,6 +58,12 @@ struct __pyx_obj_7exttype_Spam {
 static PyTypeObject *__pyx_ptype_7exttype_Spam = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_foo, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_gobble, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of exttype */
 
 static int __pyx_f_7exttype_4Spam___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -91,7 +97,6 @@ static void __pyx_f_7exttype_4Spam___dealloc__(PyObject *__pyx_v_self) {
   Py_DECREF(__pyx_v_self);
 }
 
-static PyObject *__pyx_n_gobble;
 
 static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -127,7 +132,6 @@ static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__
   return __pyx_r;
 }
 
-static PyObject *__pyx_n_foo;
 
 static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -189,11 +193,6 @@ static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_foo, "foo"},
-  {&__pyx_n_gobble, "gobble"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_7exttype_Spam(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_7exttype_Spam *p;
@@ -380,7 +379,7 @@ PyMODINIT_FUNC initexttype(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_type_7exttype_Spam.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_7exttype_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Spam", (PyObject *)&__pyx_type_7exttype_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

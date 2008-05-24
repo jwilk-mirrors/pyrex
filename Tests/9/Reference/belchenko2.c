@@ -41,6 +41,10 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of belchenko2 */
 
 static PyObject *__pyx_f_10belchenko2_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -96,6 +100,7 @@ PyMODINIT_FUNC initbelchenko2(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/C/Pyrex/Source/Tests/Bugs/belchenko/belchenko2.pyx":10 */
   return;

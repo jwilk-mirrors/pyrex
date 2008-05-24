@@ -58,6 +58,10 @@ __PYX_EXTERN_C int grail;
 __PYX_EXTERN_C DL_EXPORT(PyObject) *spam(int); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of includepublic */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -75,6 +79,7 @@ PyMODINIT_FUNC initincludepublic(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_ptype_13includepublic_sandwich = __Pyx_ImportType("i_public", "sandwich", sizeof(struct __pyx_obj_13includepublic_sandwich)); if (!__pyx_ptype_13includepublic_sandwich) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 3; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/8/i_public.pxi":5 */

@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,10 +37,16 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static int __Pyx_SetVtable(PyObject *dict, void *vtable); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from extcmethcall */
+
+
+/* Declarations from implementation of extcmethcall */
 
 struct __pyx_obj_12extcmethcall_Spam {
   PyObject_HEAD
@@ -68,6 +73,14 @@ static struct __pyx_vtabstruct_12extcmethcall_SuperSpam *__pyx_vtabptr_12extcmet
 static PyTypeObject *__pyx_ptype_12extcmethcall_Spam = 0;
 static PyTypeObject *__pyx_ptype_12extcmethcall_SuperSpam = 0;
 static void __pyx_f_12extcmethcall_tomato(void); /*proto*/
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of extcmethcall */
@@ -388,6 +401,7 @@ PyMODINIT_FUNC initextcmethcall(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_vtabptr_12extcmethcall_Spam = &__pyx_vtable_12extcmethcall_Spam;
   *(void(**)(void))&__pyx_vtable_12extcmethcall_Spam.add_tons = (void(*)(void))__pyx_f_12extcmethcall_4Spam_add_tons;
   if (PyType_Ready(&__pyx_type_12extcmethcall_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
@@ -416,6 +430,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 static int __Pyx_SetVtable(PyObject *dict, void *vtable) {
@@ -494,7 +520,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from extcmethcall */
-
-/* Declarations from implementation of extcmethcall */

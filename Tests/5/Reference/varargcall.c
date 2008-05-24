@@ -46,6 +46,10 @@ static PyObject *__pyx_f_10varargcall_grail(char *,...); /*proto*/
 static PyObject *__pyx_f_10varargcall_swallow(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of varargcall */
 
 static PyObject *__pyx_f_10varargcall_grail(char *__pyx_v_blarg,...) {
@@ -55,8 +59,6 @@ static PyObject *__pyx_f_10varargcall_grail(char *__pyx_v_blarg,...) {
   return __pyx_r;
 }
 
-static char __pyx_k1[] = "spam";
-static char __pyx_k2[] = "spam";
 
 static PyObject *__pyx_f_10varargcall_swallow(void) {
   PyObject *__pyx_r;
@@ -95,6 +97,7 @@ PyMODINIT_FUNC initvarargcall(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/5/varargcall.pyx":4 */
   return;

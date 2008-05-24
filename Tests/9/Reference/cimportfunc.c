@@ -53,6 +53,10 @@ static char *(*__pyx_f_11cexportfunc_g)(int,float); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of cimportfunc */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -71,6 +75,7 @@ PyMODINIT_FUNC initcimportfunc(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = __Pyx_ImportModule("cexportfunc"); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (__Pyx_ImportFunction(__pyx_1, "f", (void**)&__pyx_f_11cexportfunc_f, "int (void)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (__Pyx_ImportFunction(__pyx_1, "g", (void**)&__pyx_f_11cexportfunc_g, "char *(int,float)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

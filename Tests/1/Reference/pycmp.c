@@ -47,6 +47,10 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 static void __pyx_f_5pycmp_foo(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of pycmp */
 
 static void __pyx_f_5pycmp_foo(void) {
@@ -132,6 +136,7 @@ PyMODINIT_FUNC initpycmp(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("pycmp");

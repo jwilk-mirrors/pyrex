@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,12 +37,18 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from extimported */
+
+
+/* Declarations from implementation of extimported */
 
 struct __pyx_obj_11extimported_Ham {
   PyObject_HEAD
@@ -52,6 +57,14 @@ struct __pyx_obj_11extimported_Ham {
 
 static PyTypeObject *__pyx_ptype_11extimported_Ham = 0;
 static struct __pyx_obj_11extimported_Ham *__pyx_v_11extimported_ham;
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of extimported */
@@ -71,6 +84,7 @@ PyMODINIT_FUNC initextimported(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_11extimported_ham = ((struct __pyx_obj_11extimported_Ham *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_11extimported_Ham = __Pyx_ImportType("Spam.Eggs", "Ham", sizeof(struct __pyx_obj_11extimported_Ham)); if (!__pyx_ptype_11extimported_Ham) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
 
@@ -91,6 +105,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #ifndef __PYX_HAVE_RT_ImportType
@@ -198,7 +224,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from extimported */
-
-/* Declarations from implementation of extimported */

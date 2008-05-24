@@ -55,6 +55,10 @@ static PyTypeObject *__pyx_ptype_11extimported_Ham = 0;
 static struct __pyx_obj_11extimported_Ham *__pyx_v_11extimported_ham;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of extimported */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -72,6 +76,7 @@ PyMODINIT_FUNC initextimported(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_11extimported_ham = ((struct __pyx_obj_11extimported_Ham *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_11extimported_Ham = __Pyx_ImportType("Spam.Eggs", "Ham", sizeof(struct __pyx_obj_11extimported_Ham)); if (!__pyx_ptype_11extimported_Ham) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
 

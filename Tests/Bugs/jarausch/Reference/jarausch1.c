@@ -48,23 +48,18 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_x, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of jarausch1 */
 
-static char __pyx_k1[] = "\\\\";
 
-static PyObject *__pyx_n_x;
 
-static PyObject *__pyx_k1p;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_x, "x"},
-  {0, 0}
-};
 
-static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_k1p, __pyx_k1, sizeof(__pyx_k1)},
-  {0, 0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -81,7 +76,6 @@ PyMODINIT_FUNC initjarausch1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttr(__pyx_m, __pyx_n_x, __pyx_k1p) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   return;

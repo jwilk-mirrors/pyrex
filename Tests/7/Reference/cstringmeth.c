@@ -48,21 +48,18 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_foo, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_join, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_x, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_y, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of cstringmeth */
 
 
-static PyObject *__pyx_n_foo;
-static PyObject *__pyx_n_join;
-static PyObject *__pyx_n_y;
-static PyObject *__pyx_n_x;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_foo, "foo"},
-  {&__pyx_n_join, "join"},
-  {&__pyx_n_x, "x"},
-  {&__pyx_n_y, "y"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -82,7 +79,7 @@ PyMODINIT_FUNC initcstringmeth(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = PyObject_GetAttr(__pyx_n_foo, __pyx_n_join); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_2 = __Pyx_GetName(__pyx_b, __pyx_n_y); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_3 = PyTuple_New(1); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

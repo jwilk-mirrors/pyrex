@@ -50,7 +50,7 @@ class ExprNode(Node):
 	#  perform both of the above phases. These should only
 	#  be called from statement nodes, and only when no
 	#  coercion nodes need to be added around the expression
-	#  being analysed. In that case, the above two phases
+	#  being analysed. If coercion is needed, the above two phases
 	#  should be invoked separately.
 	#
 	#  Framework code in ExprNode provides much of the common
@@ -99,10 +99,10 @@ class ExprNode(Node):
 	#        - Call release_temp on sub-nodes and release any other
 	#          temps used during assignment.
 	#
-	#      calculate_result_code
-	#        - Called during the Allocate Temps phase. Should return a
-	#          C code fragment evaluating to the result. This is only
-	#          called when the result is not a temporary.
+	#      #calculate_result_code
+	#      #  - Called during the Allocate Temps phase. Should return a
+	#      #    C code fragment evaluating to the result. This is only
+	#      #    called when the result is not a temporary.
 	#
 	#      target_code
 	#        Called by the default implementation of allocate_target_temps.
@@ -132,13 +132,15 @@ class ExprNode(Node):
 	#        1. Call generate_evaluation_code for sub-expressions.
 	#        2. Generate any C statements necessary to calculate
 	#           the result of this node from the results of its
-	#           sub-expressions.
-	#        3. If result is temporary, call generate_disposal_code
+	#           sub-expressions. If result is not in a temporary, record
+	#           any information that will be needed by this node's
+	#           implementation of calculate_result_code().
+	#        4. If result is in a temporary, call generate_disposal_code
 	#           on all sub-expressions.
 	#
 	#        A default implementation of generate_evaluation_code
-	#        is provided which calls the abstract method generate_result_code
-	#        to perform the functions of no. 2 above.
+	#        is provided which uses the folling abstract methods:
+	#            generate_result_code (for no. 2)
 	#
 	#      generate_assignment_code
 	#        Called on the LHS of an assignment.
@@ -154,6 +156,9 @@ class ExprNode(Node):
 	#        - Generate code to perform the deletion.
 	#        - Call generate_disposal_code on all sub-expressions.
 	#
+	#      calculate_result_code
+	#        Return a C code fragment representing the result of this node.
+	#        This is only called if the result is not in a temporary.
 	#
 	
 	is_sequence_constructor = 0
@@ -197,17 +202,24 @@ class ExprNode(Node):
 			self.saved_subexpr_nodes = nodes
 		return self.saved_subexpr_nodes
 	
+	def result(self):
+		#  Return a C code fragment for the result of this node.
+		if self.is_temp:
+			result_code = self.result_code
+		else:
+			result_code = self.calculate_result_code()
+		return result_code
+	
 	def result_as(self, type = None):
 		#  Return the result code cast to the specified C type.
-		return typecast(type, self.ctype(), self.result_code)
+		return typecast(type, self.ctype(), self.result())
 	
 	def py_result(self):
 		#  Return the result code cast to PyObject *.
 		return self.result_as(py_object_type)
 	
 	def ctype(self):
-		#  Return the native C type of the result (i.e. the
-		#  C type of the result_code expression).
+		#  Return the native C type of the result.
 		return self.result_ctype or self.type
 	
 	def compile_time_value(self, denv):
@@ -328,7 +340,7 @@ class ExprNode(Node):
 		if debug_temp_alloc:
 			print self, "Allocating target temps"
 		self.allocate_subexpr_temps(env)
-		self.result_code = self.target_code()
+		#self.result_code = self.target_code()
 		if rhs:
 			rhs.release_temp(env)
 		self.release_subexpr_temps(env)
@@ -337,7 +349,7 @@ class ExprNode(Node):
 		if debug_temp_alloc:
 			print self, "Allocating inplace target temps"
 		self.allocate_subexpr_temps(env)
-		self.result_code = self.target_code()
+		#self.result_code = self.target_code()
 		py_inplace = self.type.is_pyobject
 		if py_inplace:
 			self.allocate_temp(env)
@@ -374,8 +386,7 @@ class ExprNode(Node):
 	
 	def allocate_temp(self, env, result = None):
 		#  If this node requires a temporary variable for its
-		#  result, allocate one, otherwise set the result to
-		#  a C code fragment. If a result is specified,
+		#  result, allocate one. If a result is specified,
 		#  this must be a temp node and the specified variable
 		#  is used as the result instead of allocating a new
 		#  one.
@@ -395,8 +406,8 @@ class ExprNode(Node):
 				self.result_code = None
 			if debug_temp_alloc:
 				print self, "Allocated result", self.result_code
-		else:
-			self.result_code = self.calculate_result_code()
+		#else:
+		#	self.result_code = self.calculate_result_code()
 	
 	def target_code(self):
 		#  Return code fragment for use as LHS of a C assignment.
@@ -428,7 +439,7 @@ class ExprNode(Node):
 		#  If result is a pyobject, make sure we own
 		#  a reference to it.
 		if self.type.is_pyobject and not self.result_in_temp():
-			code.put_incref(self.result_code, self.ctype())
+			code.put_incref(self.py_result())
 	
 	def generate_evaluation_code(self, code):
 		#  Generate code to evaluate this node and
@@ -473,7 +484,7 @@ class ExprNode(Node):
 			self.inplace_result,
 			code.error_goto(self.pos)))
 		if self.is_temp:
-			code.put_decref_clear(self.result_code, self.ctype())
+			code.put_decref_clear(self.py_result())
 		rhs.generate_disposal_code(code)
 		if self.type.is_extension_type:
 			code.putln(
@@ -487,7 +498,7 @@ class ExprNode(Node):
 		# temporary Python reference.
 		if self.is_temp:
 			if self.type.is_pyobject:
-				code.put_decref_clear(self.result_code, self.ctype())
+				code.put_decref_clear(self.py_result(), self.ctype())
 		else:
 			self.generate_subexpr_disposal_code(code)
 	
@@ -503,7 +514,7 @@ class ExprNode(Node):
 		# the result if it is a Python object.
 		if self.is_temp:
 			if self.type.is_pyobject:
-				code.putln("%s = 0;" % self.result_code)
+				code.putln("%s = 0;" % self.result())
 		else:
 			self.generate_subexpr_disposal_code(code)
 	
@@ -700,15 +711,15 @@ class FloatNode(ConstNode):
 
 
 class StringNode(ConstNode):
-	#  entry   Symtab.Entry
+	#  #entry   Symtab.Entry
 	
 	type = PyrexTypes.c_char_ptr_type
 	
 	def compile_time_value(self, denv):
 		return eval('"%s"' % self.value)
 	
-	def analyse_types(self, env):
-		self.entry = env.add_string_const(self.value)
+#	def analyse_types(self, env):
+#		self.entry = env.add_string_const(self.value)
 	
 	def coerce_to(self, dst_type, env):
 		# Arrange for a Python version of the string to be pre-allocated
@@ -723,17 +734,20 @@ class StringNode(ConstNode):
 		return ConstNode.coerce_to(node, dst_type, env)
 
 	def as_py_string_node(self, env):
-		# Return a new StringNode with the same entry as this node
+		# Return a new StringNode with the same value as this node
 		# but whose type is a Python type instead of a C type.
-		entry = self.entry
-		env.add_py_string(entry)
-		return StringNode(self.pos, entry = entry, type = py_object_type)
+		#entry = self.entry
+		#env.add_py_string(entry)
+		return StringNode(self.pos, type = py_object_type, value = self.value)
+	
+	def generate_evaluation_code(self, code):
+		if self.type.is_pyobject:
+			self.result_code = code.get_py_string_const(self.value)
+		else:
+			self.result_code = code.get_string_const(self.value)
 			
 	def calculate_result_code(self):
-		if self.type.is_pyobject:
-			return self.entry.pystring_cname
-		else:
-			return self.entry.cname
+		return self.result_code
 
 
 class LongNode(AtomicExprNode):
@@ -752,12 +766,13 @@ class LongNode(AtomicExprNode):
 		self.is_temp = 1
 	
 	def generate_evaluation_code(self, code):
+		result = self.result()
 		code.putln(
 			'%s = PyLong_FromString("%s", 0, 0); if (!%s) %s' % (
-				self.result_code,
+				self.result(),
 				self.value,
-				self.result_code,
-				code.error_goto(self.pos)))	
+				self.result(),
+				code.error_goto(self.pos)))
 
 
 class ImagNode(AtomicExprNode):
@@ -776,11 +791,12 @@ class ImagNode(AtomicExprNode):
 		self.is_temp = 1
 	
 	def generate_evaluation_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyComplex_FromDoubles(0.0, %s); if (!%s) %s" % (
-				self.result_code,
+				self.result(),
 				self.value,
-				self.result_code,
+				self.result(),
 				code.error_goto(self.pos)))
 
 
@@ -874,10 +890,6 @@ class NameNode(AtomicExprNode):
 			self.result_ctype = py_object_type
 		if entry.is_pyglobal or entry.is_builtin:
 			self.is_temp = 1
-#			if Options.intern_names:
-#				env.use_utility_code(get_name_interned_utility_code)
-#			else:
-#				env.use_utility_code(get_name_utility_code)
 			self.gil_check(env)
 	
 	gil_message = "Accessing Python global or builtin"
@@ -893,8 +905,7 @@ class NameNode(AtomicExprNode):
 			self.result_ctype = ctype
 		if entry.is_pyglobal or entry.is_builtin:
 			assert type.is_pyobject, "Python global or builtin not a Python object"
-			if Options.intern_names:
-				self.interned_cname = env.intern(self.entry.name)
+			#self.interned_cname = env.intern(self.entry.name)
 
 	def check_identifier_kind(self):
 		#  Check that this is an appropriate kind of name for use in an expression.
@@ -967,42 +978,27 @@ class NameNode(AtomicExprNode):
 				namespace = Naming.builtins_cname
 			else: # entry.is_pyglobal
 				namespace = entry.namespace_cname
-			if Options.intern_names:
-				code.use_utility_code(get_name_interned_utility_code)
-				code.putln(
-					'%s = __Pyx_GetName(%s, %s); if (!%s) %s' % (
-					self.result_code,
-					namespace, 
-					self.interned_cname,
-					self.result_code, 
-					code.error_goto(self.pos)))
-			else:
-				code.use_utility_code(get_name_utility_code)
-				code.putln(
-					'%s = __Pyx_GetName(%s, "%s"); if (!%s) %s' % (
-					self.result_code,
-					namespace, 
-					self.entry.name,
-					self.result_code, 
-					code.error_goto(self.pos)))		
+			result = self.result()
+			cname = code.intern(self.entry.name)
+			code.use_utility_code(get_name_interned_utility_code)
+			code.putln(
+				'%s = __Pyx_GetName(%s, %s); if (!%s) %s' % (
+				result,
+				namespace, 
+				cname,
+				result, 
+				code.error_goto(self.pos)))
 
 	def generate_setattr_code(self, value_code, code):
 		entry = self.entry
 		namespace = self.entry.namespace_cname
-		if Options.intern_names:
-			code.putln(
-				'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
-					namespace, 
-					self.interned_cname,
-					value_code, 
-					code.error_goto(self.pos)))
-		else:
-			code.putln(
-				'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
-					namespace, 
-					entry.name,
-					rhs.py_result(), 
-					code.error_goto(self.pos)))
+		cname = code.intern(self.entry.name)
+		code.putln(
+			'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
+				namespace, 
+				cname,
+				value_code, 
+				code.error_goto(self.pos)))
 
 	def generate_assignment_code(self, rhs, code):
 		#print "NameNode.generate_assignment_code:", self.name ###
@@ -1018,8 +1014,8 @@ class NameNode(AtomicExprNode):
 		else:
 			if self.type.is_pyobject:
 				rhs.make_owned_reference(code)
-				code.put_decref(self.result_code, self.ctype())
-			code.putln('%s = %s;' % (self.result_code, rhs.result_as(self.ctype())))
+				code.put_decref(self.py_result())
+			code.putln('%s = %s;' % (self.result(), rhs.result_as(self.ctype())))
 			if debug_disposal_code:
 				print "NameNode.generate_assignment_code:"
 				print "...generating post-assignment code for", rhs
@@ -1036,11 +1032,11 @@ class NameNode(AtomicExprNode):
 				self.generate_setattr_code(self.inplace_result, code)
 				self.generate_inplace_result_disposal_code(code)
 			else:
-				code.put_decref(self.result_code, self.ctype())
+				code.put_decref(self.py_result())
 				cast_inplace_result = typecast(self.ctype(), py_object_type, self.inplace_result)
-				code.putln('%s = %s;' % (self.result_code, cast_inplace_result))
+				code.putln('%s = %s;' % (self.result(), cast_inplace_result))
 		else:
-			code.putln("%s %s %s;" % (self.result_code, operator, rhs.result_code))
+			code.putln("%s %s %s;" % (self.result(), operator, rhs.result()))
 			rhs.generate_disposal_code(code)
 	
 	def generate_deletion_code(self, code):
@@ -1049,10 +1045,11 @@ class NameNode(AtomicExprNode):
 		if not self.entry.is_pyglobal:
 			error(self.pos, "Deletion of local or C global name not supported")
 			return
+		cname = code.intern(self.entry.name)
 		code.putln(
-			'if (PyObject_DelAttrString(%s, "%s") < 0) %s' % (
+			'if (PyObject_DelAttr(%s, %s) < 0) %s' % (
 				Naming.module_cname,
-				self.entry.name,
+				cname,
 				code.error_goto(self.pos)))
 			
 
@@ -1073,11 +1070,12 @@ class BackquoteNode(ExprNode):
 	gil_message = "Backquote expression"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyObject_Repr(%s); if (!%s) %s" % (
-				self.result_code,
+				self.result(),
 				self.arg.py_result(),
-				self.result_code,
+				self.result(),
 				code.error_goto(self.pos)))
 
 
@@ -1109,12 +1107,13 @@ class ImportNode(ExprNode):
 		else:
 			name_list_code = "0"
 		code.use_utility_code(import_utility_code)
+		result = self.result()
 		code.putln(
 			"%s = __Pyx_Import(%s, %s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.module_name.py_result(),
 				name_list_code,
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -1136,11 +1135,12 @@ class IteratorNode(ExprNode):
 	gil_message = "Iterating over Python object"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyObject_GetIter(%s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.sequence.py_result(),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -1159,13 +1159,14 @@ class NextNode(AtomicExprNode):
 		self.is_temp = 1
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyIter_Next(%s);" % (
-				self.result_code,
+				result,
 				self.iterator.py_result()))
 		code.putln(
 			"if (!%s) {" %
-				self.result_code)
+				result)
 		code.putln(
 				"if (PyErr_Occurred()) %s" %
 					code.error_goto(self.pos))
@@ -1296,31 +1297,32 @@ class IndexNode(ExprNode):
 	
 	def calculate_result_code(self):
 		return "(%s[%s])" % (
-			self.base.result_code, self.index.result_code)
+			self.base.result(), self.index.result())
 	
 	def generate_result_code(self, code):
 		if self.type.is_pyobject:
 			if self.index.type.is_int:
 				code.use_utility_code(getitem_int_utility_code)
 				function = "__Pyx_GetItemInt"
-				index_code = self.index.result_code
+				index_code = self.index.result()
 			else:
 				function = "PyObject_GetItem"
 				index_code = self.index.py_result()
+			result = self.result()
 			code.putln(
 				"%s = %s(%s, %s); if (!%s) %s" % (
-					self.result_code,
+					result,
 					function,
 					self.base.py_result(),
 					index_code,
-					self.result_code,
+					result,
 					code.error_goto(self.pos)))
 	
 	def generate_setitem_code(self, value_code, code):
 		if self.index.type.is_int:
 			code.use_utility_code(setitem_int_utility_code)
 			function = "__Pyx_SetItemInt"
-			index_code = self.index.result_code
+			index_code = self.index.result()
 		else:
 			function = "PyObject_SetItem"
 			index_code = self.index.py_result()
@@ -1339,7 +1341,7 @@ class IndexNode(ExprNode):
 		else:
 			code.putln(
 				"%s = %s;" % (
-					self.result_code, rhs.result_code))
+					self.result(), rhs.result()))
 		self.generate_subexpr_disposal_code(code)
 		rhs.generate_disposal_code(code)
 	
@@ -1351,7 +1353,7 @@ class IndexNode(ExprNode):
 			self.generate_setitem_code(self.inplace_result, code)
 			self.generate_inplace_result_disposal_code(code)
 		else:
-			code.putln("%s %s %s;" % (self.result_code, operator, rhs.result_code))
+			code.putln("%s %s %s;" % (self.result(), operator, rhs.result()))
 			rhs.generate_disposal_code(code)
 		self.generate_subexpr_disposal_code(code)
 	
@@ -1360,7 +1362,7 @@ class IndexNode(ExprNode):
 		#if self.type.is_pyobject:
 		if self.index.type.is_int:
 			function = "PySequence_DelItem"
-			index_code = self.index.result_code
+			index_code = self.index.result()
 		else:
 			function = "PyObject_DelItem"
 			index_code = self.index.py_result()
@@ -1418,13 +1420,14 @@ class SliceIndexNode(ExprNode):
 	gil_message = "Slicing Python object"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PySequence_GetSlice(%s, %s, %s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.base.py_result(),
 				self.start_code(),
 				self.stop_code(),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 	
 	def generate_setslice_code(self, value_code, code):
@@ -1438,7 +1441,7 @@ class SliceIndexNode(ExprNode):
 	
 	def generate_assignment_code(self, rhs, code):
 		self.generate_subexpr_evaluation_code(code)
-		self.generate_setslice_code(rhs.result_code, code)
+		self.generate_setslice_code(rhs.result(), code)
 		self.generate_subexpr_disposal_code(code)
 		rhs.generate_disposal_code(code)
 	
@@ -1462,19 +1465,19 @@ class SliceIndexNode(ExprNode):
 	
 	def start_code(self):
 		if self.start:
-			return self.start.result_code
+			return self.start.result()
 		else:
 			return "0"
 	
 	def stop_code(self):
 		if self.stop:
-			return self.stop.result_code
+			return self.stop.result()
 		else:
 			return "PY_SSIZE_T_MAX"
 	
-	def calculate_result_code(self):
-		# self.result_code is not used, but this method must exist
-		return "<unused>"
+#	def calculate_result_code(self):
+#		# self.result_code is not used, but this method must exist
+#		return "<unused>"
 	
 
 class SliceNode(ExprNode):
@@ -1509,13 +1512,14 @@ class SliceNode(ExprNode):
 	gil_message = "Constructing Python slice object"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PySlice_New(%s, %s, %s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.start.py_result(), 
 				self.stop.py_result(), 
 				self.step.py_result(),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -1609,7 +1613,7 @@ class SimpleCallNode(CallNode):
 				error(self.pos, "Calling non-function type '%s'" %
 					func_type)
 			self.type = PyrexTypes.error_type
-			self.result_code = "<error>"
+			#self.result_code = "<error>"
 			return
 		# Check no. of args
 		expected_nargs = len(func_type.args)
@@ -1624,7 +1628,7 @@ class SimpleCallNode(CallNode):
 						% (expected_str, actual_nargs))
 				self.args = None
 				self.type = PyrexTypes.error_type
-				self.result_code = "<error>"
+				#self.result_code = "<error>"
 				return
 		# Coerce arguments
 		for i in range(expected_nargs):
@@ -1659,13 +1663,14 @@ class SimpleCallNode(CallNode):
 			arg_code = actual_arg.result_as(formal_arg.type)
 			arg_list_code.append(arg_code)
 		for actual_arg in self.args[len(formal_args):]:
-			arg_list_code.append(actual_arg.result_code)
-		result = "%s(%s)" % (self.function.result_code,
+			arg_list_code.append(actual_arg.result())
+		result = "%s(%s)" % (self.function.result(),
 			join(arg_list_code, ","))
 		return result
 	
 	def generate_result_code(self, code):
 		func_type = self.function_type()
+		result = self.result()
 		if func_type.is_pyobject:
 			if self.arg_tuple:
 				arg_code = self.arg_tuple.py_result()
@@ -1673,26 +1678,27 @@ class SimpleCallNode(CallNode):
 				arg_code = "0"
 			code.putln(
 				"%s = PyObject_CallObject(%s, %s); if (!%s) %s" % (
-					self.result_code,
+					result,
 					self.function.py_result(),
 					arg_code,
-					self.result_code,
+					result,
 					code.error_goto(self.pos)))
 		elif func_type.is_cfunction:
 			exc_checks = []
 			if self.type.is_pyobject:
-				exc_checks.append("!%s" % self.result_code)
+				exc_checks.append("!%s" % result)
 			else:
 				exc_val = func_type.exception_value
 				exc_check = func_type.exception_check
 				if exc_val is not None:
-					exc_checks.append("%s == %s" % (self.result_code, exc_val))
+					exc_checks.append("%s == %s" % (self.result(), exc_val))
 				if exc_check:
 					exc_checks.append("PyErr_Occurred()")
 			if self.is_temp or exc_checks:
 				rhs = self.c_call_code()
-				if self.result_code:
-					lhs = "%s = " % self.result_code
+				result = self.result()
+				if result:
+					lhs = "%s = " % result
 					if self.is_temp and self.type.is_pyobject:
 						#return_type = self.type # func_type.return_type
 						#print "SimpleCallNode.generate_result_code: casting", rhs, \
@@ -1776,11 +1782,12 @@ class GeneralCallNode(CallNode):
 				self.function.py_result(),
 				self.positional_args.py_result(),
 				keyword_code)
+		result = self.result()
 		code.putln(
 			"%s = %s; if (!%s) %s" % (
-				self.result_code,
+				result,
 				call_code,
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -1809,11 +1816,12 @@ class AsTupleNode(ExprNode):
 	gil_message = "Constructing Python tuple"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PySequence_Tuple(%s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.arg.py_result(),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 	
 
@@ -1835,7 +1843,7 @@ class AttributeNode(ExprNode):
 	subexprs = ['obj']
 	
 	type = PyrexTypes.error_type
-	result = "<error>"
+	result_code = "<error>"
 	entry = None
 	is_called = 0
 
@@ -1991,8 +1999,7 @@ class AttributeNode(ExprNode):
 		if obj_type.is_pyobject:
 			self.type = py_object_type
 			self.is_py_attr = 1
-			if Options.intern_names:
-				self.interned_attr_cname = env.intern(self.attribute)
+			#self.interned_attr_cname = env.intern(self.attribute)
 			self.gil_check(env)
 		else:
 			if not obj_type.is_error:
@@ -2024,12 +2031,8 @@ class AttributeNode(ExprNode):
 			return NameNode.is_ephemeral(self)
 	
 	def calculate_result_code(self):
-		#print "AttributeNode.calculate_result_code:", self.member ###
-		#print "...obj node =", self.obj, "code", self.obj.result_code ###
-		#print "...obj type", self.obj.type, "ctype", self.obj.ctype() ###
 		obj = self.obj
 		obj_code = obj.result_as(obj.type)
-		#print "...obj_code =", obj_code ###
 		if self.entry and self.entry.is_cmethod:
 			return "((struct %s *)%s%s%s)->%s" % (
 				obj.type.vtabstruct_cname, obj_code, self.op, 
@@ -2039,38 +2042,24 @@ class AttributeNode(ExprNode):
 	
 	def generate_result_code(self, code):
 		if self.is_py_attr:
-			if Options.intern_names:
-				code.putln(
-					'%s = PyObject_GetAttr(%s, %s); if (!%s) %s' % (
-						self.result_code,
-						self.obj.py_result(),
-						self.interned_attr_cname,
-						self.result_code,
-						code.error_goto(self.pos)))
-			else:
-				code.putln(
-					'%s = PyObject_GetAttrString(%s, "%s"); if (!%s) %s' % (
-						self.result_code,
-						self.objpy_result(),
-						self.attribute,
-						self.result_code,
-						code.error_goto(self.pos)))
+			result = self.result()
+			cname = code.intern(self.attribute)
+			code.putln(
+				'%s = PyObject_GetAttr(%s, %s); if (!%s) %s' % (
+					result,
+					self.obj.py_result(),
+					cname,
+					result,
+					code.error_goto(self.pos)))
 	
 	def generate_setattr_code(self, value_code, code):
-		if Options.intern_names:
-			code.putln(
-				'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
-					self.obj.py_result(),
-					self.interned_attr_cname,
-					value_code,
-					code.error_goto(self.pos)))
-		else:
-			code.putln(
-				'if (PyObject_SetAttrString(%s, "%s", %s) < 0) %s' % (
-					self.obj.py_result(),
-					self.attribute,
-					value_code,
-					code.error_goto(self.pos)))
+		cname = code.intern(self.attribute)
+		code.putln(
+			'if (PyObject_SetAttr(%s, %s, %s) < 0) %s' % (
+				self.obj.py_result(),
+				cname,
+				value_code,
+				code.error_goto(self.pos)))
 	
 	def generate_assignment_code(self, rhs, code):
 		self.obj.generate_evaluation_code(code)
@@ -2078,7 +2067,7 @@ class AttributeNode(ExprNode):
 			self.generate_setattr_code(rhs.py_result(), code)
 			rhs.generate_disposal_code(code)
 		else:
-			select_code = self.result_code
+			select_code = self.result()
 			if self.type.is_pyobject:
 				rhs.make_owned_reference(code)
 				code.put_decref(select_code, self.ctype())
@@ -2091,7 +2080,7 @@ class AttributeNode(ExprNode):
 	
 	def generate_inplace_assignment_code(self, operator, rhs, code):
 		self.obj.generate_evaluation_code(code)
-		select_code = self.result_code
+		select_code = self.result()
 		if self.type.is_pyobject:
 			self.generate_result_code(code)
 			self.generate_inplace_operation_code(operator, rhs, code)
@@ -2103,25 +2092,19 @@ class AttributeNode(ExprNode):
 				cast_inplace_result = typecast(self.ctype(), py_object_type, self.inplace_result)
 				code.putln("%s = %s;" % (select_code, cast_inplace_result))
 		else:
-			code.putln("%s %s %s;" % (select_code, operator, rhs.result_code))
+			code.putln("%s %s %s;" % (select_code, operator, rhs.result()))
 			rhs.generate_disposal_code(code)
 		self.obj.generate_disposal_code(code)
 	
 	def generate_deletion_code(self, code):
 		self.obj.generate_evaluation_code(code)
 		if self.is_py_attr:
-			if Options.intern_names:
-				code.putln(
-					'if (PyObject_DelAttr(%s, %s) < 0) %s' % (
-						self.obj.py_result(),
-						self.interned_attr_cname,
-						code.error_goto(self.pos)))
-			else:
-				code.putln(
-					'if (PyObject_DelAttrString(%s, "%s") < 0) %s' % (
-						self.obj.py_result(),
-						self.attribute,
-						code.error_goto(self.pos)))
+			cname = code.intern(self.attribute)
+			code.putln(
+				'if (PyObject_DelAttr(%s, %s) < 0) %s' % (
+					self.obj.py_result(),
+					cname,
+					code.error_goto(self.pos)))
 		else:
 			error(self.pos, "Cannot delete C attribute of extension type")
 		self.obj.generate_disposal_code(code)
@@ -2197,11 +2180,12 @@ class SequenceNode(ExprNode):
 		self.generate_operation_code(code)
 	
 	def generate_assignment_code(self, rhs, code):
+		iter_result = self.iterator.result()
 		code.putln(
 			"%s = PyObject_GetIter(%s); if (!%s) %s" % (
-				self.iterator.result_code,
+				iter_result,
 				rhs.py_result(),
-				self.iterator.result_code,
+				iter_result,
 				code.error_goto(self.pos)))
 		rhs.generate_disposal_code(code)
 		for i in range(len(self.args)):
@@ -2209,11 +2193,12 @@ class SequenceNode(ExprNode):
 			code.use_utility_code(unpacking_utility_code)
 			unpack_code = "__Pyx_UnpackItem(%s)" % (
 				self.iterator.py_result())
+			item_result = item.result()
 			code.putln(
 				"%s = %s; if (!%s) %s" % (
-					item.result_code,
+					item_result,
 					typecast(item.ctype(), py_object_type, unpack_code),
-					item.result_code,
+					item_result,
 					code.error_goto(self.pos)))
 			value_node = self.coerced_unpacked_items[i]
 			value_node.generate_evaluation_code(code)
@@ -2241,21 +2226,24 @@ class TupleNode(SequenceNode):
 			self.compile_time_value_error(e)
 	
 	def generate_operation_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyTuple_New(%s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				len(self.args),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 		for i in range(len(self.args)):
 			arg = self.args[i]
+			arg_result = arg.py_result()
+			# ??? Change this to use make_owned_reference?
 			if not arg.result_in_temp():
-				code.put_incref(arg.result_code, arg.ctype())
+				code.put_incref(arg_result)
 			code.putln(
 				"PyTuple_SET_ITEM(%s, %s, %s);" % (
-					self.result_code,
+					result,
 					i,
-					arg.py_result()))
+					arg_result))
 	
 	def generate_subexpr_disposal_code(self, code):
 		# We call generate_post_assignment_code here instead
@@ -2274,20 +2262,22 @@ class ListNode(SequenceNode):
 		return self.compile_time_value_list(denv)
 
 	def generate_operation_code(self, code):
+		result = self.result()
 		code.putln("%s = PyList_New(%s); if (!%s) %s" %
-			(self.result_code,
+			(result,
 			len(self.args),
-			self.result_code,
+			result,
 			code.error_goto(self.pos)))
 		for i in range(len(self.args)):
 			arg = self.args[i]
+			arg_result = arg.py_result()
 			#if not arg.is_temp:
 			if not arg.result_in_temp():
-				code.put_incref(arg.result_code, arg.ctype())
+				code.put_incref(arg_result)
 			code.putln("PyList_SET_ITEM(%s, %s, %s);" %
-				(self.result_code,
+				(result,
 				i,
-				arg.py_result()))
+				arg_result))
 				
 	def generate_subexpr_disposal_code(self, code):
 		# We call generate_post_assignment_code here instead
@@ -2338,17 +2328,18 @@ class DictNode(ExprNode):
 	def generate_evaluation_code(self, code):
 		#  Custom method used here because key-value
 		#  pairs are evaluated and used one at a time.
+		result = self.result()
 		code.putln(
 			"%s = PyDict_New(); if (!%s) %s" % (
-				self.result_code,
-				self.result_code,
+				result,
+				result,
 				code.error_goto(self.pos)))
 		for key, value in self.key_value_pairs:
 			key.generate_evaluation_code(code)
 			value.generate_evaluation_code(code)
 			code.putln(
 				"if (PyDict_SetItem(%s, %s, %s) < 0) %s" % (
-					self.result_code,
+					result,
 					key.py_result(),
 					value.py_result(),
 					code.error_goto(self.pos)))
@@ -2385,6 +2376,7 @@ class ClassNode(ExprNode):
 	gil_message = "Constructing Python class"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		if self.doc:
 			code.putln(
 				'if (PyDict_SetItemString(%s, "__doc__", %s) < 0) %s' % (
@@ -2394,12 +2386,12 @@ class ClassNode(ExprNode):
 		code.use_utility_code(create_class_utility_code)
 		code.putln(
 			'%s = __Pyx_CreateClass(%s, %s, %s, "%s"); if (!%s) %s' % (
-				self.result_code,
+				result,
 				self.bases.py_result(),
 				self.dict.py_result(),
 				self.name.py_result(),
 				self.module_name,
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -2422,12 +2414,13 @@ class UnboundMethodNode(ExprNode):
 	gil_message = "Constructing an unbound method"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyMethod_New(%s, 0, %s); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.function.py_result(),
 				self.class_cname,
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 
@@ -2446,11 +2439,12 @@ class PyCFunctionNode(AtomicExprNode):
 	gil_message = "Constructing Python function"
 	
 	def generate_result_code(self, code):
+		result = self.result()
 		code.putln(
 			"%s = PyCFunction_New(&%s, 0); if (!%s) %s" % (
-				self.result_code,
+				result,
 				self.pymethdef_cname,
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 
 #-------------------------------------------------------------------
@@ -2520,12 +2514,13 @@ class UnopNode(ExprNode):
 	
 	def generate_py_operation_code(self, code):
 		function = self.py_operation_function()
+		result = self.result()
 		code.putln(
 			"%s = %s(%s); if (!%s) %s" % (
-				self.result_code, 
+				result, 
 				function, 
 				self.operand.py_result(),
-				self.result_code,
+				result,
 				code.error_goto(self.pos)))
 		
 	def type_error(self):
@@ -2555,7 +2550,7 @@ class NotNode(ExprNode):
 		self.type = PyrexTypes.c_int_type
 	
 	def calculate_result_code(self):
-		return "(!%s)" % self.operand.result_code
+		return "(!%s)" % self.operand.result()
 	
 	def generate_result_code(self, code):
 		pass
@@ -2573,7 +2568,7 @@ class UnaryPlusNode(UnopNode):
 		return "PyNumber_Positive"
 	
 	def calculate_result_code(self):
-		return self.operand.result_code
+		return self.operand.result()
 
 
 class UnaryMinusNode(UnopNode):
@@ -2591,7 +2586,7 @@ class UnaryMinusNode(UnopNode):
 		return "PyNumber_Negative"
 	
 	def calculate_result_code(self):
-		return "(-%s)" % self.operand.result_code
+		return "(-%s)" % self.operand.result()
 
 
 class TildeNode(UnopNode):
@@ -2607,7 +2602,7 @@ class TildeNode(UnopNode):
 		return "PyNumber_Invert"
 	
 	def calculate_result_code(self):
-		return "(~%s)" % self.operand.result_code
+		return "(~%s)" % self.operand.result()
 
 
 class AmpersandNode(ExprNode):
@@ -2637,7 +2632,7 @@ class AmpersandNode(ExprNode):
 		self.result_code = "<error>"
 	
 	def calculate_result_code(self):
-		return "(&%s)" % self.operand.result_code
+		return "(&%s)" % self.operand.result()
 
 	def generate_result_code(self, code):
 		pass
@@ -2687,7 +2682,7 @@ class TypecastNode(ExprNode):
 	
 	def calculate_result_code(self):
 		opnd = self.operand
-		result_code = self.type.cast_code(opnd.result_code)
+		result_code = self.type.cast_code(opnd.result())
 		return result_code
 	
 	def result_as(self, type):
@@ -2701,10 +2696,10 @@ class TypecastNode(ExprNode):
 	def generate_result_code(self, code):
 		if self.is_temp:
 			code.putln(
-				"%s = (PyObject *)%s;" % (
-					self.result_code,
-					self.operand.result_code))
-			code.put_incref(self.result_code, self.ctype())
+				"%s = %s;" % (
+					self.result(),
+					self.operand.py_result()))
+			code.put_incref(self.py_result())
 
 
 class SizeofNode(ExprNode):
@@ -2754,7 +2749,7 @@ class SizeofVarNode(SizeofNode):
 		self.type = PyrexTypes.c_int_type
 	
 	def calculate_result_code(self):
-		return "(sizeof(%s))" % self.operand.result_code
+		return "(sizeof(%s))" % self.operand.result()
 	
 	def generate_result_code(self, code):
 		pass
@@ -2855,14 +2850,15 @@ class BinopNode(ExprNode):
 				extra_args = ", Py_None"
 			else:
 				extra_args = ""
+			result = self.result()
 			code.putln(
 				"%s = %s(%s, %s%s); if (!%s) %s" % (
-					self.result_code, 
+					result, 
 					function, 
 					self.operand1.py_result(),
 					self.operand2.py_result(),
 					extra_args,
-					self.result_code,
+					result,
 					code.error_goto(self.pos)))
 		else:
 			if self.is_temp:
@@ -2904,9 +2900,9 @@ class NumBinopNode(BinopNode):
 
 	def calculate_result_code(self):
 		return "(%s %s %s)" % (
-			self.operand1.result_code, 
+			self.operand1.result(), 
 			self.operator, 
-			self.operand2.result_code)
+			self.operand2.result())
 	
 	def py_operation_function(self):
 		return self.py_functions[self.operator]
@@ -3006,7 +3002,7 @@ class PowNode(NumBinopNode):
 	
 	def calculate_result_code(self):
 		return "pow(%s, %s)" % (
-			self.operand1.result_code, self.operand2.result_code)
+			self.operand1.result(), self.operand2.result())
 			
 
 class BoolBinopNode(ExprNode):
@@ -3080,9 +3076,9 @@ class BoolBinopNode(ExprNode):
 	
 	def calculate_result_code(self):
 		return "(%s %s %s)" % (
-			self.operand1.result_code,
+			self.operand1.result(),
 			self.py_to_c_op[self.operator],
-			self.operand2.result_code)
+			self.operand2.result())
 	
 	py_to_c_op = {'and': "&&", 'or': "||"}
 
@@ -3105,7 +3101,7 @@ class BoolBinopNode(ExprNode):
 	def generate_operand1_test(self, code):
 		#  Generate code to test the truth of the first operand.
 		if self.type.is_pyobject:
-			test_result = self.temp_bool.result_code
+			test_result = self.temp_bool.result()
 			code.putln(
 				"%s = PyObject_IsTrue(%s); if (%s < 0) %s" % (
 					test_result,
@@ -3113,7 +3109,7 @@ class BoolBinopNode(ExprNode):
 					test_result,
 					code.error_goto(self.pos)))
 		else:
-			test_result = self.operand1.result_code
+			test_result = self.operand1.result()
 		return test_result
 
 
@@ -3164,31 +3160,31 @@ class CmpNode:
 		else:
 			return 0
 
-	def generate_operation_code(self, code, result_code, 
+	def generate_operation_code(self, code, result, 
 			operand1, op , operand2):
 		if op == 'in' or op == 'not_in':
 			code.putln(
 				"%s = PySequence_Contains(%s, %s); if (%s < 0) %s" % (
-					result_code, 
+					result, 
 					operand2.py_result(), 
 					operand1.py_result(), 
-					result_code,
+					result,
 					code.error_goto(self.pos)))
 			if op == 'not_in':
 				code.putln(
 					"%s = !%s;" % (
-						result_code, result_code))
+						result, result))
 		elif (operand1.type.is_pyobject
 			and op not in ('is', 'is_not')):
 				code.putln(
 					"if (PyObject_Cmp(%s, %s, &%s) < 0) %s" % (
 						operand1.py_result(), 
 						operand2.py_result(), 
-						result_code,
+						result,
 						code.error_goto(self.pos)))
 				code.putln(
 					"%s = %s %s 0;" % (
-						result_code, result_code, op))
+						result, result, op))
 		else:
 			type1 = operand1.type
 			type2 = operand2.type
@@ -3197,10 +3193,10 @@ class CmpNode:
 				code1 = operand1.result_as(py_object_type)
 				code2 = operand2.result_as(py_object_type)
 			else:
-				code1 = operand1.result_code
-				code2 = operand2.result_code
+				code1 = operand1.result()
+				code2 = operand2.result()
 			code.putln("%s = %s %s %s;" % (
-				result_code, 
+				result, 
 				code1, 
 				self.c_operator(op), 
 				code2))
@@ -3286,19 +3282,20 @@ class PrimaryCmpNode(ExprNode, CmpNode):
 
 	def calculate_result_code(self):
 		return "(%s %s %s)" % (
-			self.operand1.result_code,
+			self.operand1.result(),
 			self.c_operator(self.operator),
-			self.operand2.result_code)
+			self.operand2.result())
 	
 	def generate_evaluation_code(self, code):
 		self.operand1.generate_evaluation_code(code)
 		self.operand2.generate_evaluation_code(code)
 		if self.is_temp:
-			self.generate_operation_code(code, self.result_code, 
+			result = self.result()
+			self.generate_operation_code(code, result, 
 				self.operand1, self.operator, self.operand2)
 			if self.cascade:
 				self.cascade.generate_evaluation_code(code,
-					self.result_code, self.operand2)
+					result, self.operand2)
 			self.operand1.generate_disposal_code(code)
 			self.operand2.generate_disposal_code(code)
 	
@@ -3456,7 +3453,7 @@ class PyTypeTestNode(CoercionNode):
 		return self.arg.is_ephemeral()
 	
 	def calculate_result_code(self):
-		return self.arg.result_code
+		return self.arg.result()
 	
 	def generate_result_code(self, code):
 		if self.type.typeobj_is_available():
@@ -3491,11 +3488,12 @@ class CoerceToPyTypeNode(CoercionNode):
 	
 	def generate_result_code(self, code):
 		function = self.arg.type.to_py_function
+		result = self.result()
 		code.putln('%s = %s(%s); if (!%s) %s' % (
-			self.result_code, 
+			result, 
 			function, 
-			self.arg.result_code, 
-			self.result_code, 
+			self.arg.result(),
+			result, 
 			code.error_goto(self.pos)))
 
 
@@ -3520,12 +3518,13 @@ class CoerceFromPyTypeNode(CoercionNode):
 		rhs = "%s(%s)" % (function, operand)
 		if self.type.is_enum:
 			rhs = typecast(self.type, c_long_type, rhs)
+		result = self.result()
 		if self.type.is_string:
-			err_code = "!%s" % self.result_code
+			err_code = "!%s" % result
 		else:
 			err_code = "PyErr_Occurred()"
 		code.putln('%s = %s; if (%s) %s' % (
-			self.result_code, 
+			result, 
 			rhs,
 			err_code,
 			code.error_goto(self.pos)))
@@ -3551,15 +3550,16 @@ class CoerceToBooleanNode(CoercionNode):
 		self.arg.check_const()
 	
 	def calculate_result_code(self):
-		return "(%s != 0)" % self.arg.result_code
+		return "(%s != 0)" % self.arg.result()
 
 	def generate_result_code(self, code):
 		if self.arg.type.is_pyobject:
+			result = self.result()
 			code.putln(
 				"%s = PyObject_IsTrue(%s); if (%s < 0) %s" % (
-					self.result_code, 
+					result, 
 					self.arg.py_result(), 
-					self.result_code,
+					result,
 					code.error_goto(self.pos)))
 
 
@@ -3583,9 +3583,9 @@ class CoerceToTempNode(CoercionNode):
 		#self.arg.generate_evaluation_code(code) # Already done
 		# by generic generate_subexpr_evaluation_code!
 		code.putln("%s = %s;" % (
-			self.result_code, self.arg.result_as(self.ctype())))
+			self.result(), self.arg.result_as(self.ctype())))
 		if self.type.is_pyobject:
-			code.put_incref(self.result_code, self.ctype())
+			code.put_incref(self.py_result())
 
 
 class CloneNode(CoercionNode):
@@ -3604,7 +3604,7 @@ class CloneNode(CoercionNode):
 		self.result_ctype = arg.result_ctype
 	
 	def calculate_result_code(self):
-		return self.arg.result_code
+		return self.arg.result()
 	
 	def generate_evaluation_code(self, code):
 		pass

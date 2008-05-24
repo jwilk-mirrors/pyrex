@@ -76,18 +76,16 @@ static struct __pyx_t_4spam_Spam __pyx_v_7cimport_yummy;
 static struct __pyx_obj_3pkg_4eggs_Eggs *__pyx_v_7cimport_fried;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_eggs, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_ova, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_pkg, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of cimport */
 
-static PyObject *__pyx_n_pkg;
-static PyObject *__pyx_n_eggs;
-static PyObject *__pyx_n_ova;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_eggs, "eggs"},
-  {&__pyx_n_ova, "ova"},
-  {&__pyx_n_pkg, "pkg"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -106,7 +104,7 @@ PyMODINIT_FUNC initcimport(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_7cimport_fried = ((struct __pyx_obj_3pkg_4eggs_Eggs *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_3pkg_4eggs_Eggs = __Pyx_ImportType("pkg.eggs", "Eggs", sizeof(struct __pyx_obj_3pkg_4eggs_Eggs)); if (!__pyx_ptype_3pkg_4eggs_Eggs) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; goto __pyx_L1;}
 

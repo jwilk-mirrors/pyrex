@@ -67,9 +67,13 @@ struct __pyx_obj_14pointdexter1_b_B {
 static PyTypeObject *__pyx_ptype_14pointdexter1_b_B = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n___init__, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of pointdexter1_b */
 
-static PyObject *__pyx_n___init__;
 
 static int __pyx_f_14pointdexter1_b_1B___init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static int __pyx_f_14pointdexter1_b_1B___init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -117,10 +121,6 @@ static int __pyx_f_14pointdexter1_b_1B___init__(PyObject *__pyx_v_self, PyObject
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n___init__, "__init__"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_14pointdexter1_b_B(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = __pyx_ptype_14pointdexter1_a_A->tp_new(t, a, k);
@@ -270,7 +270,7 @@ PyMODINIT_FUNC initpointdexter1_b(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_ptype_14pointdexter1_a_A = __Pyx_ImportType("pointdexter1_a", "A", sizeof(struct __pyx_obj_14pointdexter1_a_A)); if (!__pyx_ptype_14pointdexter1_a_A) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_type_14pointdexter1_b_B.tp_base = __pyx_ptype_14pointdexter1_a_A;
   if (PyType_Ready(&__pyx_type_14pointdexter1_b_B) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

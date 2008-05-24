@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,12 +39,18 @@ static char **__pyx_f;
 
 static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed, char *name); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from extargdefault */
+
+
+/* Declarations from implementation of extargdefault */
 
 struct __pyx_obj_13extargdefault_Swallow {
   PyObject_HEAD
@@ -54,8 +59,16 @@ struct __pyx_obj_13extargdefault_Swallow {
 
 static PyTypeObject *__pyx_ptype_13extargdefault_Swallow = 0;
 static struct __pyx_obj_13extargdefault_Swallow *__pyx_v_13extargdefault_swallow;
-static PyObject *__pyx_k1;
-static struct __pyx_obj_13extargdefault_Swallow *__pyx_k2;
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
+static PyObject *__pyx_d1;
+static struct __pyx_obj_13extargdefault_Swallow *__pyx_d2;
 
 
 /* Implementation of extargdefault */
@@ -66,8 +79,8 @@ static PyObject *__pyx_f_13extargdefault_spam(PyObject *__pyx_self, PyObject *__
   struct __pyx_obj_13extargdefault_Swallow *__pyx_v_y = 0;
   PyObject *__pyx_r;
   static char *__pyx_argnames[] = {"x","y",0};
-  __pyx_v_x = __pyx_k1;
-  __pyx_v_y = __pyx_k2;
+  __pyx_v_x = __pyx_d1;
+  __pyx_v_y = __pyx_d2;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "|OO", __pyx_argnames, &__pyx_v_x, &__pyx_v_y)) return 0;
   Py_INCREF(__pyx_v_x);
   Py_INCREF(__pyx_v_y);
@@ -100,14 +113,15 @@ PyMODINIT_FUNC initextargdefault(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_13extargdefault_swallow = ((struct __pyx_obj_13extargdefault_Swallow *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_13extargdefault_Swallow = __Pyx_ImportType("somewhere", "Swallow", sizeof(struct __pyx_obj_13extargdefault_Swallow)); if (!__pyx_ptype_13extargdefault_Swallow) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/5/extargdefault.pyx":6 */
   Py_INCREF(((PyObject *)__pyx_v_13extargdefault_swallow));
-  __pyx_k1 = ((PyObject *)__pyx_v_13extargdefault_swallow);
+  __pyx_d1 = ((PyObject *)__pyx_v_13extargdefault_swallow);
   Py_INCREF(((PyObject *)__pyx_v_13extargdefault_swallow));
-  __pyx_k2 = __pyx_v_13extargdefault_swallow;
+  __pyx_d2 = __pyx_v_13extargdefault_swallow;
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("extargdefault");
@@ -133,6 +147,18 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 	PyErr_Format(PyExc_TypeError,
 		"Argument '%s' has incorrect type (expected %s, got %s)",
 		name, type->tp_name, obj->ob_type->tp_name);
+	return 0;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
 	return 0;
 }
 
@@ -241,7 +267,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from extargdefault */
-
-/* Declarations from implementation of extargdefault */

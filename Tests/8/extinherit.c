@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -42,8 +41,14 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
 static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from extinherit */
+
+
+/* Declarations from implementation of extinherit */
 
 struct __pyx_obj_10extinherit_Parrot {
   PyObject_HEAD
@@ -61,6 +66,14 @@ struct __pyx_obj_10extinherit_Norwegian {
 static PyTypeObject *__pyx_ptype_10extinherit_Parrot = 0;
 static PyTypeObject *__pyx_ptype_10extinherit_Norwegian = 0;
 static void __pyx_f_10extinherit_rest(struct __pyx_obj_10extinherit_Norwegian *); /*proto*/
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of extinherit */
@@ -441,6 +454,7 @@ PyMODINIT_FUNC initextinherit(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_type_10extinherit_Parrot.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_10extinherit_Parrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Parrot", (PyObject *)&__pyx_type_10extinherit_Parrot) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
@@ -488,6 +502,18 @@ static void __Pyx_WriteUnraisable(char *name) {
 	if (!ctx)
 		ctx = Py_None;
 	PyErr_WriteUnraisable(ctx);
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"
@@ -547,7 +573,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from extinherit */
-
-/* Declarations from implementation of extinherit */

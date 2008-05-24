@@ -44,14 +44,19 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from kwonlyargs */
 
-static PyObject *__pyx_k1;
-static PyObject *__pyx_k2;
-static PyObject *__pyx_k3;
-static PyObject *__pyx_k4;
-static PyObject *__pyx_k5;
-static PyObject *__pyx_k6;
-static PyObject *__pyx_k7;
 
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
+static PyObject *__pyx_d1;
+static PyObject *__pyx_d2;
+static PyObject *__pyx_d3;
+static PyObject *__pyx_d4;
+static PyObject *__pyx_d5;
+static PyObject *__pyx_d6;
+static PyObject *__pyx_d7;
 
 /* Implementation of kwonlyargs */
 
@@ -97,7 +102,7 @@ static PyObject *__pyx_f_10kwonlyargs_d(PyObject *__pyx_self, PyObject *__pyx_ar
   PyObject *__pyx_r;
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {"a","b","c",0};
-  __pyx_v_c = __pyx_k1;
+  __pyx_v_c = __pyx_d1;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 2, 0, 0, 0) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "OO|O", __pyx_argnames, &__pyx_v_a, &__pyx_v_b, &__pyx_v_c)) {
     Py_XDECREF(__pyx_args);
@@ -139,7 +144,7 @@ static PyObject *__pyx_f_10kwonlyargs_e(PyObject *__pyx_self, PyObject *__pyx_ar
   PyObject *__pyx_r;
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {"a","b","c",0};
-  __pyx_v_c = __pyx_k2;
+  __pyx_v_c = __pyx_d2;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 3, 0, &__pyx_v_kwds, 0) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "OO|O", __pyx_argnames, &__pyx_v_a, &__pyx_v_b, &__pyx_v_c)) {
     Py_XDECREF(__pyx_args);
@@ -184,7 +189,7 @@ static PyObject *__pyx_f_10kwonlyargs_f(PyObject *__pyx_self, PyObject *__pyx_ar
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {"a","b","c","d",0};
   static char __pyx_reqd_kwds[] = {0,0,1,0};
-  __pyx_v_d = __pyx_k3;
+  __pyx_v_d = __pyx_d3;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 2, 0, 0, __pyx_reqd_kwds) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "OOO|O", __pyx_argnames, &__pyx_v_a, &__pyx_v_b, &__pyx_v_c, &__pyx_v_d)) {
     Py_XDECREF(__pyx_args);
@@ -232,8 +237,8 @@ static PyObject *__pyx_f_10kwonlyargs_g(PyObject *__pyx_self, PyObject *__pyx_ar
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {"a","b","c","d","e","f",0};
   static char __pyx_reqd_kwds[] = {0,0,1,0,0,1};
-  __pyx_v_d = __pyx_k4;
-  __pyx_v_e = __pyx_k5;
+  __pyx_v_d = __pyx_d4;
+  __pyx_v_e = __pyx_d5;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 2, 0, &__pyx_v_kwds, __pyx_reqd_kwds) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "OOO|OOO", __pyx_argnames, &__pyx_v_a, &__pyx_v_b, &__pyx_v_c, &__pyx_v_d, &__pyx_v_e, &__pyx_v_f)) {
     Py_XDECREF(__pyx_args);
@@ -288,8 +293,8 @@ static PyObject *__pyx_f_10kwonlyargs_h(PyObject *__pyx_self, PyObject *__pyx_ar
   PyObject *__pyx_1 = 0;
   static char *__pyx_argnames[] = {"a","b","c","d","e","f",0};
   static char __pyx_reqd_kwds[] = {0,0,1,0,0,1};
-  __pyx_v_d = __pyx_k6;
-  __pyx_v_e = __pyx_k7;
+  __pyx_v_d = __pyx_d6;
+  __pyx_v_e = __pyx_d7;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 2, &__pyx_v_args, &__pyx_v_kwds, __pyx_reqd_kwds) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "OOO|OOO", __pyx_argnames, &__pyx_v_a, &__pyx_v_b, &__pyx_v_c, &__pyx_v_d, &__pyx_v_e, &__pyx_v_f)) {
     Py_XDECREF(__pyx_args);
@@ -359,36 +364,37 @@ PyMODINIT_FUNC initkwonlyargs(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/kwonlyargs.pyx":4 */
   __pyx_1 = PyInt_FromLong(88); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
-  __pyx_k1 = __pyx_1;
+  __pyx_d1 = __pyx_1;
   __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/kwonlyargs.pyx":7 */
   __pyx_2 = PyInt_FromLong(88); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
-  __pyx_k2 = __pyx_2;
+  __pyx_d2 = __pyx_2;
   __pyx_2 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/kwonlyargs.pyx":10 */
   __pyx_3 = PyInt_FromLong(42); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
-  __pyx_k3 = __pyx_3;
+  __pyx_d3 = __pyx_3;
   __pyx_3 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/kwonlyargs.pyx":13 */
   __pyx_4 = PyInt_FromLong(42); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
-  __pyx_k4 = __pyx_4;
+  __pyx_d4 = __pyx_4;
   __pyx_4 = 0;
   __pyx_5 = PyInt_FromLong(17); if (!__pyx_5) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
-  __pyx_k5 = __pyx_5;
+  __pyx_d5 = __pyx_5;
   __pyx_5 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/kwonlyargs.pyx":16 */
   __pyx_6 = PyInt_FromLong(42); if (!__pyx_6) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
-  __pyx_k6 = __pyx_6;
+  __pyx_d6 = __pyx_6;
   __pyx_6 = 0;
   __pyx_7 = PyInt_FromLong(17); if (!__pyx_7) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
-  __pyx_k7 = __pyx_7;
+  __pyx_d7 = __pyx_7;
   __pyx_7 = 0;
   return;
   __pyx_L1:;

@@ -50,6 +50,10 @@ typedef union {
 static __pyx_t_13ctypedefunion_pet __pyx_v_13ctypedefunion_sam;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ctypedefunion */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -67,6 +71,7 @@ PyMODINIT_FUNC initctypedefunion(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/6/ctypedefunion.pyx":7 */
   __pyx_v_13ctypedefunion_sam.cat = 1;

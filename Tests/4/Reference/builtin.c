@@ -46,9 +46,13 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_foo, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of builtin */
 
-static PyObject *__pyx_n_foo;
 
 
 static PyObject *__pyx_f_7builtin_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -81,10 +85,6 @@ static PyObject *__pyx_f_7builtin_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_foo, "foo"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {"f", (PyCFunction)__pyx_f_7builtin_f, METH_VARARGS|METH_KEYWORDS, 0},
@@ -102,7 +102,7 @@ PyMODINIT_FUNC initbuiltin(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("builtin");

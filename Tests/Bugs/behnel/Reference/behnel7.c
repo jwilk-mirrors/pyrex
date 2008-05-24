@@ -44,8 +44,13 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from behnel7 */
 
-static PyObject *__pyx_k1;
 
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
+static PyObject *__pyx_d1;
 
 /* Implementation of behnel7 */
 
@@ -55,7 +60,7 @@ static PyObject *__pyx_f_7behnel7_test(PyObject *__pyx_self, PyObject *__pyx_arg
   PyObject *__pyx_v_kw = 0;
   PyObject *__pyx_r;
   static char *__pyx_argnames[] = {"arg","kw",0};
-  __pyx_v_kw = __pyx_k1;
+  __pyx_v_kw = __pyx_d1;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 1, 0, 0, 0) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "O|O", __pyx_argnames, &__pyx_v_arg, &__pyx_v_kw)) {
     Py_XDECREF(__pyx_args);
@@ -89,8 +94,9 @@ PyMODINIT_FUNC initbehnel7(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   Py_INCREF(Py_None);
-  __pyx_k1 = Py_None;
+  __pyx_d1 = Py_None;
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("behnel7");

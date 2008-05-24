@@ -52,6 +52,10 @@ struct __pyx_obj_7hinsen2_vector {
 static PyTypeObject *__pyx_ptype_7hinsen2_vector = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of hinsen2 */
 
 static PyObject *__pyx_f_7hinsen2_6vector___div__(PyObject *__pyx_v_self, PyObject *__pyx_arg_factor); /*proto*/
@@ -236,6 +240,7 @@ PyMODINIT_FUNC inithinsen2(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_7hinsen2_vector) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "vector", (PyObject *)&__pyx_type_7hinsen2_vector) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_7hinsen2_vector = &__pyx_type_7hinsen2_vector;

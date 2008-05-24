@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,8 +39,14 @@ static char **__pyx_f;
 
 static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from ishimoto3 */
+
+
+/* Declarations from implementation of ishimoto3 */
 
 struct __pyx_obj_9ishimoto3_C1 {
   PyObject_HEAD
@@ -56,6 +61,14 @@ struct __pyx_obj_9ishimoto3_C2 {
 
 static PyTypeObject *__pyx_ptype_9ishimoto3_C1 = 0;
 static PyTypeObject *__pyx_ptype_9ishimoto3_C2 = 0;
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of ishimoto3 */
@@ -388,6 +401,7 @@ PyMODINIT_FUNC initishimoto3(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_9ishimoto3_C1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "C1", (PyObject *)&__pyx_type_9ishimoto3_C1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_9ishimoto3_C1 = &__pyx_type_9ishimoto3_C1;
@@ -421,6 +435,18 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
 		return 1;
 	PyErr_Format(PyExc_TypeError, "Cannot convert %s to %s",
 		obj->ob_type->tp_name, type->tp_name);
+	return 0;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
 	return 0;
 }
 
@@ -481,7 +507,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from ishimoto3 */
-
-/* Declarations from implementation of ishimoto3 */

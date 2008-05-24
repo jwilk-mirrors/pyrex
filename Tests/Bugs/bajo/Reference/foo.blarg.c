@@ -56,12 +56,16 @@ struct __pyx_obj_3foo_5blarg_e {
 static PyTypeObject *__pyx_ptype_3foo_5blarg_e = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_c, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_d, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_object, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of foo.blarg */
 
 
-static PyObject *__pyx_n_c;
-static PyObject *__pyx_n_d;
-static PyObject *__pyx_n_object;
 
 static PyObject *__pyx_f_3foo_5blarg_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_3foo_5blarg_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -73,12 +77,6 @@ static PyObject *__pyx_f_3foo_5blarg_f(PyObject *__pyx_self, PyObject *__pyx_arg
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_c, "c"},
-  {&__pyx_n_d, "d"},
-  {&__pyx_n_object, "object"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_3foo_5blarg_e(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -232,7 +230,7 @@ PyMODINIT_FUNC initblarg(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_3foo_5blarg_e) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "e", (PyObject *)&__pyx_type_3foo_5blarg_e) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
   __pyx_ptype_3foo_5blarg_e = &__pyx_type_3foo_5blarg_e;

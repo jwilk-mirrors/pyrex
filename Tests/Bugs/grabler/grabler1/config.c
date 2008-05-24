@@ -30,8 +30,7 @@
 #include "stdlib.h"
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -39,13 +38,19 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
+
+/* Declarations from t_config */
 
 struct __pyx_t_8t_config_pyalpm_list {
   char *pkgname;
   struct __pyx_t_8t_config_pyalpm_list *next;
 };
 
+
+/* Declarations from config */
 
 struct __pyx_obj_6config_config {
   PyObject_HEAD
@@ -55,6 +60,16 @@ struct __pyx_obj_6config_config {
 
 
 static PyTypeObject *__pyx_ptype_6config_config = 0;
+
+/* Declarations from implementation of config */
+
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
 
 
 
@@ -288,6 +303,7 @@ PyMODINIT_FUNC initconfig(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_6config_config) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "config", (PyObject *)&__pyx_type_6config_config) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
   __pyx_ptype_6config_config = &__pyx_type_6config_config;
@@ -306,6 +322,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"
@@ -365,9 +393,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from t_config */
-
-/* Declarations from config */
-
-/* Declarations from implementation of config */

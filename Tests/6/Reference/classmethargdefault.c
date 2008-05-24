@@ -46,20 +46,21 @@ static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from classmethargdefault */
 
-static int __pyx_k2;
-static PyObject *__pyx_k4;
-static PyObject *__pyx_k5;
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_Swallow, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_grail, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_spam, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_swallow, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {0, 0, 0, 0}
+};
+
+static int __pyx_d1;
+static PyObject *__pyx_d2;
+static PyObject *__pyx_d3;
 
 
 /* Implementation of classmethargdefault */
-
-
-static PyObject *__pyx_n_Swallow;
-static PyObject *__pyx_n_grail;
-static PyObject *__pyx_n_swallow;
-static PyObject *__pyx_n_spam;
 
 static PyObject *__pyx_f_19classmethargdefault_7Swallow_spam(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyMethodDef __pyx_mdef_19classmethargdefault_7Swallow_spam = {"spam", (PyCFunction)__pyx_f_19classmethargdefault_7Swallow_spam, METH_VARARGS|METH_KEYWORDS, 0};
@@ -70,9 +71,9 @@ static PyObject *__pyx_f_19classmethargdefault_7Swallow_spam(PyObject *__pyx_sel
   PyObject *__pyx_v_z = 0;
   PyObject *__pyx_r;
   static char *__pyx_argnames[] = {"w","x","y","z",0};
-  __pyx_v_x = __pyx_k2;
-  __pyx_v_y = __pyx_k4;
-  __pyx_v_z = __pyx_k5;
+  __pyx_v_x = __pyx_d1;
+  __pyx_v_y = __pyx_d2;
+  __pyx_v_z = __pyx_d3;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "O|iOO", __pyx_argnames, &__pyx_v_w, &__pyx_v_x, &__pyx_v_y, &__pyx_v_z)) return 0;
   Py_INCREF(__pyx_v_w);
   Py_INCREF(__pyx_v_y);
@@ -85,13 +86,6 @@ static PyObject *__pyx_f_19classmethargdefault_7Swallow_spam(PyObject *__pyx_sel
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Swallow, "Swallow"},
-  {&__pyx_n_grail, "grail"},
-  {&__pyx_n_spam, "spam"},
-  {&__pyx_n_swallow, "swallow"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -113,16 +107,16 @@ PyMODINIT_FUNC initclassmethargdefault(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = PyDict_New(); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_2 = PyTuple_New(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_3 = __Pyx_CreateClass(__pyx_2, __pyx_1, __pyx_n_Swallow, "classmethargdefault"); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
-  __pyx_k2 = 42;
+  __pyx_d1 = 42;
   Py_INCREF(__pyx_n_grail);
-  __pyx_k4 = __pyx_n_grail;
+  __pyx_d2 = __pyx_n_grail;
   __pyx_2 = __Pyx_GetName(__pyx_b, __pyx_n_swallow); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
-  __pyx_k5 = __pyx_2;
+  __pyx_d3 = __pyx_2;
   __pyx_2 = 0;
   __pyx_4 = PyCFunction_New(&__pyx_mdef_19classmethargdefault_7Swallow_spam, 0); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   __pyx_5 = PyMethod_New(__pyx_4, 0, __pyx_3); if (!__pyx_5) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}

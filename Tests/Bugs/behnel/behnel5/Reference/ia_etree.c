@@ -88,6 +88,10 @@ struct __pyx_obj_8ia_etree__BaseParser {
 static PyTypeObject *__pyx_ptype_8ia_etree_Vorpal = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ia_etree */
 
 static PyObject *__pyx_f_8ia_etree_getAttributeValue(struct LxmlElement *__pyx_v_element,PyObject *__pyx_v_key,PyObject *__pyx_v_default) {
@@ -720,6 +724,7 @@ PyMODINIT_FUNC initia_etree(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_ExportFunction("getAttributeValue", (void*)__pyx_f_8ia_etree_getAttributeValue, "PyObject *(struct LxmlElement *,PyObject *,PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_type_8ia_etree__BaseParser.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_8ia_etree__BaseParser) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}

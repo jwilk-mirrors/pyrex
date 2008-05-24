@@ -58,6 +58,10 @@ static struct __pyx_vtabstruct_6ewing3_C *__pyx_vtabptr_6ewing3_C;
 static PyTypeObject *__pyx_ptype_6ewing3_C = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ewing3 */
 
 static PyObject *__pyx_f_6ewing3_1C_f(struct __pyx_obj_6ewing3_C *__pyx_v_self) {
@@ -221,6 +225,7 @@ PyMODINIT_FUNC initewing3(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_vtabptr_6ewing3_C = &__pyx_vtable_6ewing3_C;
   *(void(**)(void))&__pyx_vtable_6ewing3_C.f = (void(*)(void))__pyx_f_6ewing3_1C_f;
   if (PyType_Ready(&__pyx_type_6ewing3_C) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

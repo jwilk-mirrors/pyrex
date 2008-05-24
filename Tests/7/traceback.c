@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -42,12 +41,27 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from traceback */
+
+
+/* Declarations from implementation of traceback */
 
 static int __pyx_f_9traceback_grail(void); /*proto*/
+
+static char __pyx_k1[] = "spam";
+
+static PyObject *__pyx_n_spam;
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_spam, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of traceback */
@@ -83,8 +97,6 @@ static int __pyx_f_9traceback_grail(void) {
   return __pyx_r;
 }
 
-static PyObject *__pyx_n_spam;
-
 static PyObject *__pyx_f_9traceback_tomato(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_9traceback_tomato(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_r;
@@ -114,11 +126,6 @@ static PyObject *__pyx_f_9traceback_tomato(PyObject *__pyx_self, PyObject *__pyx
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_spam, "spam"},
-  {0, 0}
-};
-
 static struct PyMethodDef __pyx_methods[] = {
   {"spam", (PyCFunction)__pyx_f_9traceback_spam, METH_VARARGS|METH_KEYWORDS, 0},
   {"tomato", (PyCFunction)__pyx_f_9traceback_tomato, METH_VARARGS|METH_KEYWORDS, 0},
@@ -136,7 +143,7 @@ PyMODINIT_FUNC inittraceback(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/traceback.pyx":7 */
   return;
@@ -225,11 +232,13 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	return result;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -292,7 +301,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from traceback */
-
-/* Declarations from implementation of traceback */

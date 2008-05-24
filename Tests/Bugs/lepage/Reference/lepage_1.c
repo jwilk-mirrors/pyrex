@@ -51,6 +51,10 @@ struct __pyx_obj_8lepage_1_A {
 static PyTypeObject *__pyx_ptype_8lepage_1_A = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of lepage_1 */
 
 static PyObject *__pyx_f_8lepage_1_1A___getitem__(PyObject *__pyx_v_self, PyObject *__pyx_v_i); /*proto*/
@@ -233,6 +237,7 @@ PyMODINIT_FUNC initlepage_1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_8lepage_1_A) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "A", (PyObject *)&__pyx_type_8lepage_1_A) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_8lepage_1_A = &__pyx_type_8lepage_1_A;

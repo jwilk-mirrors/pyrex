@@ -52,11 +52,14 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 static void __pyx_f_5king1_f(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of king1 */
 
-static PyObject *__pyx_k1p;
 
-static char __pyx_k1[] = "It works!";
 
 static void __pyx_f_5king1_f(void) {
   if (__Pyx_PrintItem(__pyx_k1p) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
@@ -68,10 +71,6 @@ static void __pyx_f_5king1_f(void) {
   __pyx_L0:;
 }
 
-static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_k1p, __pyx_k1, sizeof(__pyx_k1)},
-  {0, 0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}

@@ -53,6 +53,10 @@ enum __pyx_t_13enumintcompat_G {
 static void __pyx_f_13enumintcompat_f(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of enumintcompat */
 
 static void __pyx_f_13enumintcompat_f(void) {
@@ -122,6 +126,7 @@ PyMODINIT_FUNC initenumintcompat(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/enumintcompat.pyx":7 */
   return;

@@ -56,6 +56,10 @@ struct __pyx_obj_7pinard7_Curseur {
 static PyTypeObject *__pyx_ptype_7pinard7_Curseur = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of pinard7 */
 
 static PyObject *__pyx_f_7pinard7_7Curseur_method(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -235,6 +239,7 @@ PyMODINIT_FUNC initpinard7(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_7pinard7_Curseur) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Curseur", (PyObject *)&__pyx_type_7pinard7_Curseur) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   __pyx_ptype_7pinard7_Curseur = &__pyx_type_7pinard7_Curseur;

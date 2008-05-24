@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,7 +37,7 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
@@ -48,6 +47,8 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from spam */
+
 struct __pyx_t_4spam_Spam {
   int i;
   char *s;
@@ -56,6 +57,8 @@ struct __pyx_t_4spam_Spam {
 __PYX_EXTERN_C float tons;
 __PYX_EXTERN_C DL_EXPORT(void) (*eat)(struct __pyx_t_4spam_Spam); /*proto*/
 
+/* Declarations from pkg.eggs */
+
 struct __pyx_obj_3pkg_4eggs_Eggs {
   PyObject_HEAD
 };
@@ -63,24 +66,36 @@ struct __pyx_obj_3pkg_4eggs_Eggs {
 
 static PyTypeObject *__pyx_ptype_3pkg_4eggs_Eggs = 0;
 
+/* Declarations from pkg */
 
+
+/* Declarations from cimport */
+
+
+/* Declarations from implementation of cimport */
 
 static struct __pyx_t_4spam_Spam __pyx_v_7cimport_yummy;
 static struct __pyx_obj_3pkg_4eggs_Eggs *__pyx_v_7cimport_fried;
 
+static char __pyx_k1[] = "pkg";
+static char __pyx_k2[] = "eggs";
+static char __pyx_k3[] = "ova";
 
-/* Implementation of cimport */
-
-static PyObject *__pyx_n_pkg;
 static PyObject *__pyx_n_eggs;
 static PyObject *__pyx_n_ova;
+static PyObject *__pyx_n_pkg;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_eggs, "eggs"},
-  {&__pyx_n_ova, "ova"},
-  {&__pyx_n_pkg, "pkg"},
-  {0, 0}
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_eggs, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_ova, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_pkg, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
 };
+
+
+
+/* Implementation of cimport */
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -99,7 +114,7 @@ PyMODINIT_FUNC initcimport(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_7cimport_fried = ((struct __pyx_obj_3pkg_4eggs_Eggs *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_3pkg_4eggs_Eggs = __Pyx_ImportType("pkg.eggs", "Eggs", sizeof(struct __pyx_obj_3pkg_4eggs_Eggs)); if (!__pyx_ptype_3pkg_4eggs_Eggs) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; goto __pyx_L1;}
 
@@ -139,11 +154,13 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -262,13 +279,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from spam */
-
-/* Declarations from pkg.eggs */
-
-/* Declarations from pkg */
-
-/* Declarations from cimport */
-
-/* Declarations from implementation of cimport */

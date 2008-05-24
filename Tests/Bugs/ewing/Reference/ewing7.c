@@ -70,6 +70,10 @@ static PyTypeObject *__pyx_ptype_6ewing7_B = 0;
 __PYX_EXTERN_C DL_EXPORT(void) g(struct __pyx_obj_6ewing7_A *,PyObject *); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ewing7 */
 
 static void __pyx_f_6ewing7_1A_f(struct __pyx_obj_6ewing7_A *__pyx_v_self,PyObject *__pyx_v_x) {
@@ -377,6 +381,7 @@ PyMODINIT_FUNC initewing7(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_vtabptr_6ewing7_A = &__pyx_vtable_6ewing7_A;
   *(void(**)(void))&__pyx_vtable_6ewing7_A.f = (void(*)(void))__pyx_f_6ewing7_1A_f;
   if (PyType_Ready(&__pyx_type_6ewing7_A) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

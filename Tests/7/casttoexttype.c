@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,12 +37,18 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from casttoexttype */
+
+
+/* Declarations from implementation of casttoexttype */
 
 struct __pyx_obj_13casttoexttype_Spam {
   PyObject_HEAD
@@ -53,6 +58,14 @@ struct __pyx_obj_13casttoexttype_Spam {
 static PyTypeObject *__pyx_ptype_13casttoexttype_Spam = 0;
 static void __pyx_f_13casttoexttype_foo(PyObject *); /*proto*/
 static void __pyx_f_13casttoexttype_blarg(void *,PyObject *); /*proto*/
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of casttoexttype */
@@ -90,6 +103,7 @@ PyMODINIT_FUNC initcasttoexttype(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_ptype_13casttoexttype_Spam = __Pyx_ImportType("external", "Spam", sizeof(struct __pyx_obj_13casttoexttype_Spam)); if (!__pyx_ptype_13casttoexttype_Spam) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/casttoexttype.pyx":7 */
@@ -106,6 +120,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #ifndef __PYX_HAVE_RT_ImportType
@@ -213,7 +239,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from casttoexttype */
-
-/* Declarations from implementation of casttoexttype */

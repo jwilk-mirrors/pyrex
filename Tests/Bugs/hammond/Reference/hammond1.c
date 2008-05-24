@@ -51,6 +51,10 @@ typedef __pyx_t_8hammond1_enum_type __pyx_t_8hammond1_enum2_type;
 static int __pyx_f_8hammond1_test2(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of hammond1 */
 
 static int __pyx_f_8hammond1_test2(void) {
@@ -81,6 +85,7 @@ PyMODINIT_FUNC inithammond1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/hammond/hammond1.pyx":6 */
   return;

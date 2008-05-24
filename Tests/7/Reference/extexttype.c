@@ -63,6 +63,10 @@ static PyTypeObject *__pyx_ptype_10extexttype_Tomato = 0;
 static PyTypeObject *__pyx_ptype_10extexttype_Bicycle = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of extexttype */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -80,6 +84,7 @@ PyMODINIT_FUNC initextexttype(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_ptype_10extexttype_Spam = __Pyx_ImportType("external", "Spam", sizeof(struct SpamObject)); if (!__pyx_ptype_10extexttype_Spam) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_10extexttype_Grail = __Pyx_ImportType("external", "Grail", sizeof(Grail)); if (!__pyx_ptype_10extexttype_Grail) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
   __pyx_ptype_10extexttype_Tomato = __Pyx_ImportType("external", "Tomato", sizeof(struct Tomato)); if (!__pyx_ptype_10extexttype_Tomato) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}

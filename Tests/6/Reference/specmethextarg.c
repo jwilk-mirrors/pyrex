@@ -53,6 +53,10 @@ struct __pyx_obj_14specmethextarg_Spam {
 static PyTypeObject *__pyx_ptype_14specmethextarg_Spam = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of specmethextarg */
 
 static PyObject *__pyx_f_14specmethextarg_4Spam___iadd__(PyObject *__pyx_v_self, PyObject *__pyx_v_other); /*proto*/
@@ -222,6 +226,7 @@ PyMODINIT_FUNC initspecmethextarg(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_14specmethextarg_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Spam", (PyObject *)&__pyx_type_14specmethextarg_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_14specmethextarg_Spam = &__pyx_type_14specmethextarg_Spam;

@@ -52,9 +52,13 @@ struct __pyx_obj_8rovner_1_DD {
 static PyTypeObject *__pyx_ptype_8rovner_1_DD = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_close, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of rovner_1 */
 
-static PyObject *__pyx_n_close;
 
 static PyObject *__pyx_f_8rovner_1_2DD_term(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_8rovner_1_2DD_term(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -93,10 +97,6 @@ static PyObject *__pyx_f_8rovner_1_2DD_close(PyObject *__pyx_v_self, PyObject *_
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_close, "close"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_8rovner_1_DD(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -248,7 +248,7 @@ PyMODINIT_FUNC initrovner_1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_8rovner_1_DD) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "DD", (PyObject *)&__pyx_type_8rovner_1_DD) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_8rovner_1_DD = &__pyx_type_8rovner_1_DD;

@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -42,10 +41,14 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed, char *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from exttype */
+
+
+/* Declarations from implementation of exttype */
 
 struct __pyx_obj_7exttype_Spam {
   PyObject_HEAD
@@ -55,6 +58,20 @@ struct __pyx_obj_7exttype_Spam {
 
 
 static PyTypeObject *__pyx_ptype_7exttype_Spam = 0;
+
+static char __pyx_k1[] = "gobble";
+static char __pyx_k2[] = "foo";
+
+static PyObject *__pyx_n_foo;
+static PyObject *__pyx_n_gobble;
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_foo, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_gobble, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of exttype */
@@ -90,8 +107,6 @@ static void __pyx_f_7exttype_4Spam___dealloc__(PyObject *__pyx_v_self) {
   Py_DECREF(__pyx_v_self);
 }
 
-static PyObject *__pyx_n_gobble;
-
 static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_r;
@@ -125,8 +140,6 @@ static PyObject *__pyx_f_7exttype_4Spam_eat(PyObject *__pyx_v_self, PyObject *__
   Py_DECREF(__pyx_v_self);
   return __pyx_r;
 }
-
-static PyObject *__pyx_n_foo;
 
 static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -187,12 +200,6 @@ static PyObject *__pyx_f_7exttype_f(PyObject *__pyx_self, PyObject *__pyx_args, 
   Py_DECREF(__pyx_v_spam);
   return __pyx_r;
 }
-
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_foo, "foo"},
-  {&__pyx_n_gobble, "gobble"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_7exttype_Spam(PyTypeObject *t, PyObject *a, PyObject *k) {
   struct __pyx_obj_7exttype_Spam *p;
@@ -379,7 +386,7 @@ PyMODINIT_FUNC initexttype(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_type_7exttype_Spam.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_7exttype_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Spam", (PyObject *)&__pyx_type_7exttype_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
@@ -422,11 +429,13 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 	return 0;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -489,7 +498,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from exttype */
-
-/* Declarations from implementation of exttype */

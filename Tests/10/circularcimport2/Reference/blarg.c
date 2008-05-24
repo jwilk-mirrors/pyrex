@@ -75,6 +75,10 @@ struct __pyx_obj_5blarg_Blarg {
 static PyTypeObject *__pyx_ptype_5blarg_Blarg = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of blarg */
 
 static PyObject *__pyx_tp_new_5blarg_Blarg(PyTypeObject *t, PyObject *a, PyObject *k) {
@@ -256,6 +260,7 @@ PyMODINIT_FUNC initblarg(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_type_5blarg_Blarg.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_5blarg_Blarg) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Blarg", (PyObject *)&__pyx_type_5blarg_Blarg) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

@@ -53,6 +53,10 @@ static PyObject *__pyx_v_9khavkine1_b;
 static void __pyx_f_9khavkine1_f(void *); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of khavkine1 */
 
 static void __pyx_f_9khavkine1_f(void *__pyx_v_obj) {
@@ -208,6 +212,7 @@ PyMODINIT_FUNC initkhavkine1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_9khavkine1_b = Py_None; Py_INCREF(Py_None);
   if (PyType_Ready(&__pyx_type_9khavkine1_T) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "T", (PyObject *)&__pyx_type_9khavkine1_T) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

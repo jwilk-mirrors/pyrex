@@ -60,6 +60,10 @@ static PyTypeObject *__pyx_ptype_9extcoerce_Grail = 0;
 static PyTypeObject *__pyx_ptype_9extcoerce_Swallow = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of extcoerce */
 
 static PyObject *__pyx_f_9extcoerce_5Grail___add__(PyObject *__pyx_arg_x, PyObject *__pyx_arg_y); /*proto*/
@@ -470,6 +474,7 @@ PyMODINIT_FUNC initextcoerce(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_9extcoerce_Grail) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Grail", (PyObject *)&__pyx_type_9extcoerce_Grail) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_9extcoerce_Grail = &__pyx_type_9extcoerce_Grail;

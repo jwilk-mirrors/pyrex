@@ -59,6 +59,10 @@ static struct __pyx_obj_13fwddeclcclass_Widget *__pyx_v_13fwddeclcclass_w;
 static struct __pyx_obj_13fwddeclcclass_Container *__pyx_v_13fwddeclcclass_c;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of fwddeclcclass */
 
 static PyObject *__pyx_tp_new_13fwddeclcclass_Widget(PyTypeObject *t, PyObject *a, PyObject *k) {
@@ -365,6 +369,7 @@ PyMODINIT_FUNC initfwddeclcclass(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_13fwddeclcclass_w = ((struct __pyx_obj_13fwddeclcclass_Widget *)Py_None); Py_INCREF(Py_None);
   __pyx_v_13fwddeclcclass_c = ((struct __pyx_obj_13fwddeclcclass_Container *)Py_None); Py_INCREF(Py_None);
   __pyx_type_13fwddeclcclass_Widget.tp_free = _PyObject_GC_Del;

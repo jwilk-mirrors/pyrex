@@ -48,8 +48,14 @@ struct __pyx_obj_18specmethargdefault_Grail {
 
 
 static PyTypeObject *__pyx_ptype_18specmethargdefault_Grail = 0;
-static PyObject *__pyx_k1;
-static PyObject *__pyx_k2;
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
+static PyObject *__pyx_d1;
+static PyObject *__pyx_d2;
 
 
 /* Implementation of specmethargdefault */
@@ -59,7 +65,7 @@ static int __pyx_f_18specmethargdefault_5Grail___cinit__(PyObject *__pyx_v_self,
   PyObject *__pyx_v_spam = 0;
   int __pyx_r;
   static char *__pyx_argnames[] = {"spam",0};
-  __pyx_v_spam = __pyx_k1;
+  __pyx_v_spam = __pyx_d1;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "|O", __pyx_argnames, &__pyx_v_spam)) return -1;
   Py_INCREF(__pyx_v_self);
   Py_INCREF(__pyx_v_spam);
@@ -75,7 +81,7 @@ static int __pyx_f_18specmethargdefault_5Grail___init__(PyObject *__pyx_v_self, 
   PyObject *__pyx_v_parrot = 0;
   int __pyx_r;
   static char *__pyx_argnames[] = {"parrot",0};
-  __pyx_v_parrot = __pyx_k2;
+  __pyx_v_parrot = __pyx_d2;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "|O", __pyx_argnames, &__pyx_v_parrot)) return -1;
   Py_INCREF(__pyx_v_self);
   Py_INCREF(__pyx_v_parrot);
@@ -238,17 +244,18 @@ PyMODINIT_FUNC initspecmethargdefault(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_18specmethargdefault_Grail) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Grail", (PyObject *)&__pyx_type_18specmethargdefault_Grail) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_18specmethargdefault_Grail = &__pyx_type_18specmethargdefault_Grail;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/6/specmethargdefault.pyx":3 */
   Py_INCREF(Py_None);
-  __pyx_k1 = Py_None;
+  __pyx_d1 = Py_None;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/6/specmethargdefault.pyx":6 */
   __pyx_1 = PyInt_FromLong(42); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
-  __pyx_k2 = __pyx_1;
+  __pyx_d2 = __pyx_1;
   __pyx_1 = 0;
   return;
   __pyx_L1:;

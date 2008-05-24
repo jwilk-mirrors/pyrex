@@ -48,11 +48,15 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_Spam, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_eggs, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of pyclass */
 
 
-static PyObject *__pyx_n_Spam;
-static PyObject *__pyx_n_eggs;
 
 static PyObject *__pyx_f_7pyclass_4Spam_eggs(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyMethodDef __pyx_mdef_7pyclass_4Spam_eggs = {"eggs", (PyCFunction)__pyx_f_7pyclass_4Spam_eggs, METH_VARARGS|METH_KEYWORDS, 0};
@@ -68,11 +72,6 @@ static PyObject *__pyx_f_7pyclass_4Spam_eggs(PyObject *__pyx_self, PyObject *__p
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_Spam, "Spam"},
-  {&__pyx_n_eggs, "eggs"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -93,7 +92,7 @@ PyMODINIT_FUNC initpyclass(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_1 = PyDict_New(); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_2 = PyTuple_New(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_3 = __Pyx_CreateClass(__pyx_2, __pyx_1, __pyx_n_Spam, "pyclass"); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

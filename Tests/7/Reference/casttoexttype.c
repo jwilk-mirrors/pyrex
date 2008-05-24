@@ -56,6 +56,10 @@ static void __pyx_f_13casttoexttype_foo(PyObject *); /*proto*/
 static void __pyx_f_13casttoexttype_blarg(void *,PyObject *); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of casttoexttype */
 
 static void __pyx_f_13casttoexttype_foo(PyObject *__pyx_v_x) {
@@ -92,6 +96,7 @@ PyMODINIT_FUNC initcasttoexttype(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_ptype_13casttoexttype_Spam = __Pyx_ImportType("external", "Spam", sizeof(struct __pyx_obj_13casttoexttype_Spam)); if (!__pyx_ptype_13casttoexttype_Spam) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/casttoexttype.pyx":7 */

@@ -58,6 +58,10 @@ __PYX_EXTERN_C struct __pyx_t_11declandimpl_Sandwich butty;
 static struct __pyx_obj_11declandimpl_Tomato *__pyx_v_11declandimpl_supertom;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of declandimpl */
 
 static PyObject *__pyx_f_11declandimpl_6Tomato_eject(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -221,6 +225,7 @@ PyMODINIT_FUNC initdeclandimpl(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_11declandimpl_supertom = ((struct __pyx_obj_11declandimpl_Tomato *)Py_None); Py_INCREF(Py_None);
   if (PyType_Ready(&__pyx_type_11declandimpl_Tomato) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Tomato", (PyObject *)&__pyx_type_11declandimpl_Tomato) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

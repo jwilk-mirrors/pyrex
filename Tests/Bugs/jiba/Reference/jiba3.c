@@ -84,6 +84,10 @@ static PyTypeObject *__pyx_ptype_5jiba3_CoordSyst = 0;
 static void __pyx_f_5jiba3_test(float *); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of jiba3 */
 
 static void __pyx_f_5jiba3_test(float *__pyx_v_f) {
@@ -687,6 +691,7 @@ PyMODINIT_FUNC initjiba3(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_type_5jiba3_Position.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_5jiba3_Position) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Position", (PyObject *)&__pyx_type_5jiba3_Position) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}

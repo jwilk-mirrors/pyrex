@@ -4,3 +4,6 @@ glob:*.so
 glob:.DS_Store
 glob:*.pickle
 glob:*.dep
+glob:*.orig
+glob:*.new
+glob:*_copy.c

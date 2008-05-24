@@ -69,6 +69,10 @@ __PYX_EXTERN_C DL_EXPORT(void) g(__pyx_t_6a_capi_Blarg *); /*proto*/
 __PYX_EXTERN_C DL_EXPORT(void) h(Zax *); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of a_capi */
 
 static float f(struct Foo *__pyx_v_x) {
@@ -234,6 +238,7 @@ PyMODINIT_FUNC inita_capi(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_ExportFunction("f", (void*)f, "float (struct Foo *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (__Pyx_ExportFunction("h", (void*)h, "void (Zax *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyType_Ready(&C_Type) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}

@@ -50,9 +50,7 @@ class Node:
 	#         Determine the result types of expressions and fill in the
 	#         'type' attribute of each ExprNode. Insert coercion nodes into the
 	#         tree where needed to convert to and from Python objects. 
-	#         Allocate temporary locals for intermediate results. Fill
-	#         in the 'result_code' attribute of each ExprNode with a C code
-	#         fragment.
+	#         Allocate temporary locals for intermediate results.
 	#
 	#   (3) generate_code
 	#         Emit C code for all declarations, statements and expressions.
@@ -74,34 +72,35 @@ class Node:
 
 class BlockNode:
 	#  Mixin class for nodes representing a declaration block.
+	pass
 
-	def generate_const_definitions(self, env, code):
-		if env.const_entries:
-			code.putln("")
-			for entry in env.const_entries:
-				if not entry.is_interned:
-					code.put_var_declaration(entry, static = 1)
+#	def generate_const_definitions(self, env, code):
+#		if env.const_entries:
+#			code.putln("")
+#			for entry in env.const_entries:
+#				if not entry.is_interned:
+#					code.put_var_declaration(entry, static = 1)
 	
-	def generate_interned_name_decls(self, env, code):
-		#  Flush accumulated interned names from the global scope
-		#  and generate declarations for them.
-		genv = env.global_scope()
-		intern_map = genv.intern_map
-		names = genv.interned_names
-		if names:
-			code.putln("")
-			for name in names:
-				code.putln(
-					"static PyObject *%s;" % intern_map[name])
-			del names[:]
+#	def generate_interned_name_decls(self, env, code):
+#		#  Flush accumulated interned names from the global scope
+#		#  and generate declarations for them.
+#		genv = env.global_scope()
+#		intern_map = genv.intern_map
+#		names = genv.interned_names
+#		if names:
+#			code.putln("")
+#			for name in names:
+#				code.putln(
+#					"static PyObject *%s;" % intern_map[name])
+#			del names[:]
 	
-	def generate_py_string_decls(self, env, code):
-		entries = env.pystring_entries
-		if entries:
-			code.putln("")
-			for entry in entries:
-				code.putln(
-					"static PyObject *%s;" % entry.pystring_cname)
+#	def generate_py_string_decls(self, env, code):
+#		entries = env.pystring_entries
+#		if entries:
+#			code.putln("")
+#			for entry in entries:
+#				code.putln(
+#					"static PyObject *%s;" % entry.pystring_cname)
 
 
 class StatListNode(Node):
@@ -213,7 +212,7 @@ class CArrayDeclaratorNode(CDeclaratorNode):
 			self.dimension.analyse_const_expression(env)
 			if not self.dimension.type.is_int:
 				error(self.dimension.pos, "Array dimension not integer")
-			size = self.dimension.result_code
+			size = self.dimension.result()
 		else:
 			size = None
 		if not base_type.is_complete():
@@ -265,7 +264,7 @@ class CFuncDeclaratorNode(CDeclaratorNode):
 		else:
 			if self.exception_value:
 				self.exception_value.analyse_const_expression(env)
-				exc_val = self.exception_value.result_code
+				exc_val = self.exception_value.result()
 				if not return_type.assignable_from(self.exception_value.type):
 					error(self.exception_value.pos,
 						"Exception value incompatible with function return type")
@@ -477,10 +476,12 @@ class CEnumDefItemNode(StatNode):
 		if value_node:
 			value_node.analyse_const_expression(env)
 			type = value_node.type
-			if not (type.is_int or type.is_enum):
+			if type.is_int or type.is_enum:
+				value = value_node.result()
+			else:
 				error(self.pos,
 					"Type '%s' is not a valid enum value" % type)
-			value = value_node.result_code
+				value = "<error>"
 		else:
 			value = self.name
 		entry = env.declare_const(self.name, enum_entry.type, 
@@ -539,9 +540,9 @@ class FuncDefNode(StatNode, BlockNode):
 		# Code for nested function definitions would go here
 		# if we supported them, which we probably won't.
 		# ----- Top-level constants used by this function
-		self.generate_interned_name_decls(lenv, code)
-		self.generate_py_string_decls(lenv, code)
-		self.generate_const_definitions(lenv, code)
+		#self.generate_interned_name_decls(lenv, code)
+		#self.generate_py_string_decls(lenv, code)
+		#self.generate_const_definitions(lenv, code)
 		# ----- Function header
 		code.putln("")
 		self.generate_function_header(code,
@@ -1205,10 +1206,11 @@ class DefNode(FuncDefNode):
 					"%s = %s;" % (
 						arg.default_entry.cname,
 						default.result_as(arg.default_entry.type)))
-				if default.is_temp and default.type.is_pyobject:
-					code.putln(
-						"%s = 0;" %
-							default.result_code)
+				default.generate_post_assignment_code(code)
+#				if default.is_temp and default.type.is_pyobject:
+#					code.putln(
+#						"%s = 0;" %
+#							default.result())
 		# For Python class methods, create and store function object
 		if self.assmt:
 			self.assmt.generate_execution_code(code)
@@ -1259,8 +1261,8 @@ class PyClassDefNode(StatNode, BlockNode):
 		self.classobj.analyse_expressions(env)
 		genv = env.global_scope()
 		cenv = PyClassScope(name = self.name, outer_scope = genv)
-		cenv.class_dict_cname = self.dict.result_code
-		cenv.class_obj_cname = self.classobj.result_code
+		cenv.class_dict_cname = self.dict.result()
+		cenv.class_obj_cname = self.classobj.result()
 		self.scope = cenv
 		self.body.analyse_declarations(cenv)
 		self.body.analyse_expressions(cenv)
@@ -1270,7 +1272,7 @@ class PyClassDefNode(StatNode, BlockNode):
 		#self.target.release_target_temp(env)
 	
 	def generate_function_definitions(self, env, code):
-		self.generate_py_string_decls(self.scope, code)
+		#self.generate_py_string_decls(self.scope, code)
 		self.body.generate_function_definitions(
 			self.scope, code)
 	
@@ -1385,12 +1387,12 @@ class PropertyNode(StatNode):
 	#  body   StatListNode
 	
 	def analyse_declarations(self, env):
-		print "PropertyNode.analyse_declarations:", env ###
+		#print "PropertyNode.analyse_declarations:", env ###
 		entry = env.declare_property(self.name, self.doc, self.pos)
 		if entry:
-			if self.doc:
-				doc_entry = env.get_string_const(self.doc)
-				entry.doc_cname = doc_entry.cname
+			#if self.doc:
+			#	doc_entry = env.get_string_const(self.doc)
+			#	entry.doc_cname = doc_entry.cname
 			self.body.analyse_declarations(entry.scope)
 		
 	def analyse_expressions(self, env):
@@ -1430,8 +1432,8 @@ class ExprStatNode(StatNode):
 	
 	def generate_execution_code(self, code):
 		self.expr.generate_evaluation_code(code)
-		if not self.expr.is_temp and self.expr.result_code:
-			code.putln("%s;" % self.expr.result_code)
+		if not self.expr.is_temp and self.expr.result():
+			code.putln("%s;" % self.expr.result())
 		self.expr.generate_disposal_code(code)
 
 
@@ -1872,7 +1874,7 @@ class AssertStatNode(StatNode):
 		self.cond.generate_evaluation_code(code)
 		code.putln(
 			"if (!%s) {" %
-				self.cond.result_code)
+				self.cond.result())
 		if self.value:
 			self.value.generate_evaluation_code(code)
 		if self.value:
@@ -1941,7 +1943,7 @@ class IfClauseNode(Node):
 		self.condition.generate_evaluation_code(code)
 		code.putln(
 			"if (%s) {" %
-				self.condition.result_code)
+				self.condition.result())
 		self.body.generate_execution_code(code)
 		#code.putln(
 		#	"goto %s;" %
@@ -1978,7 +1980,7 @@ class WhileStatNode(StatNode):
 		self.condition.generate_evaluation_code(code)
 		code.putln(
 			"if (!%s) break;" %
-				self.condition.result_code)
+				self.condition.result())
 		self.body.generate_execution_code(code)
 		code.put_label(code.continue_label)
 		code.putln("}")
@@ -2091,7 +2093,7 @@ class IntegerForStatNode(StatNode):
 			c_loopvar_node = ExprNodes.TempNode(self.pos, 
 				PyrexTypes.c_long_type, env)
 			c_loopvar_node.allocate_temps(env)
-			self.loopvar_name = c_loopvar_node.result_code
+			self.loopvar_name = c_loopvar_node.result()
 			self.py_loopvar_node = \
 				ExprNodes.CloneNode(c_loopvar_node).coerce_to_pyobject(env)
 		self.bound1.allocate_temps(env)
@@ -2117,8 +2119,8 @@ class IntegerForStatNode(StatNode):
 		code.putln(
 			"for (%s = %s%s; %s %s %s; %s%s) {" % (
 				self.loopvar_name,
-				self.bound1.result_code, offset,
-				self.loopvar_name, self.relation2, self.bound2.result_code,
+				self.bound1.result(), offset,
+				self.loopvar_name, self.relation2, self.bound2.result(),
 				incop, self.loopvar_name))
 		if self.py_loopvar_node:
 			self.py_loopvar_node.generate_evaluation_code(code)
@@ -2503,14 +2505,19 @@ class CImportStatNode(StatNode):
 			for name in names[1:]:
 				submodule_scope = module_scope.find_submodule(name)
 				module_scope.declare_module(name, submodule_scope, self.pos)
+				if not self.as_name:
+					env.add_imported_module(submodule_scope)
 				module_scope = submodule_scope
 			if self.as_name:
 				env.declare_module(self.as_name, module_scope, self.pos)
+				env.add_imported_module(module_scope)
 			else:
 				env.declare_module(top_name, top_module_scope, self.pos)
+				env.add_imported_module(top_module_scope)
 		else:
 			name = self.as_name or self.module_name
 			env.declare_module(name, module_scope, self.pos)
+			env.add_imported_module(module_scope)
 
 	def analyse_expressions(self, env):
 		pass
@@ -2575,7 +2582,7 @@ class FromImportStatNode(StatNode):
 	#
 	#  module           ImportNode
 	#  items            [(string, NameNode)]
-	#  interned_items   [(string, NameNode)]
+	#  #interned_items   [(string, NameNode)]
 	#  item             PyTempNode            used internally
 	
 	def analyse_declarations(self, env):
@@ -2587,37 +2594,26 @@ class FromImportStatNode(StatNode):
 		self.module.analyse_expressions(env)
 		self.item = ExprNodes.PyTempNode(self.pos, env)
 		self.item.allocate_temp(env)
-		self.interned_items = []
+		#self.interned_items = []
 		for name, target in self.items:
-			if Options.intern_names:
-				self.interned_items.append((env.intern(name), target))
+			#self.interned_items.append((env.intern(name), target))
 			target.analyse_target_expression(env, None)
-			#target.release_target_temp(env) # was release_temp ?!?
 		self.module.release_temp(env)
 		self.item.release_temp(env)
 	
 	def generate_execution_code(self, code):
 		self.module.generate_evaluation_code(code)
-		if Options.intern_names:
-			for cname, target in self.interned_items:
-				code.putln(
-					'%s = PyObject_GetAttr(%s, %s); if (!%s) %s' % (
-						self.item.result_code, 
-						self.module.py_result(),
-						cname,
-						self.item.result_code,
-						code.error_goto(self.pos)))
-				target.generate_assignment_code(self.item, code)
-		else:
-			for name, target in self.items:
-				code.putln(
-					'%s = PyObject_GetAttrString(%s, "%s"); if (!%s) %s' % (
-						self.item.result_code, 
-						self.module.py_result(),
-						name,
-						self.item.result_code,
-						code.error_goto(self.pos)))
-				target.generate_assignment_code(self.item, code)
+		#for cname, target in self.interned_items:
+		for name, target in self.items:
+			cname = code.intern(name)
+			code.putln(
+				'%s = PyObject_GetAttr(%s, %s); if (!%s) %s' % (
+					self.item.result(), 
+					self.module.py_result(),
+					cname,
+					self.item.result(),
+					code.error_goto(self.pos)))
+			target.generate_assignment_code(self.item, code)
 		self.module.generate_disposal_code(code)
 
 #------------------------------------------------------------------------------------
@@ -2626,10 +2622,15 @@ class FromImportStatNode(StatNode):
 #
 #------------------------------------------------------------------------------------
 
+#utility_function_predeclarations = \
+#"""
+#typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
+#typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+#"""
+
 utility_function_predeclarations = \
 """
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 """
 
 #get_name_predeclaration = \
@@ -3060,20 +3061,35 @@ done:
 
 #------------------------------------------------------------------------------------
 
-init_intern_tab_utility_code = [
-"""
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
-""","""
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
-}
-"""]
+#init_intern_tab_utility_code = [
+#"""
+#static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+#""","""
+#static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+#	while (t->p) {
+#		*t->p = PyString_InternFromString(t->s);
+#		if (!*t->p)
+#			return -1;
+#		++t;
+#	}
+#	return 0;
+#}
+#"""]
+
+#init_intern_tab_utility_code = [
+#"""
+#static int __Pyx_InternStrings(PyObject **t[]); /*proto*/
+#""","""
+#static int __Pyx_InternStrings(PyObject **t[]) {
+#	while (*t) {
+#		PyString_InternInPlace(*t);
+#		if (!**t)
+#			return -1;
+#		++t;
+#	}
+#	return 0;
+#}
+#"""]
 
 #------------------------------------------------------------------------------------
 
@@ -3086,6 +3102,8 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

@@ -45,6 +45,10 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 static int __pyx_v_6watts2_x;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of watts2 */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -62,6 +66,7 @@ PyMODINIT_FUNC initwatts2(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/other/watts2.pyx":2 */
   __pyx_v_6watts2_x = 0xFFFFFFFF;

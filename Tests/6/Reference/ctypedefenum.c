@@ -50,6 +50,10 @@ typedef enum {
 static __pyx_t_12ctypedefenum_parrot_state __pyx_v_12ctypedefenum_polly;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ctypedefenum */
 
 static struct PyMethodDef __pyx_methods[] = {
@@ -67,6 +71,7 @@ PyMODINIT_FUNC initctypedefenum(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/6/ctypedefenum.pyx":7 */
   __pyx_v_12ctypedefenum_polly = __pyx_e_12ctypedefenum_dead;

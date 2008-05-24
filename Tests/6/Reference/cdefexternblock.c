@@ -57,14 +57,14 @@ static PyTypeObject *__pyx_ptype_15cdefexternblock_runny = 0;
 static struct runny_obj *__pyx_v_15cdefexternblock_r;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_x, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of cdefexternblock */
 
-static PyObject *__pyx_n_x;
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_x, "x"},
-  {0, 0}
-};
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -82,7 +82,7 @@ PyMODINIT_FUNC initcdefexternblock(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_15cdefexternblock_r = ((struct runny_obj *)Py_None); Py_INCREF(Py_None);
   __pyx_ptype_15cdefexternblock_runny = __Pyx_ImportType("external", "runny", sizeof(struct runny_obj)); if (!__pyx_ptype_15cdefexternblock_runny) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
 

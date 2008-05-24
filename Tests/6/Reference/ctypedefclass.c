@@ -51,6 +51,10 @@ static PyTypeObject *__pyx_ptype_13ctypedefclass_spam = 0;
 static __pyx_obj_13ctypedefclass_spam *__pyx_v_13ctypedefclass_s;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of ctypedefclass */
 
 static PyObject *__pyx_tp_new_13ctypedefclass_spam(PyTypeObject *t, PyObject *a, PyObject *k) {
@@ -201,6 +205,7 @@ PyMODINIT_FUNC initctypedefclass(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   __pyx_v_13ctypedefclass_s = ((__pyx_obj_13ctypedefclass_spam *)Py_None); Py_INCREF(Py_None);
   if (PyType_Ready(&__pyx_type_13ctypedefclass_spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "spam", (PyObject *)&__pyx_type_13ctypedefclass_spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}

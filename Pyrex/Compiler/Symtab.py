@@ -2,7 +2,6 @@
 #   Pyrex - Symbol Table
 #
 
-import re
 from Errors import warning, error, InternalError
 import Options
 import Naming
@@ -14,8 +13,6 @@ from PyrexTypes import \
 from TypeSlots import \
 	pyfunction_signature, pymethod_signature, \
 	get_special_method_signature, get_property_accessor_signature
-
-identifier_pattern = re.compile(r"[A-Za-z_][A-Za-z0-9_]*$")
 
 class Entry:
 	# A symbol table entry in a Scope or ModuleNamespace.
@@ -38,7 +35,7 @@ class Entry:
 	# is_type           boolean         Is a type definition
 	# is_const          boolean         Is a constant
 	# is_property       boolean         Is a property of an extension type:
-	# doc_cname         string or None  C const holding the docstring
+	# #doc_cname         string or None  C const holding the docstring
 	# getter_cname      string          C func for getting property
 	# setter_cname      string          C func for setting or deleting property
 	# is_self_arg       boolean         Is the "self" arg of an exttype method
@@ -63,7 +60,7 @@ class Entry:
 	# is_inherited     boolean          Is an inherited attribute of an extension type
 	# #interned_cname   string          C name of interned name string
 	# pystring_cname   string           C name of Python version of string literal
-	# is_interned      boolean          For string const entries, value is interned
+	# #is_interned      boolean          For string const entries, value is interned
 	# used             boolean
 	# is_special       boolean          Is a special method or property accessor
 	#                                     of an extension type
@@ -143,8 +140,8 @@ class Scope:
 	# scope_prefix      string             Disambiguator for C names
 	# in_cinclude       boolean            Suppress C declaration code
 	# qualified_name    string             "modname" or "modname.classname"
-	# pystring_entries  [Entry]            String const entries newly used as
-	#                                        Python strings in this scope
+	# #pystring_entries  [Entry]            String const entries newly used as
+	# #                                       Python strings in this scope
 	# nogil             boolean            In a nogil section
 
 	is_py_class_scope = 0
@@ -183,13 +180,13 @@ class Scope:
 		self.temp_counter = 1
 		self.cname_to_entry = {}
 		self.pow_function_used = 0
-		self.pystring_entries = []
+		#self.pystring_entries = []
 	
 	def __str__(self):
 		return "<%s %s>" % (self.__class__.__name__, self.qualified_name)
 	
-	def intern(self, name):
-		return self.global_scope().intern(name)
+#	def intern(self, name):
+#		return self.global_scope().intern(name)
 	
 	def qualifying_scope(self):
 		return self.parent_scope
@@ -441,42 +438,42 @@ class Scope:
 			entry = self.declare_var(name, py_object_type, None)
 		return entry
 	
-	def add_string_const(self, value):
-		# Add an entry for a string constant.
-		cname = self.new_const_cname()
-		entry = Entry("", cname, c_char_array_type, init = value)
-		entry.used = 1
-		self.const_entries.append(entry)
-		return entry
+#	def add_string_const(self, value):
+#		# Add an entry for a string constant.
+#		cname = self.new_const_cname()
+#		entry = Entry("", cname, c_char_array_type, init = value)
+#		entry.used = 1
+#		self.const_entries.append(entry)
+#		return entry
 	
-	def get_string_const(self, value):
-		# Get entry for string constant. Returns an existing
-		# one if possible, otherwise creates a new one.
-		genv = self.global_scope()
-		entry = genv.string_to_entry.get(value)
-		if not entry:
-			entry = self.add_string_const(value)
-			genv.string_to_entry[value] = entry
-		return entry
+#	def get_string_const(self, value):
+#		# Get entry for string constant. Returns an existing
+#		# one if possible, otherwise creates a new one.
+#		genv = self.global_scope()
+#		entry = genv.string_to_entry.get(value)
+#		if not entry:
+#			entry = self.add_string_const(value)
+#			genv.string_to_entry[value] = entry
+#		return entry
 	
-	def add_py_string(self, entry):
-		# If not already done, allocate a C name for a Python version of
-		# a string literal, and add it to the list of Python strings to
-		# be created at module init time. If the string resembles a
-		# Python identifier, it will be interned.
-		if not entry.pystring_cname:
-			value = entry.init
-			if identifier_pattern.match(value):
-				entry.pystring_cname = self.intern(value)
-				entry.is_interned = 1
-			else:
-				entry.pystring_cname = entry.cname + "p"
-				self.pystring_entries.append(entry)
-				self.global_scope().all_pystring_entries.append(entry)
+#	def add_py_string(self, entry):
+#		# If not already done, allocate a C name for a Python version of
+#		# a string literal, and add it to the list of Python strings to
+#		# be created at module init time. If the string resembles a
+#		# Python identifier, it will be interned.
+#		if not entry.pystring_cname:
+#			value = entry.init
+#			if identifier_pattern.match(value):
+#				entry.pystring_cname = self.intern(value)
+#				entry.is_interned = 1
+#			else:
+#				entry.pystring_cname = entry.cname + "p"
+#				self.pystring_entries.append(entry)
+#				self.global_scope().all_pystring_entries.append(entry)
 	
-	def new_const_cname(self):
-		# Create a new globally-unique name for a constant.
-		return self.global_scope().new_const_cname()
+#	def new_const_cname(self):
+#		# Create a new globally-unique name for a constant.
+#		return self.global_scope().new_const_cname()
 
 	def allocate_temp(self, type):
 		# Allocate a temporary variable of the given type from the 
@@ -634,14 +631,14 @@ class ModuleScope(Scope):
 		#entry.interned_cname = self.intern(name)
 		return entry
 	
-	def intern(self, name):
-		intern_map = self.intern_map
-		cname = intern_map.get(name)
-		if not cname:
-			cname = Naming.interned_prefix + name
-			intern_map[name] = cname
-			self.interned_names.append(name)
-		return cname
+#	def intern(self, name):
+#		intern_map = self.intern_map
+#		cname = intern_map.get(name)
+#		if not cname:
+#			cname = Naming.interned_prefix + name
+#			intern_map[name] = cname
+#			self.interned_names.append(name)
+#		return cname
 
 	def add_include_file(self, filename):
 		if filename not in self.python_include_files \
@@ -674,8 +671,9 @@ class ModuleScope(Scope):
 				return None
 		else:
 			entry = self.declare_var(name, py_object_type, pos)
+		#print "declare_module:", scope, "in", self ###
 		entry.as_module = scope
-		self.cimported_modules.append(scope)
+		#self.cimported_modules.append(scope)
 		return entry
 	
 	def declare_var(self, name, type, pos, 
@@ -709,16 +707,17 @@ class ModuleScope(Scope):
 	def add_default_value(self, type):
 		# Add an entry for holding a function argument
 		# default value.
-		cname = self.new_const_cname()
+		cname = "%s%d" % (Naming.default_prefix, self.default_counter)
+		self.default_counter += 1
 		entry = Entry("", cname, type)
 		self.default_entries.append(entry)
 		return entry
 		
-	def new_const_cname(self):
-		# Create a new globally-unique name for a constant.
-		n = self.const_counter
-		self.const_counter = n + 1
-		return "%s%d" % (Naming.const_prefix, n)
+#	def new_const_cname(self):
+#		# Create a new globally-unique name for a constant.
+#		n = self.const_counter
+#		self.const_counter = n + 1
+#		return "%s%d" % (Naming.const_prefix, n)
 	
 #	def use_utility_code(self, new_code):
 #		#  Add string to list of utility code to be included,
@@ -923,13 +922,14 @@ class ImplementationScope(ModuleScope):
 	#
 	#  definition_scope  ModuleScope  Scope holding definitions from corresponding .pxd
 	# doc_cname            string             C name of module doc string
-	# const_counter        integer            Counter for naming constants
+	# default_counter      string             Counter for naming default values
+	# #const_counter        integer            Counter for naming constants
 	# #utility_code_used    [string]           Utility code to be included
 	# default_entries      [Entry]            Function argument default entries
-	# string_to_entry      {string : Entry}   Map string const to entry
-	# intern_map           {string : string}  Mapping from Python names to interned strs
-	# interned_names       [string]           Interned names pending generation of declarations
-	# all_pystring_entries [Entry]            Python string consts from all scopes
+	# #string_to_entry      {string : Entry}   Map string const to entry
+	# #intern_map           {string : string}  Mapping from Python names to interned strs
+	# #interned_names       [string]           Interned names pending generation of declarations
+	# #all_pystring_entries [Entry]            Python string consts from all scopes
 
 	def __init__(self, def_scope):
 		ModuleScope.__init__(self, def_scope.name, def_scope.parent_scope,
@@ -937,13 +937,14 @@ class ImplementationScope(ModuleScope):
 		self.definition_scope = def_scope
 		self.doc_cname = Naming.moddoc_cname
 		self.type_names = def_scope.type_names.copy()
-		self.const_counter = 1
+		self.default_counter = 1
+		#self.const_counter = 1
 		#self.utility_code_used = []
 		self.default_entries = []
-		self.string_to_entry = {}
-		self.intern_map = {}
-		self.interned_names = []
-		self.all_pystring_entries = []
+		#self.string_to_entry = {}
+		#self.intern_map = {}
+		#self.interned_names = []
+		#self.all_pystring_entries = []
 
 	def lookup_here(self, name):
 		entry = Scope.lookup_here(self, name)

@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,10 +39,24 @@ static char **__pyx_f;
 
 static int __Pyx_GetStarArgs(PyObject **args, PyObject **kwds, char *kwd_list[], 	Py_ssize_t nargs, PyObject **args2, PyObject **kwds2, char rqd_kwds[]); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from behnel7 */
 
-static PyObject *__pyx_k1;
+
+/* Declarations from implementation of behnel7 */
+
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
+static PyObject *__pyx_d1;
 
 
 /* Implementation of behnel7 */
@@ -54,7 +67,7 @@ static PyObject *__pyx_f_7behnel7_test(PyObject *__pyx_self, PyObject *__pyx_arg
   PyObject *__pyx_v_kw = 0;
   PyObject *__pyx_r;
   static char *__pyx_argnames[] = {"arg","kw",0};
-  __pyx_v_kw = __pyx_k1;
+  __pyx_v_kw = __pyx_d1;
   if (__Pyx_GetStarArgs(&__pyx_args, &__pyx_kwds, __pyx_argnames, 1, 0, 0, 0) < 0) return 0;
   if (!PyArg_ParseTupleAndKeywords(__pyx_args, __pyx_kwds, "O|O", __pyx_argnames, &__pyx_v_arg, &__pyx_v_kw)) {
     Py_XDECREF(__pyx_args);
@@ -88,8 +101,9 @@ PyMODINIT_FUNC initbehnel7(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   Py_INCREF(Py_None);
-  __pyx_k1 = Py_None;
+  __pyx_d1 = Py_None;
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("behnel7");
@@ -202,6 +216,18 @@ bad:
 	return -1;
 }
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
+}
+
 #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
@@ -259,7 +285,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from behnel7 */
-
-/* Declarations from implementation of behnel7 */

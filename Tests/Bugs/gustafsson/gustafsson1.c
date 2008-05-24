@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -42,16 +41,29 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from gustafsson1 */
+
+
+/* Declarations from implementation of gustafsson1 */
+
+
+static char __pyx_k1[] = "raises";
+
+static PyObject *__pyx_n_raises;
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_raises, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {0, 0, 0, 0}
+};
 
 
 
 /* Implementation of gustafsson1 */
-
-static PyObject *__pyx_n_raises;
 
 static PyObject *__pyx_f_11gustafsson1_test(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_11gustafsson1_test(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -126,11 +138,6 @@ static PyObject *__pyx_f_11gustafsson1_test(PyObject *__pyx_self, PyObject *__py
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_raises, "raises"},
-  {0, 0}
-};
-
 static struct PyMethodDef __pyx_methods[] = {
   {"test", (PyCFunction)__pyx_f_11gustafsson1_test, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
@@ -147,7 +154,7 @@ PyMODINIT_FUNC initgustafsson1(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("gustafsson1");
@@ -194,11 +201,13 @@ bad:
 	return -1;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -261,7 +270,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from gustafsson1 */
-
-/* Declarations from implementation of gustafsson1 */

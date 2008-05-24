@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,10 +37,16 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static int __Pyx_ExportFunction(char *n, void *f, char *s); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
+/* Declarations from tree */
+
+
+/* Declarations from ia_etree */
 
 struct LxmlDocument {
   PyObject_HEAD
@@ -65,6 +70,8 @@ static PyTypeObject *__pyx_ptype_8ia_etree__Document = 0;
 static PyTypeObject *__pyx_ptype_8ia_etree__Element = 0;
 static PyObject *__pyx_f_8ia_etree_getAttributeValue(struct LxmlElement *,PyObject *,PyObject *); /*proto*/
 
+/* Declarations from implementation of ia_etree */
+
 struct __pyx_t_8ia_etree_Foo {
   int spam;
 };
@@ -81,6 +88,14 @@ struct __pyx_obj_8ia_etree__BaseParser {
 
 
 static PyTypeObject *__pyx_ptype_8ia_etree_Vorpal = 0;
+
+
+
+
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 
 
 /* Implementation of ia_etree */
@@ -715,6 +730,7 @@ PyMODINIT_FUNC initia_etree(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_ExportFunction("getAttributeValue", (void*)__pyx_f_8ia_etree_getAttributeValue, "PyObject *(struct LxmlElement *,PyObject *,PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_type_8ia_etree__BaseParser.tp_free = _PyObject_GC_Del;
   if (PyType_Ready(&__pyx_type_8ia_etree__BaseParser) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
@@ -747,6 +763,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 static int __Pyx_ExportFunction(char *n, void *f, char *s) {
@@ -832,9 +860,3 @@ bad:
 	Py_XDECREF(py_code);
 	Py_XDECREF(py_frame);
 }
-
-/* Declarations from tree */
-
-/* Declarations from ia_etree */
-
-/* Declarations from implementation of ia_etree */

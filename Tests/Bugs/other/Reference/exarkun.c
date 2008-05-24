@@ -55,6 +55,13 @@ struct __pyx_obj_7exarkun_Point {
 static PyTypeObject *__pyx_ptype_7exarkun_Point = 0;
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {&__pyx_n_x, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_y, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_z, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {0, 0, 0, 0}
+};
+
 /* Implementation of exarkun */
 
 static int __pyx_f_7exarkun_5Point___init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -81,9 +88,6 @@ static int __pyx_f_7exarkun_5Point___init__(PyObject *__pyx_v_self, PyObject *__
   return __pyx_r;
 }
 
-static PyObject *__pyx_n_x;
-static PyObject *__pyx_n_y;
-static PyObject *__pyx_n_z;
 
 static PyObject *__pyx_f_7exarkun_5Point___add__(PyObject *__pyx_v_self, PyObject *__pyx_v_other); /*proto*/
 static PyObject *__pyx_f_7exarkun_5Point___add__(PyObject *__pyx_v_self, PyObject *__pyx_v_other) {
@@ -139,12 +143,6 @@ static PyObject *__pyx_f_7exarkun_5Point___add__(PyObject *__pyx_v_self, PyObjec
   return __pyx_r;
 }
 
-static __Pyx_InternTabEntry __pyx_intern_tab[] = {
-  {&__pyx_n_x, "x"},
-  {&__pyx_n_y, "y"},
-  {&__pyx_n_z, "z"},
-  {0, 0}
-};
 
 static PyObject *__pyx_tp_new_7exarkun_Point(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -294,7 +292,7 @@ PyMODINIT_FUNC initexarkun(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (__Pyx_InternStrings(__pyx_intern_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_7exarkun_Point) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Point", (PyObject *)&__pyx_type_7exarkun_Point) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_7exarkun_Point = &__pyx_type_7exarkun_Point;

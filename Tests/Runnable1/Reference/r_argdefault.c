@@ -17,9 +17,6 @@ static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type);
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
-static PyObject *__pyx_k1;
-static PyObject *__pyx_k2;
-static PyObject *__pyx_k3;
 
 static char (__pyx_k4[]) = "This swallow is called";
 static char (__pyx_k5[]) = "This swallow is flying at";

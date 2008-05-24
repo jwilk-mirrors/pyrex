@@ -52,6 +52,10 @@ static PyObject *__pyx_f_15nononetypecheck_f(struct __pyx_obj_15nononetypecheck_
 static PyObject *__pyx_f_15nononetypecheck_g(void); /*proto*/
 
 
+static __Pyx_StringTabEntry __pyx_string_tab[] = {
+  {0, 0, 0, 0}
+};
+
 /* Implementation of nononetypecheck */
 
 static PyObject *__pyx_f_15nononetypecheck_f(struct __pyx_obj_15nononetypecheck_Spam *__pyx_v_s) {
@@ -227,6 +231,7 @@ PyMODINIT_FUNC initnononetypecheck(void) {
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyType_Ready(&__pyx_type_15nononetypecheck_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Spam", (PyObject *)&__pyx_type_15nononetypecheck_Spam) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_15nononetypecheck_Spam = &__pyx_type_15nononetypecheck_Spam;
