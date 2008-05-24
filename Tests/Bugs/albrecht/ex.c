@@ -44,10 +44,10 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 /* Declarations from ring.integer */
 
 
-/* Declarations from ring.rational */
-
-
 /* Declarations from ring */
+
+
+/* Declarations from ring.rational */
 
 
 /* Declarations from ex */

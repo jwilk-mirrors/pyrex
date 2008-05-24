@@ -1,3 +1,12 @@
+0.9.8.3
+-------
+
+Modifications:
+
+	- Compiling multiple source files at once should work as
+		advertised now.
+
+
 0.9.8.2
 -------
 
