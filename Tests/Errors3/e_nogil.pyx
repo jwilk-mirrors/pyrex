@@ -14,7 +14,12 @@ cdef object p() nogil:
 cdef void r() nogil:
 	q()
 	
+cdef void (*fp)()
+cdef void (*fq)() nogil
+cdef extern void u()
+
 cdef object m():
+	global fp, fq
 	cdef object x, y, obj
 	cdef int i, j, k
 	global fred
@@ -66,6 +71,8 @@ cdef object m():
 			pass
 		finally:
 			pass
+		fq = u
+		fq = fp
 
 cdef void q():
 	pass
