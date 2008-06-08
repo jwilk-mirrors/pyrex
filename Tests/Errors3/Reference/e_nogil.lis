@@ -52,3 +52,5 @@
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:59:8: Converting to Python object not allowed without gil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:61:2: Try-except statement not allowed without gil
 /Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:65:2: Try-finally statement not allowed without gil
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:74:8: Cannot assign type 'void (void)' to 'void (*)(void) nogil'
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_nogil.pyx:75:9: Cannot assign type 'void (*)(void)' to 'void (*)(void) nogil'

@@ -54,6 +54,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 static int __pyx_f_11inplace_ops_f(void) {
   PyObject *__pyx_v_a;
   PyObject *__pyx_v_b;
+  char *__pyx_v_p;
   int __pyx_r;
   PyObject *__pyx_1 = 0;
   __pyx_v_a = Py_None; Py_INCREF(Py_None);
@@ -113,6 +114,16 @@ static int __pyx_f_11inplace_ops_f(void) {
   __pyx_1 = PyNumber_InPlaceOr(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":15 */
+  __pyx_v_p += 42;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":16 */
+  __pyx_v_p -= 42;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":17 */
+  __pyx_2 = PyInt_AsLong(__pyx_v_a); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
+  __pyx_v_p += __pyx_2;
 
   __pyx_r = 0;
   goto __pyx_L0;

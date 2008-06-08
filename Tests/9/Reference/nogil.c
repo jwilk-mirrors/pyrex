@@ -43,6 +43,8 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from nogil */
 
+static void (*__pyx_v_5nogil_fp)(PyObject *);
+static void (*__pyx_v_5nogil_fq)(PyObject *);
 __PYX_EXTERN_C DL_EXPORT(PyObject) *g(PyObject *); /*proto*/
 __PYX_EXTERN_C DL_EXPORT(void) g2(PyObject *); /*proto*/
 static void __pyx_f_5nogil_f(int); /*proto*/
@@ -80,6 +82,12 @@ static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":18 */
   e2();
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":23 */
+  __pyx_v_5nogil_fp = g2;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":24 */
+  __pyx_v_5nogil_fp = __pyx_v_5nogil_fq;
 
 }
 
