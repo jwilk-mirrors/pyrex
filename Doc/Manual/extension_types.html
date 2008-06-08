@@ -105,7 +105,9 @@
 
   As well as creating normal user-defined classes with the Python <b>class</b>
 statement, Pyrex also lets you create new built-in Python types, known as 
-<i>extension types</i>. You define an extension type using the <b>cdef class</b> statement. Here's an example:  
+<i>extension types</i>. <br><br><table style="text-align: left; background-color: rgb(255, 255, 0); width: 554px; margin-left: 40px;" border="0" cellpadding="5" cellspacing="0"><tbody><tr><td style="vertical-align: top; text-align: left;">WARNING: There are substantial differences in the way many of the
+special methods work in extension types compared to Python classes.
+Before attempting to define any __xxx__ methods, read the section on <a href="special_methods.html">Special Methods of Extension Types.</a></td></tr></tbody></table><br>You define an extension type using the <b>cdef class</b> statement. Here's an example:  
 <blockquote><tt>cdef class Shrubbery:</tt>     
   
   <p><tt>&nbsp;&nbsp;&nbsp; cdef int width, height</tt> </p>
