@@ -15,6 +15,14 @@ Bug fixes:
 	- Compiling a .pyx file whose name is not a valid module name now
 		reports an error instead of generating invalid C code.
 		[Robert Bradshaw]
+	
+	- Integer indexing optimisation now performed only for signed
+		index types, to avoid change of semantics with index values
+		greater than the maximum positive signed int value. [Robert
+		Bradshaw]
+	
+	- Non-void function declared 'except *' could produce C compiler
+		warning about uninitialised variable. [Lisandro Dalcin]
 
 
 0.9.8.2

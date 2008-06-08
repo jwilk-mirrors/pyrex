@@ -596,24 +596,25 @@ class FuncDefNode(StatNode, BlockNode):
 			code.put_goto(code.return_label)
 			code.put_label(code.error_label)
 			code.put_var_xdecrefs(lenv.temp_entries)
+			default_retval = self.return_type.default_value
 			err_val = self.error_value()
 			exc_check = self.caller_will_check_exceptions()
-			if err_val is not None or exc_check:
+			if err_val or exc_check:
 				code.putln(
 					'__Pyx_AddTraceback("%s");' % 
 						self.entry.qualified_name)
-				if err_val is not None:
+				val = err_val or default_retval
+				if val:
 					code.putln(
 						"%s = %s;" % (
 							Naming.retval_cname, 
-							err_val))
+							val))
 			else:
 				code.use_utility_code(unraisable_exception_utility_code)
 				code.putln(
 					'__Pyx_WriteUnraisable("%s");' % 
 						self.entry.qualified_name)
 				#if not self.return_type.is_void:
-				default_retval = self.return_type.default_value
 				if default_retval:
 					code.putln(
 						"%s = %s;" % (

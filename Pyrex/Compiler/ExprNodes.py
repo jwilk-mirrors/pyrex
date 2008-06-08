@@ -1301,7 +1301,8 @@ class IndexNode(ExprNode):
 	
 	def generate_result_code(self, code):
 		if self.type.is_pyobject:
-			if self.index.type.is_int:
+			itype = self.index.type
+			if itype.is_int and itype.signed:
 				code.use_utility_code(getitem_int_utility_code)
 				function = "__Pyx_GetItemInt"
 				index_code = self.index.result()
@@ -1319,7 +1320,8 @@ class IndexNode(ExprNode):
 					code.error_goto(self.pos)))
 	
 	def generate_setitem_code(self, value_code, code):
-		if self.index.type.is_int:
+		itype = self.index.type
+		if itype.is_int and itype.signed:
 			code.use_utility_code(setitem_int_utility_code)
 			function = "__Pyx_SetItemInt"
 			index_code = self.index.result()

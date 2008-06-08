@@ -37,20 +37,16 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
-
-static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
-/* Declarations from intindex */
+/* Declarations from dalcin1 */
 
 
-/* Declarations from implementation of intindex */
+/* Declarations from implementation of dalcin1 */
 
-static int __pyx_f_8intindex_f(void); /*proto*/
+static int __pyx_f_7dalcin1_obj2int(PyObject *); /*proto*/
 
 
 
@@ -61,57 +57,23 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 
 
 
-/* Implementation of intindex */
+/* Implementation of dalcin1 */
 
-static int __pyx_f_8intindex_f(void) {
-  PyObject *__pyx_v_x;
-  PyObject *__pyx_v_y;
-  PyObject *__pyx_v_z;
-  int __pyx_v_i;
-  unsigned int __pyx_v_ui;
+static int __pyx_f_7dalcin1_obj2int(PyObject *__pyx_v_ob) {
   int __pyx_r;
-  PyObject *__pyx_1 = 0;
-  __pyx_v_x = Py_None; Py_INCREF(Py_None);
-  __pyx_v_y = Py_None; Py_INCREF(Py_None);
-  __pyx_v_z = Py_None; Py_INCREF(Py_None);
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":5 */
-  __pyx_1 = PyObject_GetItem(__pyx_v_x, __pyx_v_y); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_z);
-  __pyx_v_z = __pyx_1;
-  __pyx_1 = 0;
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":6 */
-  __pyx_1 = __Pyx_GetItemInt(__pyx_v_x, __pyx_v_i); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_z);
-  __pyx_v_z = __pyx_1;
-  __pyx_1 = 0;
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":7 */
-  if (PyObject_SetItem(__pyx_v_x, __pyx_v_y, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":8 */
-  if (__Pyx_SetItemInt(__pyx_v_x, __pyx_v_i, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":9 */
-  __pyx_1 = PyObject_GetItem(__pyx_v_x, ((PyObject *)__pyx_v_ui)); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_z);
-  __pyx_v_z = __pyx_1;
-  __pyx_1 = 0;
-
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":10 */
-  if (PyObject_SetItem(__pyx_v_x, ((PyObject *)__pyx_v_ui), __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
+  int __pyx_1;
+  Py_INCREF(__pyx_v_ob);
+  __pyx_1 = PyInt_AsLong(__pyx_v_ob); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
+  __pyx_r = __pyx_1;
+  goto __pyx_L0;
 
   __pyx_r = 0;
   goto __pyx_L0;
   __pyx_L1:;
-  Py_XDECREF(__pyx_1);
-  __Pyx_AddTraceback("intindex.f");
-  __pyx_r = (-1);
+  __Pyx_AddTraceback("dalcin1.obj2int");
+  __pyx_r = 0;
   __pyx_L0:;
-  Py_DECREF(__pyx_v_x);
-  Py_DECREF(__pyx_v_y);
-  Py_DECREF(__pyx_v_z);
+  Py_DECREF(__pyx_v_ob);
   return __pyx_r;
 }
 
@@ -121,10 +83,10 @@ static struct PyMethodDef __pyx_methods[] = {
 
 static void __pyx_init_filenames(void); /*proto*/
 
-PyMODINIT_FUNC initintindex(void); /*proto*/
-PyMODINIT_FUNC initintindex(void) {
+PyMODINIT_FUNC initdalcin1(void); /*proto*/
+PyMODINIT_FUNC initdalcin1(void) {
   __pyx_init_filenames();
-  __pyx_m = Py_InitModule4("intindex", __pyx_methods, 0, 0, PYTHON_API_VERSION);
+  __pyx_m = Py_InitModule4("dalcin1", __pyx_methods, 0, 0, PYTHON_API_VERSION);
   if (!__pyx_m) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   Py_INCREF(__pyx_m);
   __pyx_b = PyImport_AddModule("__builtin__");
@@ -133,47 +95,17 @@ PyMODINIT_FUNC initintindex(void) {
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   return;
   __pyx_L1:;
-  __Pyx_AddTraceback("intindex");
+  __Pyx_AddTraceback("dalcin1");
 }
 
 static char *__pyx_filenames[] = {
-  "intindex.pyx",
+  "dalcin1.pyx",
 };
 
 /* Runtime support code */
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
-}
-
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
-	PyTypeObject *t = o->ob_type;
-	PyObject *r;
-	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_GetItem(o, i);
-	else {
-		PyObject *j = PyInt_FromLong(i);
-		if (!j)
-			return 0;
-		r = PyObject_GetItem(o, j);
-		Py_DECREF(j);
-	}
-	return r;
-}
-
-static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
-	PyTypeObject *t = o->ob_type;
-	int r;
-	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_SetItem(o, i, v);
-	else {
-		PyObject *j = PyInt_FromLong(i);
-		if (!j)
-			return -1;
-		r = PyObject_SetItem(o, j, v);
-		Py_DECREF(j);
-	}
-	return r;
 }
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
