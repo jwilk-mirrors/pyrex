@@ -1,4 +1,4 @@
-VERSION = 0.9.8.3
+VERSION = 0.9.8.4
 
 version:
 	@echo "Setting version to $(VERSION)"

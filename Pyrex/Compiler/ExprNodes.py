@@ -1256,13 +1256,8 @@ class IndexNode(ExprNode):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
 		if self.base.type.is_pyobject:
-#			if self.index.type.is_int:
-#				if getting:
-#					env.use_utility_code(getitem_int_utility_code)
-#				if setting:
-#					env.use_utility_code(setitem_int_utility_code)
-#			else:
-			if not self.index.type.is_int:
+			itype = self.index.type
+			if not (itype.is_int and itype.signed):
 				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
 			self.gil_check(env)
