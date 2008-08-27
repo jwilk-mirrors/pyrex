@@ -12,6 +12,10 @@ Bug fixes:
 	- MACOSX_DEPLOYMENT_TARGET is no longer set unless the undocumented -X
 		option is being used. Hopefully this will prevent complaints about it
 		from distutils. [Martin Field]
+	
+	- Recognize MS_WINDOWS as well as WIN32. [Alexander Belchenko]
+	
+	- Hexadecimal compile-time constants did not work. [Devan]
 
 Enhancements:
 

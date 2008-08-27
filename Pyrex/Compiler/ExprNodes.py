@@ -689,7 +689,7 @@ class IntNode(ConstNode):
 	type = PyrexTypes.c_long_type
 
 	def compile_time_value(self, denv):
-		return int(self.value)
+		return int(self.value, 0)
 	
 
 class FloatNode(ConstNode):

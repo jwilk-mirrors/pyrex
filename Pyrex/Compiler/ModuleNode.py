@@ -316,7 +316,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("  #define PyInt_FromSsize_t(z) PyInt_FromLong(z)")
 		code.putln("  #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)")
 		code.putln("#endif")
-		code.putln("#ifndef WIN32")
+		code.putln("#if !defined(WIN32) && !defined(MS_WINDOWS)")
 		code.putln("  #ifndef __stdcall")
 		code.putln("    #define __stdcall")
 		code.putln("  #endif")
