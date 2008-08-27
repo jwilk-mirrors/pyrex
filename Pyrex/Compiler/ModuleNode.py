@@ -139,7 +139,10 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		api_funcs = []
 		public_extension_types = []
 		has_api_extension_types = 0
-		for entry in denv.cfunc_entries + env.cfunc_entries:
+		for entry in denv.cfunc_entries:
+			if entry.visibility <> 'extern':
+				api_funcs.append(entry)
+		for entry in env.cfunc_entries:
 			if entry.api:
 				api_funcs.append(entry)
 		for entry in denv.c_class_entries + env.c_class_entries:
@@ -1355,7 +1358,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	def generate_pxd_function_export_code(self, env, code):
 		denv = env.definition_scope
 		for entry in denv.cfunc_entries:
-			self.generate_c_function_export_code(env, entry, code)
+			if entry.visibility <> 'extern':
+				self.generate_c_function_export_code(env, entry, code)
 	
 	def generate_api_function_export_code(self, env, code):
 		for entry in env.cfunc_entries:
