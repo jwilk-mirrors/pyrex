@@ -1,5 +1,5 @@
 Traceback (most recent call last):
-  File "Tests/Runnable2/r_traceback_t.py", line 5, in <module>
+  File "Tests/Runnable2/r_traceback_t.py", line 5, in ?
     r_traceback.tomato()
   File "r_traceback.pyx", line 8, in r_traceback.tomato
     grail()

@@ -140,7 +140,7 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		public_extension_types = []
 		has_api_extension_types = 0
 		for entry in denv.cfunc_entries:
-			if entry.visibility <> 'extern':
+			if entry.api:
 				api_funcs.append(entry)
 		for entry in env.cfunc_entries:
 			if entry.api:

@@ -416,7 +416,10 @@ def munge_c_line(line):
 			line = ""
 	line = re.sub("__pyx_k[0-9]+", "__pyx_kx", line)
 	line = re.sub("__pyx_k[0-9]+p", "__pyx_kxp", line)
-		
+	
+	# WIN32 hack
+	
+	line = line.replace('#ifndefWIN32', '#if!defined(WIN32)&&!defined(MS_WINDOWS)')
 	
 	# ---------- END HACKS ----------
 
