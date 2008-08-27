@@ -19,8 +19,6 @@ py_include_dirs = [
 	"/Library/Frameworks/Python.framework/Versions/%s/Headers" % version_string
 ]
 
-os.environ["MACOSX_DEPLOYMENT_TARGET"] = "10.3"
-
 compilers = ["gcc", "g++"]
 compiler_options = \
 	"-g -c -fno-strict-aliasing -Wno-long-double -no-cpp-precomp " \
@@ -75,6 +73,7 @@ def c_link_list(obj_files, verbose_flag = 0, cplus = 0):
 	#  Link the given object files into a dynamically
 	#  loadable extension file. Returns the pathname
 	#  of the resulting file.
+	os.environ["MACOSX_DEPLOYMENT_TARGET"] = "10.3"
 	out_file = replace_suffix(obj_files[0], ".so")
 	linker = linkers[bool(cplus)]
 	args = [linker] + linker_options + obj_files + ["-o", out_file]

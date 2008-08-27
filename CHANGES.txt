@@ -8,6 +8,10 @@ Bug fixes:
 	
 	- The 'api' option was not recognised with 'ctypedef public class'.
 		[Lisandro Dalcin]
+	
+	- MACOSX_DEPLOYMENT_TARGET is no longer set unless the undocumented -X
+		option is being used. Hopefully this will prevent complaints about it
+		from distutils. [Martin Field]
 
 Enhancements:
 
