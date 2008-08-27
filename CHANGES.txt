@@ -1,6 +1,11 @@
 0.9.8.5
 -------
 
+Enhancements:
+
+	- Dependency files (.dep) are only created when compiling with timestamp
+		checking or recursion enabled.
+
 Deprecations:
 
 	- The features introducted in 0.9.8 and 0.9.8.1 for cross-forward-declaring

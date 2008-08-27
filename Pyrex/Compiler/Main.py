@@ -21,6 +21,7 @@ from Pyrex.Utils import set, replace_suffix, modification_time, \
 	file_newer_than, castrate_file
 
 verbose = 0
+debug_timestamps = 0
 
 module_name_pattern = re.compile(
 	r"[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$")
@@ -236,21 +237,37 @@ class Context:
 				"'%s' is not a valid module name" % module_name)
 		return module_name
 	
+	def dep_file_out_of_date(self, source_path):
+		dep_path = replace_suffix(source_path, ".dep")
+		if not os.path.exists(dep_path):
+			return 1
+		dep_time = modification_time(dep_path)
+		return file_newer_than(source_path, dep_time)
+	
 	def c_file_out_of_date(self, source_path):
-		#print "Checking whether", source_path, "is out of date" ###
+		if debug_timestamps:
+			print "Checking whether", source_path, "is out of date"
 		c_path = replace_suffix(source_path, ".c")
 		if not os.path.exists(c_path):
-			#print "...yes, c file doesn't exist" ###
+			if debug_timestamps:
+				print "...yes, c file doesn't exist"
 			return 1
 		c_time = modification_time(c_path)
 		if file_newer_than(source_path, c_time):
-			#print "...yes, newer than c file" ###
+			if debug_timestamps:
+				print "...yes, newer than c file"
 			return 1
 		pos = [source_path]
 		module_name = self.extract_module_name(source_path)
 		pxd_path = self.find_pxd_file(module_name, pos)
 		if pxd_path and file_newer_than(pxd_path, c_time):
-			#print "...yes, pxd file newer than c file" ###
+			if debug_timestamps:
+				print "...yes, pxd file newer than c file"
+			return 1
+		dep_path = replace_suffix(source_path, ".dep")
+		if not os.path.exists(dep_path):
+			if debug_timestamps:
+				print "...yes, dep file does not exist"
 			return 1
 		for kind, name in self.read_dependency_file(source_path):
 			if kind == "cimport":
@@ -260,9 +277,11 @@ class Context:
 			else:
 				continue
 			if dep_path and file_newer_than(dep_path, c_time):
-				#print "...yes,", dep_path, "newer than c file" ###
+				if debug_timestamps:
+					print "...yes,", dep_path, "newer than c file"
 				return 1
-		#print "...no" ###
+		if debug_timestamps:
+			print "...no"
 	
 	def find_cimported_module_names(self, source_path):
 		for kind, name in self.read_dependency_file(source_path):
