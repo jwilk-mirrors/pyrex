@@ -390,13 +390,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 	
 	def generate_type_definitions(self, env, code): #, implementation):
 		#print "generate_type_definitions:", env ###
-#		if definition:
-#			type_entries = env.type_entries
-#		else:
-#			type_entries = []
-#			for entry in env.type_entries:
-#				if entry.defined_in_pxd:
-#					type_entries.append(entry)
 		type_entries = env.type_entries
 		self.generate_type_header_code(type_entries, code)
 		for entry in env.c_class_entries:
@@ -405,20 +398,20 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				self.generate_exttype_vtable_struct(entry, code)
 				self.generate_exttype_vtabptr_declaration(entry, code)
 	
-	def generate_gcc33_hack(self, env, code):
-		# Workaround for spurious warning generation in gcc 3.3
-		if 0:
-			code.putln("")
-			for entry in env.c_class_entries:
-				type = entry.type
-				if not type.typedef_flag:
-					name = type.objstruct_cname
-					if name.startswith("__pyx_"):
-						tail = name[6:]
-					else:
-						tail = name
-					code.putln("typedef struct %s __pyx_gcc33_%s;" % (
-						name, tail))
+#	def generate_gcc33_hack(self, env, code):
+#		# Workaround for spurious warning generation in gcc 3.3
+#		if 0:
+#			code.putln("")
+#			for entry in env.c_class_entries:
+#				type = entry.type
+#				if not type.typedef_flag:
+#					name = type.objstruct_cname
+#					if name.startswith("__pyx_"):
+#						tail = name[6:]
+#					else:
+#						tail = name
+#					code.putln("typedef struct %s __pyx_gcc33_%s;" % (
+#						name, tail))
 	
 	def generate_typedef(self, entry, code):
 		base_type = entry.type.typedef_base_type
@@ -492,9 +485,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				code.putln("%s DL_EXPORT(PyTypeObject) %s;" % (
 					Naming.extern_c_macro,
 					name))
-			# ??? Do we really need the rest of this? ???
-			#else:
-			#	code.putln("staticforward PyTypeObject %s;" % name)
 	
 	def generate_exttype_vtable_struct(self, entry, code):
 		# Generate struct declaration for an extension type's vtable.
@@ -1248,42 +1238,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			code.putln(
 				"};")
 	
-#	def generate_interned_name_table(self, env, code):
-#		items = env.intern_map.items()
-#		if items:
-#			items.sort()
-#			code.putln("")
-#			code.putln(
-#				"static __Pyx_InternTabEntry %s[] = {" %
-#					Naming.intern_tab_cname)
-#			for (name, cname) in items:
-#				code.putln(
-#					'{&%s, "%s"},' % (
-#						cname,
-#						name))
-#			code.putln(
-#				"{0, 0}")
-#			code.putln(
-#				"};")
-	
-#	def generate_py_string_table(self, env, code):
-#		entries = env.all_pystring_entries
-#		if entries:
-#			code.putln("")
-#			code.putln(
-#				"static __Pyx_StringTabEntry %s[] = {" %
-#					Naming.stringtab_cname)
-#			for entry in entries:
-#				code.putln(
-#					"{&%s, %s, sizeof(%s)}," % (
-#						entry.pystring_cname,
-#						entry.cname,
-#						entry.cname))
-#			code.putln(
-#				"{0, 0, 0}")
-#			code.putln(
-#				"};")
-	
 	def generate_interned_name_table(self, interned_strings, code):
 		code.putln("")
 		code.putln(
@@ -1293,30 +1247,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("0")
 		code.putln(
 			"};")
-	
-#	def generate_py_string_table(self, py_strings, code):
-#		interned = []
-#		uninterned = []
-#		for s in py_strings:
-#			if s.is_interned:
-#				interned.append(s)
-#			else:
-#				uninterned.append(s)
-#		code.putln("")
-#		code.putln(
-#			"static __Pyx_StringTabEntry %s[] = {" %
-#				Naming.stringtab_cname)
-#		for s in interned + uninterned:
-#			cname = s.cname
-#			code.putln(
-#				"{&%s, %s, sizeof(%s)}," % (
-#					s.py_cname,
-#					cname,
-#					cname))
-#		code.putln(
-#			"{0, 0, 0}")
-#		code.putln(
-#			"};")
 
 	def generate_filename_init_prototype(self, code):
 		code.putln("");
@@ -1406,13 +1336,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				Naming.builtins_cname,
 				code.error_goto(self.pos)))
 	
-#	def generate_intern_code(self, env, code):
-#		code.use_utility_code(Nodes.init_intern_tab_utility_code);
-#		code.putln(
-#			"if (__Pyx_InternStrings(%s) < 0) %s;" % (
-#				Naming.intern_tab_cname,
-#				code.error_goto(self.pos)))
-	
 	def generate_string_init_code(self, env, code):
 		code.use_utility_code(Nodes.init_string_tab_utility_code)
 		code.putln(
@@ -1438,11 +1361,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 			if entry.api:
 				self.generate_c_function_export_code(env, entry, code)
 
-#	def generate_c_function_export_code(self, env, code):
-#		# Generate code to create PyCFunction wrappers for exported C functions.
-#		for entry in env.cfunc_entries:
-#			if entry.api or entry.defined_in_pxd:
-	
 	def generate_c_function_export_code(self, env, entry, code):
 		code.use_utility_code(function_export_utility_code)
 		signature = entry.type.signature_string()
