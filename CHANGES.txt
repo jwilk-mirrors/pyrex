@@ -5,6 +5,9 @@ Bug fixes:
 
 	- Function export code was erroneously generated for 'extern' functions
 		declared in a .pxd file. [Sebastian Sable]
+	
+	- The 'api' option was not recognised with 'ctypedef public class'.
+		[Lisandro Dalcin]
 
 Enhancements:
 
