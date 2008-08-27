@@ -1,6 +1,8 @@
 Release Checklist
 =================
 
+# Update CHANGES.txt
+
 * Ensure all tests pass
 
 * cd Demos; make test
@@ -15,6 +17,6 @@ Release Checklist
 
 * Tag release
 
-* make tar
+* cd ..; make tar
 
 * make upload

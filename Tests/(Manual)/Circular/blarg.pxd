@@ -1,4 +1,6 @@
-from foo cimport class Foo
+cdef class Blarg
+
+from foo cimport Foo
 
 cdef class Blarg:
 	cdef object name

@@ -1,3 +1,23 @@
+0.9.8.5
+-------
+
+Deprecations:
+
+	- The features introducted in 0.9.8 and 0.9.8.1 for cross-forward-declaring
+		extension types between .pxd files turn out to be unnecessary, since
+		the circular import problems they are aimed at can be avoided using
+		ordinary forward delcarations in the .pxd files ahead of any cimports.
+
+
+0.9.8.4
+-------
+
+Bug fixes:
+
+	- Incorrect code generated for Python indexing with an unsigned int.
+		[Christopher Williams]
+
+
 0.9.8.3
 -------
 
