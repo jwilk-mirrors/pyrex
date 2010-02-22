@@ -8,6 +8,13 @@ Bug fixes:
 	
 	- Compiler crash on misspelled method name in property declaration.
 		[Stefan Behnel]
+	
+	- Fixed deprecation warnings in 2.6
+
+
+Modifications:
+
+	- Added 'tags' to .hgignore file. [Kirill Smelkov]
 
 
 0.9.8.5

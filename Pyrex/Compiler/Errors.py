@@ -14,7 +14,6 @@ class CompileError(PyrexError):
 	
 	def __init__(self, position = None, message = ""):
 		self.position = position
-		self.message = message
 		if position:
 			pos_str = "%s:%d:%d: " % position
 		else:
