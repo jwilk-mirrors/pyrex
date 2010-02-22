@@ -2427,9 +2427,11 @@ class PyCFunctionNode(AtomicExprNode):
 	#  from a PyMethodDef struct.
 	#
 	#  pymethdef_cname   string   PyMethodDef structure
+	#  module_name       string   Name of defining module
 	
 	def analyse_types(self, env):
 		self.type = py_object_type
+		self.module_name = env.global_scope().module_name
 		self.gil_check(env)
 		self.is_temp = 1
 	
@@ -2438,9 +2440,10 @@ class PyCFunctionNode(AtomicExprNode):
 	def generate_result_code(self, code):
 		result = self.result()
 		code.putln(
-			"%s = PyCFunction_New(&%s, 0); if (!%s) %s" % (
+			"%s = PyCFunction_NewEx(&%s, 0, %s); if (!%s) %s" % (
 				result,
 				self.pymethdef_cname,
+				code.get_py_string_const(self.module_name),
 				result,
 				code.error_goto(self.pos)))
 
