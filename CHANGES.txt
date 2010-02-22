@@ -10,6 +10,9 @@ Bug fixes:
 		[Stefan Behnel]
 	
 	- Fixed deprecation warnings in 2.6
+	
+	- Always preserve explicit type casts for non-Python types.
+		[Alexander Belchenko]
 
 
 Modifications:
