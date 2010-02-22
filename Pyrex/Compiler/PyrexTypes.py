@@ -285,6 +285,10 @@ class PyExtensionType(PyObjectType):
 	def attributes_known(self):
 		return self.scope is not None
 	
+	def is_complete(self):
+		scope = self.scope
+		return scope and scope.defined
+	
 	def __str__(self):
 		return self.name
 	

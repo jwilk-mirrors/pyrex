@@ -1,3 +1,12 @@
+0.9.8.6
+-------
+
+Bug fixes:
+
+	- Compiler crashed if base class of extension type was incompletely
+		defined.
+
+
 0.9.8.5
 -------
 

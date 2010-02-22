@@ -141,6 +141,7 @@ list_methods = [
 	# name,        args,   return,  C API func
 	("insert",     "OiO",  "r",     "PyList_Insert"),
 	("append",     "OO",   "r",     "PyList_Append"),
+	("iappend",     "OO",   "i",     "PyList_Append"),
 	("sort",       "O",    "r",     "PyList_Sort"),
 	("reverse",    "O",    "r",     "PyList_Reverse"),
 	("as_tuple",   "O",    "O",     "PyList_AsTuple"),

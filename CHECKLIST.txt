@@ -20,3 +20,5 @@ Release Checklist
 * cd ..; make tar
 
 * make upload
+
+* make push
