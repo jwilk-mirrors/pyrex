@@ -7,3 +7,4 @@ glob:*.dep
 glob:*.orig
 glob:*.new
 glob:*_copy.c
+tags
