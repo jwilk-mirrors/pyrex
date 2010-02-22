@@ -1327,7 +1327,7 @@ class CClassDefNode(StatNode):
 						error(self.pos, "'%s' is not a type name" % self.base_class_name)
 					elif not base_class_entry.type.is_extension_type:
 						error(self.pos, "'%s' is not an extension type" % self.base_class_name)
-					elif not base_class_entry.type.is_complete():
+					elif not base_class_entry.type.is_defined():
 						error(self.pos, "Base class '%s' is incomplete" % self.base_class_name)
 					else:
 						self.base_type = base_class_entry.type

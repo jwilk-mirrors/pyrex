@@ -1259,13 +1259,13 @@ class PropertyScope(Scope):
 	
 	def declare_pyfunction(self, name, pos):
 		# Add an entry for a method.
+		entry = self.declare(name, name, py_object_type, pos)
 		signature = get_property_accessor_signature(name)
 		if signature:
-			entry = self.declare(name, name, py_object_type, pos)
 			entry.is_special = 1
 			entry.signature = signature
-			return entry
 		else:
 			error(pos, "Only __get__, __set__ and __del__ methods allowed "
 				"in a property declaration")
-			return None
+			entry.signature = pymethod_signature
+		return entry

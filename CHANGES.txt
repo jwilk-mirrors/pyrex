@@ -5,6 +5,9 @@ Bug fixes:
 
 	- Compiler crashed if base class of extension type was incompletely
 		defined.
+	
+	- Compiler crash on misspelled method name in property declaration.
+		[Stefan Behnel]
 
 
 0.9.8.5
