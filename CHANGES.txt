@@ -27,6 +27,9 @@ Bug fixes:
 	
 	- Compiler crash due to attribute reference in compile-time expression.
 		[Hoyt Koepke]
+	
+	- Public extension type attribute with cname didn't work.
+		[Mark Ellis]
 
 
 Modifications:
