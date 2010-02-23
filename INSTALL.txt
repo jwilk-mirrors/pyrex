@@ -15,8 +15,19 @@ OR
 
 (2) If you prefer not to modify your Python
     installation, arrange for the directory
-    containing this file (INSTALL.txt) to be in 
-    your PYTHONPATH. On unix, also put the bin
-    directory on your PATH.
+    containing this file (INSTALL.txt) to be in
+    your module search path. 
+
+    For example, create a pyrex.pth file in your
+    Python installation's Lib/site-packages
+    directory and insert a line containing the
+    fully qualified path to the directory containing
+    this file.
+
+    On unix, also put the bin directory on your PATH.
+
+    On Win32 copy the pyrexc.py file to your Python
+    installation's Scripts directory, which should
+    already be on the PATH.    
 
 See README.txt for pointers to other documentation.
