@@ -1,0 +1,1 @@
+/Local/Projects/D/Pyrex/Source/Tests/9/e_nogilexceptstar.pyx:5:2: Calling 'except ?' or 'except *' function not allowed without gil

@@ -1646,6 +1646,8 @@ class SimpleCallNode(CallNode):
 		# Check gil
 		if not func_type.nogil:
 			self.gil_check(env)
+		if func_type.exception_check and env.nogil:
+			self.gil_error("Calling 'except ?' or 'except *' function")
 	
 	def calculate_result_code(self):
 		return self.c_call_code()

@@ -35,8 +35,8 @@ class Node:
 		if env.nogil:
 			self.gil_error()
 	
-	def gil_error(self):
-		error(self.pos, "%s not allowed without gil" % self.gil_message)
+	def gil_error(self, message = None):
+		error(self.pos, "%s not allowed without gil" % (message or self.gil_message))
 	
 	#
 	#  There are 3 phases of parse tree processing, applied in order to
@@ -2938,12 +2938,14 @@ static void __Pyx_WriteUnraisable(char *name); /*proto*/
 static void __Pyx_WriteUnraisable(char *name) {
 	PyObject *old_exc, *old_val, *old_tb;
 	PyObject *ctx;
+	PyGILState_STATE state = PyGILState_Ensure();
 	PyErr_Fetch(&old_exc, &old_val, &old_tb);
 	ctx = PyString_FromString(name);
 	PyErr_Restore(old_exc, old_val, old_tb);
 	if (!ctx)
 		ctx = Py_None;
 	PyErr_WriteUnraisable(ctx);
+	PyGILState_Release(state);
 }
 """]
 

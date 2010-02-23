@@ -1,6 +1,11 @@
 0.9.8.6
 -------
 
+Enhancements:
+
+	- Check for gil when calling a function declared 'execpt *' or 'except ?'.
+		Acquire gil when reporting unraisable exception.
+
 Bug fixes:
 
 	- Compiler crashed if base class of extension type was incompletely
