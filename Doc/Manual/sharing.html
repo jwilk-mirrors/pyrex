@@ -118,15 +118,15 @@ exactly parallels that of the normal Python import statement:
              
       <p><tt>def serve():</tt> <br>
 
-       <tt>&nbsp;&nbsp;&nbsp; spamdish d</tt> <br>
+       <tt>&nbsp;&nbsp;&nbsp; cdef spamdish d</tt> <br>
 
        <tt>&nbsp;&nbsp;&nbsp; prepare(&amp;d)</tt> <br>
 
        <tt>&nbsp;&nbsp;&nbsp; print "%d oz spam, filler no. %d" % \</tt>
       <br>
 
-       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (d-&gt;oz_of_spam,
- d-&gt;otherstuff)</tt></p>
+       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (d.oz_of_spam,
+ d.filler)</tt></p>
 
        </td>
 
