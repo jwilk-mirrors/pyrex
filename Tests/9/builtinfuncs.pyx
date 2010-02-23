@@ -13,6 +13,7 @@ cdef int f() except -1:
 	i = isinstance(y, z)
 	i = issubclass(y, z)
 	x = iter(y)
+	x = iter2(y, z)
 	i = len(x)
 	x = open(y, z)
 	x = pow(y, z, w)

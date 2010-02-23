@@ -100,6 +100,7 @@ builtin_function_table = [
 	('isinstance', "OO",   "i",     "PyObject_IsInstance"),
 	('issubclass', "OO",   "i",     "PyObject_IsSubclass"),
 	('iter',       "O",    "O",     "PyObject_GetIter"),
+	('iter2',      "OO",   "O",     "PyCallIter_New"),
 	('len',        "O",    "Z",     "PyObject_Length"),
 	#('map',       "",     "",      ""),
 	#('max',       "",     "",      ""),

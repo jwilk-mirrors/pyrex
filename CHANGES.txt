@@ -5,6 +5,9 @@ Enhancements:
 
 	- Check for gil when calling a function declared 'execpt *' or 'except ?'.
 		Acquire gil when reporting unraisable exception.
+	
+	- Added iter2() function for 2-argument form of iter().
+
 
 Bug fixes:
 
