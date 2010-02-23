@@ -34,6 +34,8 @@ Bug fixes:
 	- Memory leak related to exporting C functions. [Lisandro Dalcin]
 	
 	- Compiler crash on return outside function. [Kurt Smith]
+	
+	- Scope problem with extension types declared in pxd. [KS Sreeram]
 
 
 Modifications:

@@ -776,7 +776,8 @@ class ModuleScope(Scope):
 		#
 		#  Check for re-definition and create scope if needed
 		#
-		if not type.scope:
+		scope = type.scope
+		if not scope:
 			if defining or implementing:
 				scope = CClassScope(name = name, outer_scope = self,
 					visibility = visibility)
@@ -787,10 +788,11 @@ class ModuleScope(Scope):
 			else:
 				self.check_for_illegal_incomplete_ctypedef(typedef_flag, pos)
 		else:
-			if defining and type.scope.defined:
+			if defining and scope.defined:
 				error(pos, "C class '%s' already defined" % name)
-			elif implementing and type.scope.implemented:
+			elif implementing and scope.implemented:
 				error(pos, "C class '%s' already implemented" % name)
+			scope.outer_scope = self
 		#
 		#  Fill in options, checking for compatibility with any previous declaration
 		#
