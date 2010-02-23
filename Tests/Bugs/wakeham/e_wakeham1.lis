@@ -1,0 +1,2 @@
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/wakeham/e_wakeham1.pyx:2:2: 'Foo' is not declared
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/wakeham/e_wakeham1.pyx:2:2: 'Foo' is not a type identifier

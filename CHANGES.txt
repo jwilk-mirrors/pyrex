@@ -21,6 +21,9 @@ Bug fixes:
 	
 	- Header files for cimported modules included in wrong order.
 		[Stephane Drouard]
+	
+	- Don't allow a member of a ctypedef struct to reference itself.
+		[Tim Wakeham]
 
 
 Modifications:

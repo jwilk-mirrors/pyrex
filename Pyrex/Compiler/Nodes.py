@@ -425,15 +425,21 @@ class CStructOrUnionDefNode(StatNode):
 				return
 		else:
 			home_scope = env
-		self.entry = home_scope.declare_struct_or_union(
-			self.name, self.kind, scope, self.typedef_flag, self.pos,
-			self.cname, visibility = self.visibility)
+		def declare():
+			self.entry = home_scope.declare_struct_or_union(
+				self.name, self.kind, scope, self.typedef_flag, self.pos,
+				self.cname, visibility = self.visibility)
+			if self.attributes is not None:
+				if self.in_pxd and not env.in_cinclude:
+					self.entry.defined_in_pxd = 1
+		if not self.typedef_flag:
+			declare()
 		if self.attributes is not None:
-			if self.in_pxd and not env.in_cinclude:
-				self.entry.defined_in_pxd = 1
 			for attr in self.attributes:
 				attr.analyse_declarations(env, scope)
-	
+		if self.typedef_flag:
+			declare()
+
 	def analyse_expressions(self, env):
 		pass
 	
