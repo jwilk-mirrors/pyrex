@@ -16,6 +16,8 @@ Bug fixes:
 	
 	- Added workaround for threading initialisation bug in Python 2.3.
 		[Lisandro Dalcin]
+	
+	- Deleting dict item with integer key did not work. [Titus Brown]
 
 
 Modifications:

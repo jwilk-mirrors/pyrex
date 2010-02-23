@@ -1565,7 +1565,7 @@ bad:
 type_import_utility_code = [
 """
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
-""","""
+""",r"""
 #ifndef __PYX_HAVE_RT_ImportType
 #define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, 
@@ -1586,6 +1586,8 @@ static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name,
 			module_name, class_name);
 		goto bad;
 	}
+	printf("__Pyx_ImportType: basicsize = %ld structsize = %ld\n",
+		((PyTypeObject *)result)->tp_basicsize, size);
 	if (((PyTypeObject *)result)->tp_basicsize != size) {
 		PyErr_Format(PyExc_ValueError, 
 			"%s.%s does not appear to be the correct type object",

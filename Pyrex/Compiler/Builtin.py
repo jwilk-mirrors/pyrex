@@ -160,7 +160,7 @@ slice_members = [
 ]
 
 builtin_type_table = [
-	# name,  objstruct,      typeobj,      methods,        members
+	# name,  objstruct,      typeobj,      methods,        members,     flags
 #  bool - function
 #  buffer - constant
 #  classmethod
@@ -169,7 +169,7 @@ builtin_type_table = [
 #  file - constant
 #  float - constant
 #  int - constant
-	("list", "PyListObject", "PyList_Type", list_methods),
+	("list", "PyListObject", "PyList_Type", list_methods, [], ['is_sequence']),
 #  long - constant
 #  object
 #  property - constant
@@ -236,13 +236,16 @@ def declare_builtin_member(self_type, name, typecode, cname = None):
 	member_type = Signature.format_map[typecode]
 	self_type.scope.declare_builtin_var(name, member_type, cname)
 
-def declare_builtin_type(name, objstruct, typeobj, methods, members = []):
+def declare_builtin_type(name, objstruct, typeobj, methods, members = [],
+		flags = []):
 	entry = builtin_scope.declare_builtin_class(name, objstruct, typeobj)
 	type = entry.type
 	for desc in methods:
 		declare_builtin_method(type, *desc)
 	for desc in members:
 		declare_builtin_member(type, *desc)
+	for flag in flags:
+		setattr(type, flag, 1)
 
 def init_builtin_constants():
 	for desc in builtin_constant_table:

@@ -1255,9 +1255,10 @@ class IndexNode(ExprNode):
 	def analyse_base_and_index_types(self, env, getting = 0, setting = 0):
 		self.base.analyse_types(env)
 		self.index.analyse_types(env)
-		if self.base.type.is_pyobject:
+		btype = self.base.type
+		if btype.is_pyobject:
 			itype = self.index.type
-			if not (itype.is_int and itype.signed):
+			if not (btype.is_sequence and itype.is_int and itype.signed):
 				self.index = self.index.coerce_to_pyobject(env)
 			self.type = py_object_type
 			self.gil_check(env)
@@ -1356,8 +1357,7 @@ class IndexNode(ExprNode):
 	
 	def generate_deletion_code(self, code):
 		self.generate_subexpr_evaluation_code(code)
-		#if self.type.is_pyobject:
-		if self.index.type.is_int:
+		if self.base.type.is_sequence and self.index.type.is_int:
 			function = "PySequence_DelItem"
 			index_code = self.index.result()
 		else:

@@ -38,6 +38,7 @@ class PyrexType(BaseType):
 	#  is_typedef            boolean     Is a typedef type
 	#  is_string             boolean     Is a C char * type
 	#  is_returncode         boolean     Is used only to signal exceptions
+	#  is_sequence           boolean     Is a sequence type
 	#  is_error              boolean     Is the dummy error type
 	#  has_attributes        boolean     Has C dot-selectable attributes
 	#  default_value         string      Initial value
@@ -84,6 +85,7 @@ class PyrexType(BaseType):
 	is_typedef = 0
 	is_string = 0
 	is_returncode = 0
+	is_sequence = 0
 	is_error = 0
 	has_attributes = 0
 	default_value = ""
