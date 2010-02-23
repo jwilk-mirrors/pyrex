@@ -32,6 +32,8 @@ Bug fixes:
 		[Mark Ellis]
 	
 	- Memory leak related to exporting C functions. [Lisandro Dalcin]
+	
+	- Compiler crash on return outside function. [Kurt Smith]
 
 
 Modifications:
