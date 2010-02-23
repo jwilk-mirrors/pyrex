@@ -24,6 +24,9 @@ Bug fixes:
 	
 	- Don't allow a member of a ctypedef struct to reference itself.
 		[Tim Wakeham]
+	
+	- Compiler crash due to attribute reference in compile-time expression.
+		[Hoyt Koepke]
 
 
 Modifications:
