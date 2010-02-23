@@ -41,11 +41,15 @@ Bug fixes:
 	- Compiler crash on return outside function. [Kurt Smith]
 	
 	- Scope problem with extension types declared in pxd. [KS Sreeram]
+	
+	- Calling a builtin method of a subclass of a builtin class did not work.
 
 
 Modifications:
 
 	- Added 'tags' to .hgignore file. [Kirill Smelkov]
+	
+	- Disallow overriding a builtin method in a subclass of a builtin class.
 
 
 0.9.8.5

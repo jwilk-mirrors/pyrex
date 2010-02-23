@@ -1430,22 +1430,21 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		# extension type defined in another module, and extract its C method
 		# table pointer if any.
 		#print "generate_type_import_code:", type ###
-		if type in env.types_imported:
-			return
-		if type.typedef_flag:
-			objstruct = type.objstruct_cname
-		else:
-			objstruct = "struct %s" % type.objstruct_cname
-		self.generate_type_import_call(type, code, code.error_goto(pos))
-		self.use_type_import_utility_code(code)
-		if type.vtabptr_cname:
-			code.putln(
-				"if (__Pyx_GetVtable(%s->tp_dict, &%s) < 0) %s" % (
-					type.typeptr_cname,
-					type.vtabptr_cname,
-					code.error_goto(pos)))
-			code.use_utility_code(Nodes.get_vtable_utility_code)
-		env.types_imported[type] = 1
+		if not type.is_builtin and type not in env.types_imported:
+			if type.typedef_flag:
+				objstruct = type.objstruct_cname
+			else:
+				objstruct = "struct %s" % type.objstruct_cname
+			self.generate_type_import_call(type, code, code.error_goto(pos))
+			self.use_type_import_utility_code(code)
+			if type.vtabptr_cname:
+				code.putln(
+					"if (__Pyx_GetVtable(%s->tp_dict, &%s) < 0) %s" % (
+						type.typeptr_cname,
+						type.vtabptr_cname,
+						code.error_goto(pos)))
+				code.use_utility_code(Nodes.get_vtable_utility_code)
+			env.types_imported[type] = 1
 	
 	def generate_type_import_call(self, type, code, error_code):
 		if type.typedef_flag:

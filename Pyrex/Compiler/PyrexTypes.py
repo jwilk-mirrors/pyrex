@@ -39,6 +39,7 @@ class PyrexType(BaseType):
 	#  is_string             boolean     Is a C char * type
 	#  is_returncode         boolean     Is used only to signal exceptions
 	#  is_sequence           boolean     Is a sequence type
+	#  is_builtin            boolean     Is a built-in Python type
 	#  is_error              boolean     Is the dummy error type
 	#  has_attributes        boolean     Has C dot-selectable attributes
 	#  default_value         string      Initial value
@@ -86,6 +87,7 @@ class PyrexType(BaseType):
 	is_string = 0
 	is_returncode = 0
 	is_sequence = 0
+	is_builtin = 0
 	is_error = 0
 	has_attributes = 0
 	default_value = ""
@@ -250,6 +252,8 @@ class PyExtensionType(PyObjectType):
 		self.vtabstruct_cname = None
 		self.vtabptr_cname = None
 		self.vtable_cname = None
+		if base_type and base_type.is_sequence:
+			self.is_sequence = 1
 	
 	def set_scope(self, scope):
 		self.scope = scope

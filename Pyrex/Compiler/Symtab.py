@@ -575,6 +575,7 @@ class BuiltinScope(Scope):
 		type.module_name = "__builtin__"
 		type.typeptr_cname = "(&%s)" % typeobj_cname
 		type.objstruct_cname = objstruct_cname
+		type.is_builtin = 1
 		scope = CClassScope(name = name, outer_scope = self, visibility = "extern")
 		type.set_scope(scope)
 		entry = self.declare_type(name, type, pos = None, visibility = "extern",
@@ -1173,7 +1174,11 @@ class CClassScope(ClassScope):
 			warning(pos, "__new__ method of extension type will change semantics "
 				"in a future version of Pyrex. Use __cinit__ instead.")
 			name = "__cinit__"
-		entry = self.declare(name, name, py_object_type, pos)
+		entry = self.lookup_here(name)
+		if entry and entry.is_builtin_method:
+			self.overriding_builtin_method(name, pos)
+		else:
+			entry = self.declare(name, name, py_object_type, pos)
 		special_sig = get_special_method_signature(name)
 		if special_sig:
 			entry.is_special = 1
@@ -1183,6 +1188,10 @@ class CClassScope(ClassScope):
 			entry.signature = pymethod_signature
 			self.pyfunc_entries.append(entry)
 		return entry
+	
+	def overriding_builtin_method(self, name, pos):
+		error(pos, "Cannot override builtin method '%s' of class '%s'" % (
+			name, self.parent_type.base_type.name))
 	
 	def lookup_here(self, name):
 		if name == "__new__":
@@ -1207,6 +1216,8 @@ class CClassScope(ClassScope):
 		if entry:
 			if not entry.is_cfunction:
 				entry.redeclared(pos)
+			elif entry.is_builtin_method:
+				self.overriding_builtin_method(name, pos)
 			else:
 				if defining and entry.func_cname:
 					error(pos, "'%s' already defined" % name)
@@ -1252,9 +1263,13 @@ class CClassScope(ClassScope):
 				entry.is_variable = 1
 				self.inherited_var_entries.append(entry)
 		for base_entry in base_scope.cfunc_entries:
-			entry = self.add_cfunction(base_entry.name, base_entry.type,
-				base_entry.pos, adapt(base_entry.cname), base_entry.visibility)
-			entry.is_inherited = 1
+			cname = base_entry.cname
+			if base_entry.is_builtin_method:
+				self.entries[base_entry.name] = base_entry
+			else:
+				entry = self.add_cfunction(base_entry.name, base_entry.type,
+					base_entry.pos, adapt(base_entry.cname), base_entry.visibility)
+				entry.is_inherited = 1
 	
 
 class PropertyScope(Scope):

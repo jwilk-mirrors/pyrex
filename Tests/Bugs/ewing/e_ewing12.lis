@@ -1,0 +1,2 @@
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/ewing/e_ewing12.pyx:3:6: Cannot override builtin method 'append' of class 'list'
+/Local/Projects/D/Pyrex/Source/Tests/Bugs/ewing/e_ewing12.pyx:6:1: Cannot override builtin method 'append' of class 'list'
