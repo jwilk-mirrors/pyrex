@@ -18,6 +18,9 @@ Bug fixes:
 		[Lisandro Dalcin]
 	
 	- Deleting dict item with integer key did not work. [Titus Brown]
+	
+	- Header files for cimported modules included in wrong order.
+		[Stephane Drouard]
 
 
 Modifications:

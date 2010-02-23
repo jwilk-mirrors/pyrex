@@ -355,8 +355,8 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("#endif")
 
 	def generate_includes(self, env, cimported_modules, code):
-		includes = env.include_files[:]
-		for module in cimported_modules:
+		includes = []
+		for module in cimported_modules + [env]:
 			for filename in module.include_files:
 				if filename not in includes:
 					includes.append(filename)
