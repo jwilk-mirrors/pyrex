@@ -540,10 +540,6 @@ class FuncDefNode(StatNode, BlockNode):
 		self.body.analyse_expressions(lenv)
 		# Code for nested function definitions would go here
 		# if we supported them, which we probably won't.
-		# ----- Top-level constants used by this function
-		#self.generate_interned_name_decls(lenv, code)
-		#self.generate_py_string_decls(lenv, code)
-		#self.generate_const_definitions(lenv, code)
 		# ----- Function header
 		code.putln("")
 		self.generate_function_header(code,
@@ -565,6 +561,7 @@ class FuncDefNode(StatNode, BlockNode):
 		# ----- GIL acquisition
 		acquire_gil = self.need_gil_acquisition(lenv)
 		if acquire_gil:
+			lenv.global_scope().gil_used = 1
 			code.putln("PyGILState_STATE _save = PyGILState_Ensure();")
 		# ----- Fetch arguments
 		self.generate_argument_parsing_code(code)
@@ -2461,6 +2458,7 @@ class GILStatNode(TryFinallyStatNode):
 			finally_clause = GILExitNode(pos, state = state))
 
 	def analyse_expressions(self, env):
+		env.global_scope().gil_used = 1
 		was_nogil = env.nogil
 		env.nogil = 1
 		TryFinallyStatNode.analyse_expressions(self, env)

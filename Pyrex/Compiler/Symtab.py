@@ -602,6 +602,9 @@ class ModuleScope(Scope):
 	# types_imported       {PyrexType : 1}    Set of types for which import code generated
 	# type_names           {string : 1}       Set of type names (used during parsing)
 	# pyrex_include_files  [string]           Pyrex sources included with 'include'
+	# gil_used             boolean            True if GIL is acquired/released anywhere
+
+	gil_used = 0
 
 	def __init__(self, name, parent_module, context):
 		outer_scope = context.find_submodule("__builtin__")

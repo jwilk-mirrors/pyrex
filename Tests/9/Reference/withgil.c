@@ -92,6 +92,9 @@ static void __pyx_init_filenames(void); /*proto*/
 
 PyMODINIT_FUNC initwithgil(void); /*proto*/
 PyMODINIT_FUNC initwithgil(void) {
+  #if PY_VERSION_HEX < 0x02040000 && defined(WITH_THREAD)
+    PyEval_InitThreads();
+  #endif
   __pyx_init_filenames();
   __pyx_m = Py_InitModule4("withgil", __pyx_methods, 0, 0, PYTHON_API_VERSION);
   if (!__pyx_m) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};

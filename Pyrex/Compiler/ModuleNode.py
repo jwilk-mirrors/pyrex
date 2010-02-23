@@ -402,21 +402,6 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 				self.generate_exttype_vtable_struct(entry, code)
 				self.generate_exttype_vtabptr_declaration(entry, code)
 	
-#	def generate_gcc33_hack(self, env, code):
-#		# Workaround for spurious warning generation in gcc 3.3
-#		if 0:
-#			code.putln("")
-#			for entry in env.c_class_entries:
-#				type = entry.type
-#				if not type.typedef_flag:
-#					name = type.objstruct_cname
-#					if name.startswith("__pyx_"):
-#						tail = name[6:]
-#					else:
-#						tail = name
-#					code.putln("typedef struct %s __pyx_gcc33_%s;" % (
-#						name, tail))
-	
 	def generate_typedef(self, entry, code):
 		base_type = entry.type.typedef_base_type
 		code.putln("")
@@ -1263,6 +1248,12 @@ class ModuleNode(Nodes.Node, Nodes.BlockNode):
 		code.putln("%s; /*proto*/" % header)
 		code.putln("%s {" % header)
 		code.put_var_declarations(env.temp_entries)
+		
+		if env.gil_used:
+			# Workaround for GIL/threading bug in 2.3
+			code.putln("#if PY_VERSION_HEX < 0x02040000 && defined(WITH_THREAD)")
+			code.putln("  PyEval_InitThreads();")
+			code.putln("#endif")
 
 		#code.putln("/*--- Libary function declarations ---*/")
 		env.generate_library_function_declarations(code)

@@ -13,6 +13,9 @@ Bug fixes:
 	
 	- Always preserve explicit type casts for non-Python types.
 		[Alexander Belchenko]
+	
+	- Added workaround for threading initialisation bug in Python 2.3.
+		[Lisandro Dalcin]
 
 
 Modifications:
