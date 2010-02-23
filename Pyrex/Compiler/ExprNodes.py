@@ -1846,7 +1846,7 @@ class AttributeNode(ExprNode):
 
 	def compile_time_value(self, denv):
 		attr = self.attribute
-		if attr.beginswith("__") and attr.endswith("__"):
+		if attr.startswith("__") and attr.endswith("__"):
 			self.error("Invalid attribute name '%s' in compile-time expression"
 				% attr)
 			return None
