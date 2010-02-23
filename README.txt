@@ -14,15 +14,24 @@ For more info, see:
 Comments, suggestions, bug reports, etc. are
 welcome!
 
-Copyright stuff: Pyrex is free of restrictions. You
-may use, redistribute, modify and distribute modified
-versions.
+License
+-------
+
+Pyrex is open source. You may use it, redistribute it, modify
+it and distribute modified versions without restriction.
+
+If you require a more formal license statement, you may use
+Pyrex under the terms of the Apache License Version 2.0, a copy
+of which is included in the file LICENSE.txt.
+
+Updates
+-------
 
 The latest version of Pyrex can be found here:
 
 http://www.cosc.canterbury.ac.nz/~greg/python/Pyrex/
 
-Greg Ewing, Computer Science Dept, +--------------------------------------+
-University of Canterbury,          | A citizen of NewZealandCorp, a       |
-Christchurch, New Zealand          | wholly-owned subsidiary of USA Inc.  |
-greg@cosc.canterbury.ac.nz         +--------------------------------------+
+Gregory Ewing, Computer Science Dept,
+University of Canterbury,
+Christchurch, New Zealand
+greg.ewing@canterbury.ac.nz
