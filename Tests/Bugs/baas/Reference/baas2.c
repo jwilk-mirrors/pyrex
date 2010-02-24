@@ -100,13 +100,17 @@ static PyObject *__pyx_f_5baas2_bar(PyObject *__pyx_self, PyObject *__pyx_args, 
   __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/baas/baas2.pyx":7 */
-  __pyx_2 = __Pyx_GetItemInt(__pyx_v_values, 0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  __pyx_2 = PyInt_FromLong(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  __pyx_3 = PyObject_GetItem(__pyx_v_values, __pyx_2); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  Py_DECREF(__pyx_2); __pyx_2 = 0;
   __pyx_4 = PyInt_AsLong(__pyx_2); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   __pyx_v_a = __pyx_4;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/baas/baas2.pyx":8 */
-  __pyx_3 = __Pyx_GetItemInt(__pyx_v_values, 1); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
+  __pyx_1 = PyInt_FromLong(1); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
+  __pyx_2 = PyObject_GetItem(__pyx_v_values, __pyx_1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
+  Py_DECREF(__pyx_1); __pyx_1 = 0;
   __pyx_4 = PyInt_AsLong(__pyx_3); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
   Py_DECREF(__pyx_3); __pyx_3 = 0;
   __pyx_v_b = __pyx_4;

@@ -77,6 +77,7 @@ static int __pyx_f_12builtinfuncs_f(void) {
   PyObject *__pyx_1 = 0;
   int __pyx_2;
   int __pyx_3;
+  long __pyx_4;
   char *__pyx_4;
   Py_ssize_t __pyx_5;
   PyObject *__pyx_6 = 0;

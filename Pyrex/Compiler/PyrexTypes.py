@@ -293,7 +293,7 @@ class PyExtensionType(PyObjectType):
 	
 	def is_defined(self):
 		scope = self.scope
-		return scope and scope.defined
+		return scope and (scope.defined or scope.implemented)
 	
 	def __str__(self):
 		return self.name

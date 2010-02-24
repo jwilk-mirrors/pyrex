@@ -2688,7 +2688,7 @@ class TypecastNode(ExprNode):
 		return result_code
 	
 	def result_as(self, type):
-		if not self.is_temp and self.type.is_pyobject and self.operand.type.is_pyobject:
+		if not self.is_temp and type.is_pyobject and self.type.is_pyobject:
 			#  Optimise away some unnecessary casting
 			return self.operand.result_as(type)
 		else:

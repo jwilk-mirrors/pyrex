@@ -27,8 +27,8 @@
 #define __PYX_EXTERN_C extern
 #endif
 #include <math.h>
-#include "foo.h"
 #include "blarg.h"
+#include "foo.h"
 
 
 typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/

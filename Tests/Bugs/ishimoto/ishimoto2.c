@@ -51,16 +51,19 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 static char __pyx_k1[] = "C";
 static char __pyx_k2[] = "a b";
-static char __pyx_k3[] = "xxx";
+static char __pyx_k3[] = "ishimoto2";
+static char __pyx_k4[] = "xxx";
 
 static PyObject *__pyx_n_C;
+static PyObject *__pyx_n_ishimoto2;
 static PyObject *__pyx_n_xxx;
 
 static PyObject *__pyx_k2p;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_C, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_xxx, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_ishimoto2, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_xxx, 1, __pyx_k4, sizeof(__pyx_k4)},
   {&__pyx_k2p, 0, __pyx_k2, sizeof(__pyx_k2)},
   {0, 0, 0, 0}
 };
@@ -114,7 +117,7 @@ PyMODINIT_FUNC initishimoto2(void) {
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   Py_INCREF(__pyx_k2p);
   __pyx_d1 = __pyx_k2p;
-  __pyx_2 = PyCFunction_New(&__pyx_mdef_9ishimoto2_1C_xxx, 0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
+  __pyx_2 = PyCFunction_NewEx(&__pyx_mdef_9ishimoto2_1C_xxx, 0, __pyx_n_ishimoto2); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   __pyx_4 = PyMethod_New(__pyx_2, 0, __pyx_3); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   if (PyObject_SetAttr(__pyx_3, __pyx_n_xxx, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}

@@ -73,7 +73,9 @@ static PyObject *__pyx_f_5jiba5_f(PyObject *__pyx_self, PyObject *__pyx_args, Py
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/jiba/jiba5.pyx":4 */
   __pyx_1 = __Pyx_GetName(__pyx_m, __pyx_n_mylist); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
-  if (PySequence_DelItem(__pyx_1, __pyx_v_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
+  __pyx_2 = PyInt_FromLong(__pyx_v_i); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
+  if (PyObject_DelItem(__pyx_1, __pyx_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
+  Py_DECREF(__pyx_1); __pyx_1 = 0;
   Py_DECREF(__pyx_1); __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/jiba/jiba5.pyx":5 */
@@ -84,6 +86,7 @@ static PyObject *__pyx_f_5jiba5_f(PyObject *__pyx_self, PyObject *__pyx_args, Py
   goto __pyx_L0;
   __pyx_L1:;
   Py_XDECREF(__pyx_1);
+  Py_XDECREF(__pyx_2);
   __Pyx_AddTraceback("jiba5.f");
   __pyx_r = 0;
   __pyx_L0:;

@@ -51,16 +51,19 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 static char __pyx_k1[] = "t";
 static char __pyx_k2[] = "B";
-static char __pyx_k3[] = "__init__";
+static char __pyx_k3[] = "rodriguez_1";
+static char __pyx_k4[] = "__init__";
 
 static PyObject *__pyx_n_B;
 static PyObject *__pyx_n___init__;
+static PyObject *__pyx_n_rodriguez_1;
 static PyObject *__pyx_n_t;
 
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_B, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n___init__, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n___init__, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_rodriguez_1, 1, __pyx_k3, sizeof(__pyx_k3)},
   {&__pyx_n_t, 1, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
@@ -158,7 +161,7 @@ PyMODINIT_FUNC initrodriguez_1(void) {
   __pyx_2 = PyTuple_New(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_3 = __Pyx_CreateClass(__pyx_2, __pyx_1, __pyx_n_B, "rodriguez_1"); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
-  __pyx_2 = PyCFunction_New(&__pyx_mdef_11rodriguez_1_1B___init__, 0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
+  __pyx_2 = PyCFunction_NewEx(&__pyx_mdef_11rodriguez_1_1B___init__, 0, __pyx_n_rodriguez_1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   __pyx_4 = PyMethod_New(__pyx_2, 0, __pyx_3); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   if (PyObject_SetAttr(__pyx_3, __pyx_n___init__, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 2; goto __pyx_L1;}

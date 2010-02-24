@@ -795,6 +795,7 @@ static int __Pyx_ExportFunction(char *n, void *f, char *s) {
 		goto bad;
 	if (PyDict_SetItemString(d, n, p) < 0)
 		goto bad;
+	Py_DECREF(p);
 	Py_DECREF(d);
 	return 0;
 bad:

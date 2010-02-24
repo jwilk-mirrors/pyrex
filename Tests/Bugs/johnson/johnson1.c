@@ -37,8 +37,6 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
-
 static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
@@ -85,9 +83,11 @@ static void __pyx_f_8johnson1_func(void) {
   __pyx_2 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/johnson/johnson1.pyx":7 */
-  __pyx_1 = __Pyx_GetItemInt(__pyx_v_map, 0); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
-  __pyx_3 = ((__pyx_t_8johnson1_foo)PyInt_AsLong(__pyx_1)); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  __pyx_1 = PyInt_FromLong(0); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  __pyx_2 = PyObject_GetItem(__pyx_v_map, __pyx_1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;
+  __pyx_3 = ((__pyx_t_8johnson1_foo)PyInt_AsLong(__pyx_2)); if (PyErr_Occurred()) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  Py_DECREF(__pyx_2); __pyx_2 = 0;
   __pyx_v_x = __pyx_3;
 
   goto __pyx_L0;
@@ -132,30 +132,17 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i) {
-	PyTypeObject *t = o->ob_type;
-	PyObject *r;
-	if (t->tp_as_sequence && t->tp_as_sequence->sq_item)
-		r = PySequence_GetItem(o, i);
-	else {
-		PyObject *j = PyInt_FromLong(i);
-		if (!j)
-			return 0;
-		r = PyObject_GetItem(o, j);
-		Py_DECREF(j);
-	}
-	return r;
-}
-
 static void __Pyx_WriteUnraisable(char *name) {
 	PyObject *old_exc, *old_val, *old_tb;
 	PyObject *ctx;
+	PyGILState_STATE state = PyGILState_Ensure();
 	PyErr_Fetch(&old_exc, &old_val, &old_tb);
 	ctx = PyString_FromString(name);
 	PyErr_Restore(old_exc, old_val, old_tb);
 	if (!ctx)
 		ctx = Py_None;
 	PyErr_WriteUnraisable(ctx);
+	PyGILState_Release(state);
 }
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

@@ -1,5 +1,6 @@
 cdef int f() except -1:
-	cdef object x, y, z
+	cdef list x
+	cdef object y, z
 	cdef int i
 	cdef unsigned int ui
 	z = x[y]

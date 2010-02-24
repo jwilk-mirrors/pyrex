@@ -195,12 +195,14 @@ static void __pyx_init_filenames(void) {
 static void __Pyx_WriteUnraisable(char *name) {
 	PyObject *old_exc, *old_val, *old_tb;
 	PyObject *ctx;
+	PyGILState_STATE state = PyGILState_Ensure();
 	PyErr_Fetch(&old_exc, &old_val, &old_tb);
 	ctx = PyString_FromString(name);
 	PyErr_Restore(old_exc, old_val, old_tb);
 	if (!ctx)
 		ctx = Py_None;
 	PyErr_WriteUnraisable(ctx);
+	PyGILState_Release(state);
 }
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

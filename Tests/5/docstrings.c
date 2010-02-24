@@ -59,16 +59,19 @@ static PyTypeObject *__pyx_ptype_10docstrings_SuperParrot = 0;
 
 static char __pyx_k1[] = "Parrot";
 static char __pyx_k2[] = "Standard Norwegian Blue.";
-static char __pyx_k3[] = "admire_plumage";
+static char __pyx_k3[] = "docstrings";
+static char __pyx_k4[] = "admire_plumage";
 
 static PyObject *__pyx_n_Parrot;
 static PyObject *__pyx_n_admire_plumage;
+static PyObject *__pyx_n_docstrings;
 
 static PyObject *__pyx_k2p;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_Parrot, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_admire_plumage, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_admire_plumage, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_docstrings, 1, __pyx_k3, sizeof(__pyx_k3)},
   {&__pyx_k2p, 0, __pyx_k2, sizeof(__pyx_k2)},
   {0, 0, 0, 0}
 };
@@ -273,7 +276,7 @@ PyMODINIT_FUNC initdocstrings(void) {
   if (PyDict_SetItemString(__pyx_1, "__doc__", __pyx_k2p) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
   __pyx_3 = __Pyx_CreateClass(__pyx_2, __pyx_1, __pyx_n_Parrot, "docstrings"); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
-  __pyx_2 = PyCFunction_New(&__pyx_mdef_10docstrings_6Parrot_admire_plumage, 0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_2 = PyCFunction_NewEx(&__pyx_mdef_10docstrings_6Parrot_admire_plumage, 0, __pyx_n_docstrings); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   __pyx_4 = PyMethod_New(__pyx_2, 0, __pyx_3); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   if (PyObject_SetAttr(__pyx_3, __pyx_n_admire_plumage, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}

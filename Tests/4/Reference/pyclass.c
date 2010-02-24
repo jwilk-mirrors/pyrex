@@ -50,15 +50,17 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 
 static char __pyx_k1[] = "Spam";
-static char __pyx_k2[] = "eggs";
+static char __pyx_k2[] = "pyclass";
+static char __pyx_k3[] = "eggs";
 
 static PyObject *__pyx_n_Spam;
 static PyObject *__pyx_n_eggs;
-
+static PyObject *__pyx_n_pyclass;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_Spam, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_eggs, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_eggs, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_pyclass, 1, __pyx_k2, sizeof(__pyx_k2)},
   {0, 0, 0, 0}
 };
 
@@ -104,7 +106,7 @@ PyMODINIT_FUNC initpyclass(void) {
   __pyx_2 = PyTuple_New(0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_3 = __Pyx_CreateClass(__pyx_2, __pyx_1, __pyx_n_Spam, "pyclass"); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
-  __pyx_2 = PyCFunction_New(&__pyx_mdef_7pyclass_4Spam_eggs, 0); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
+  __pyx_2 = PyCFunction_NewEx(&__pyx_mdef_7pyclass_4Spam_eggs, 0, __pyx_n_pyclass); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   __pyx_4 = PyMethod_New(__pyx_2, 0, __pyx_3); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   if (PyObject_SetAttr(__pyx_3, __pyx_n_eggs, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}

@@ -235,7 +235,9 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   if (__pyx_2) {
     __Pyx_AddTraceback("tryexcept.f");
     if (__Pyx_GetException(&__pyx_3, &__pyx_4, &__pyx_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
-    if (__Pyx_SetItemInt(__pyx_v_c, 42, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
+    __pyx_5 = PyInt_FromLong(42); if (!__pyx_5) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
+    if (PyObject_SetItem(__pyx_v_c, __pyx_5, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
+    Py_DECREF(__pyx_5); __pyx_5 = 0;
     __pyx_v_i = 2;
     Py_DECREF(__pyx_3); __pyx_3 = 0;
     Py_DECREF(__pyx_4); __pyx_4 = 0;
@@ -266,6 +268,7 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
     }
     goto __pyx_L15;
     __pyx_L14:;
+    Py_XDECREF(__pyx_3); __pyx_3 = 0;
     Py_XDECREF(__pyx_1); __pyx_1 = 0;
     Py_XDECREF(__pyx_4); __pyx_4 = 0;
 

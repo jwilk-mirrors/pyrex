@@ -128,12 +128,14 @@ static int __pyx_f_11inplace_lhs_f(void) {
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_lhs.pyx":17 */
   __pyx_1 = PyNumber_Add(__pyx_v_b, __pyx_v_c); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
-  __pyx_2 = __Pyx_GetItemInt(__pyx_v_a, __pyx_v_i); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
+  __pyx_2 = PyInt_FromLong(__pyx_v_i); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
+  __pyx_3 = PyObject_GetItem(__pyx_v_a, __pyx_2); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
   __pyx_3 = PyNumber_InPlaceAdd(__pyx_2, __pyx_1); if (!__pyx_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
   Py_DECREF(__pyx_2); __pyx_2 = 0;
   Py_DECREF(__pyx_1); __pyx_1 = 0;
-  if (__Pyx_SetItemInt(__pyx_v_a, __pyx_v_i, __pyx_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
+  if (PyObject_SetItem(__pyx_v_a, __pyx_2, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 17; goto __pyx_L1;}
   Py_DECREF(__pyx_3); __pyx_3 = 0;
+  Py_DECREF(__pyx_2); __pyx_2 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_lhs.pyx":18 */
   __pyx_2 = PyNumber_Add(__pyx_v_b, __pyx_v_c); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; goto __pyx_L1;}
@@ -196,6 +198,7 @@ static int __pyx_f_11inplace_lhs_f(void) {
   Py_XDECREF(__pyx_1);
   Py_XDECREF(__pyx_2);
   Py_XDECREF(__pyx_3);
+  Py_XDECREF(__pyx_4);
   __Pyx_AddTraceback("inplace_lhs.f");
   __pyx_r = (-1);
   __pyx_L0:;

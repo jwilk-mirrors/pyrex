@@ -1585,8 +1585,6 @@ static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name,
 			module_name, class_name);
 		goto bad;
 	}
-	printf("__Pyx_ImportType: basicsize = %ld structsize = %ld\n",
-		((PyTypeObject *)result)->tp_basicsize, size);
 	if (((PyTypeObject *)result)->tp_basicsize != size) {
 		PyErr_Format(PyExc_ValueError, 
 			"%s.%s does not appear to be the correct type object",

@@ -54,9 +54,11 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 static char __pyx_k1[] = "Swallow";
 static char __pyx_k2[] = "grail";
 static char __pyx_k3[] = "swallow";
-static char __pyx_k4[] = "spam";
+static char __pyx_k4[] = "classmethargdefault";
+static char __pyx_k5[] = "spam";
 
 static PyObject *__pyx_n_Swallow;
+static PyObject *__pyx_n_classmethargdefault;
 static PyObject *__pyx_n_grail;
 static PyObject *__pyx_n_spam;
 static PyObject *__pyx_n_swallow;
@@ -64,8 +66,9 @@ static PyObject *__pyx_n_swallow;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_Swallow, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_classmethargdefault, 1, __pyx_k4, sizeof(__pyx_k4)},
   {&__pyx_n_grail, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_spam, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_spam, 1, __pyx_k5, sizeof(__pyx_k5)},
   {&__pyx_n_swallow, 1, __pyx_k3, sizeof(__pyx_k3)},
   {0, 0, 0, 0}
 };
@@ -132,7 +135,7 @@ PyMODINIT_FUNC initclassmethargdefault(void) {
   __pyx_2 = __Pyx_GetName(__pyx_b, __pyx_n_swallow); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   __pyx_d3 = __pyx_2;
   __pyx_2 = 0;
-  __pyx_4 = PyCFunction_New(&__pyx_mdef_19classmethargdefault_7Swallow_spam, 0); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
+  __pyx_4 = PyCFunction_NewEx(&__pyx_mdef_19classmethargdefault_7Swallow_spam, 0, __pyx_n_classmethargdefault); if (!__pyx_4) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   __pyx_5 = PyMethod_New(__pyx_4, 0, __pyx_3); if (!__pyx_5) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
   Py_DECREF(__pyx_4); __pyx_4 = 0;
   if (PyObject_SetAttr(__pyx_3, __pyx_n_spam, __pyx_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}

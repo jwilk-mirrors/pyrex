@@ -1318,6 +1318,7 @@ class CClassDefNode(StatNode):
 			error(self.pos, "Object struct name specification required for "
 				"C class defined in 'extern from' block")
 		self.base_type = None
+		has_body = self.body is not None
 		if self.base_class_name:
 			if self.base_class_module:
 				base_class_scope = env.find_module(self.base_class_module, self.pos)
@@ -1330,11 +1331,10 @@ class CClassDefNode(StatNode):
 						error(self.pos, "'%s' is not a type name" % self.base_class_name)
 					elif not base_class_entry.type.is_extension_type:
 						error(self.pos, "'%s' is not an extension type" % self.base_class_name)
-					elif base_class_entry.visibility <> 'extern' and not base_class_entry.type.is_defined():
+					elif has_body and base_class_entry.visibility <> 'extern' and not base_class_entry.type.is_defined():
 						error(self.pos, "Base class '%s' is incomplete" % self.base_class_name)
 					else:
 						self.base_type = base_class_entry.type
-		has_body = self.body is not None
 		if self.module_name and self.visibility <> 'extern':
 			module_path = self.module_name.split(".")
 			home_scope = env.find_imported_module(module_path, self.pos)
