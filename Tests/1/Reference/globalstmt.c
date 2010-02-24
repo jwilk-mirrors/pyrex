@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,24 +39,38 @@ static char **__pyx_f;
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from globalstmt */
 
 
+/* Declarations from implementation of globalstmt */
+
+
+static char __pyx_k1[] = "b";
+static char __pyx_k2[] = "a";
+static char __pyx_k3[] = "d";
+static char __pyx_k4[] = "c";
+
+static PyObject *__pyx_n_a;
+static PyObject *__pyx_n_b;
+static PyObject *__pyx_n_c;
+static PyObject *__pyx_n_d;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_a, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_b, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_c, 1, __pyx_k3, sizeof(__pyx_k3)},
-  {&__pyx_n_d, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_a, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_b, 1, __pyx_k1, sizeof(__pyx_k1)},
+  {&__pyx_n_c, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_d, 1, __pyx_k3, sizeof(__pyx_k3)},
   {0, 0, 0, 0}
 };
 
-/* Implementation of globalstmt */
 
+
+/* Implementation of globalstmt */
 
 static PyObject *__pyx_f_10globalstmt_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_10globalstmt_f(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -85,7 +98,6 @@ static PyObject *__pyx_f_10globalstmt_f(PyObject *__pyx_self, PyObject *__pyx_ar
   __pyx_L0:;
   return __pyx_r;
 }
-
 
 static struct PyMethodDef __pyx_methods[] = {
   {"f", (PyCFunction)__pyx_f_10globalstmt_f, METH_VARARGS|METH_KEYWORDS, 0},
@@ -127,11 +139,13 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	return result;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

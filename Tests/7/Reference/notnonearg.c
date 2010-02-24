@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,6 +39,8 @@ static char **__pyx_f;
 
 static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed, char *name); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
@@ -47,6 +48,9 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from notnonearg */
+
+
+/* Declarations from implementation of notnonearg */
 
 struct Spam {
   PyObject_HEAD
@@ -62,9 +66,13 @@ static PyTypeObject *__pyx_ptype_10notnonearg_Spam = 0;
 static PyTypeObject *__pyx_ptype_10notnonearg_Eggs = 0;
 
 
+
+
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of notnonearg */
 
@@ -137,6 +145,18 @@ static int __Pyx_ArgTypeTest(PyObject *obj, PyTypeObject *type, int none_allowed
 	PyErr_Format(PyExc_TypeError,
 		"Argument '%s' has incorrect type (expected %s, got %s)",
 		name, type->tp_name, obj->ob_type->tp_name);
+	return 0;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
 	return 0;
 }
 

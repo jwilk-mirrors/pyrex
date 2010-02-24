@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -42,16 +41,25 @@ static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
 
 static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from intindex */
 
+
+/* Declarations from implementation of intindex */
+
 static int __pyx_f_8intindex_f(void); /*proto*/
+
+
 
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of intindex */
 
@@ -63,31 +71,32 @@ static int __pyx_f_8intindex_f(void) {
   unsigned int __pyx_v_ui;
   int __pyx_r;
   PyObject *__pyx_1 = 0;
+  PyObject *__pyx_2 = 0;
   __pyx_v_x = Py_None; Py_INCREF(Py_None);
   __pyx_v_y = Py_None; Py_INCREF(Py_None);
   __pyx_v_z = Py_None; Py_INCREF(Py_None);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":4 */
-  __pyx_1 = PyObject_GetItem(__pyx_v_x, __pyx_v_y); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_z);
-  __pyx_v_z = __pyx_1;
-  __pyx_1 = 0;
-
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":5 */
-  __pyx_1 = __Pyx_GetItemInt(__pyx_v_x, __pyx_v_i); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
+  __pyx_1 = PyObject_GetItem(__pyx_v_x, __pyx_v_y); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   Py_DECREF(__pyx_v_z);
   __pyx_v_z = __pyx_1;
   __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":6 */
-  if (PyObject_SetItem(__pyx_v_x, __pyx_v_y, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
+  __pyx_1 = __Pyx_GetItemInt(__pyx_v_x, __pyx_v_i); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
+  Py_DECREF(__pyx_v_z);
+  __pyx_v_z = __pyx_1;
+  __pyx_1 = 0;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":7 */
-  if (__Pyx_SetItemInt(__pyx_v_x, __pyx_v_i, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  if (PyObject_SetItem(__pyx_v_x, __pyx_v_y, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":8 */
+  if (__Pyx_SetItemInt(__pyx_v_x, __pyx_v_i, __pyx_v_z) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/intindex.pyx":9 */
   __pyx_1 = PyLong_FromUnsignedLong(__pyx_v_ui); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
-  __pyx_2 = PyObject_GetItem(__pyx_v_x, __pyx_1); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_2 = PyObject_GetItem(__pyx_v_x, __pyx_1); if (!__pyx_2) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   Py_DECREF(__pyx_1); __pyx_1 = 0;
   Py_DECREF(__pyx_v_z);
   __pyx_v_z = __pyx_2;
@@ -171,6 +180,18 @@ static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
 		Py_DECREF(j);
 	}
 	return r;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"

@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,27 +37,37 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_CreateClass(PyObject *bases, PyObject *dict, PyObject *name, char *modname); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static PyObject *__Pyx_CreateClass(PyObject *bases, PyObject *dict, PyObject *name, char *modname); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from rodriguez_1 */
 
 
+/* Declarations from implementation of rodriguez_1 */
+
+
+static char __pyx_k1[] = "t";
+static char __pyx_k2[] = "B";
+static char __pyx_k3[] = "__init__";
+
+static PyObject *__pyx_n_B;
+static PyObject *__pyx_n___init__;
+static PyObject *__pyx_n_t;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_B, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n___init__, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_t, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_B, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n___init__, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_t, 1, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of rodriguez_1 */
-
-
-
 
 static PyObject *__pyx_f_11rodriguez_1_1B___init__(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyMethodDef __pyx_mdef_11rodriguez_1_1B___init__ = {"__init__", (PyCFunction)__pyx_f_11rodriguez_1_1B___init__, METH_VARARGS|METH_KEYWORDS, 0};
@@ -125,7 +134,6 @@ static PyObject *__pyx_f_11rodriguez_1_1B___init__(PyObject *__pyx_self, PyObjec
   return __pyx_r;
 }
 
-
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
 };
@@ -177,6 +185,18 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
+}
+
 static PyObject *__Pyx_CreateClass(
 	PyObject *bases, PyObject *dict, PyObject *name, char *modname)
 {
@@ -192,16 +212,6 @@ static PyObject *__Pyx_CreateClass(
 bad:
 	Py_XDECREF(py_modname);
 	return result;
-}
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
 }
 
 #include "compile.h"

@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -48,15 +47,22 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 /* Declarations from mitch_chapman_3 */
 
 
+/* Declarations from implementation of mitch_chapman_3 */
+
+
+static char __pyx_k1[] = "Done.";
+
+
+static PyObject *__pyx_k1p;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of mitch_chapman_3 */
-
-
 
 static PyObject *__pyx_f_15mitch_chapman_3_cannotIterate(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_15mitch_chapman_3_cannotIterate(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -126,7 +132,6 @@ static PyObject *__pyx_f_15mitch_chapman_3_cannotIterate(PyObject *__pyx_self, P
   Py_DECREF(__pyx_v_item);
   return __pyx_r;
 }
-
 
 static struct PyMethodDef __pyx_methods[] = {
   {"cannotIterate", (PyCFunction)__pyx_f_15mitch_chapman_3_cannotIterate, METH_VARARGS|METH_KEYWORDS, 0},
@@ -206,6 +211,8 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

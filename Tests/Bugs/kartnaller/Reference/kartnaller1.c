@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,13 +39,20 @@ static char **__pyx_f;
 
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from kartnaller1 */
 
+
+/* Declarations from implementation of kartnaller1 */
+
 static PyObject *__pyx_f_11kartnaller1_leek(PyObject *,PyObject *); /*proto*/
+
+static char __pyx_k1[] = "range";
+
+static PyObject *__pyx_n_range;
 
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
@@ -54,8 +60,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
 
-/* Implementation of kartnaller1 */
 
+
+/* Implementation of kartnaller1 */
 
 static PyObject *__pyx_f_11kartnaller1_leek(PyObject *__pyx_v_x,PyObject *__pyx_v_y) {
   PyObject *__pyx_v_i;
@@ -108,7 +115,6 @@ static PyObject *__pyx_f_11kartnaller1_leek(PyObject *__pyx_v_x,PyObject *__pyx_
   return __pyx_r;
 }
 
-
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
 };
@@ -148,11 +154,13 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	return result;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

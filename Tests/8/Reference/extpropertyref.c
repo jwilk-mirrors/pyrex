@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,11 +39,14 @@ static char **__pyx_f;
 
 static void __Pyx_WriteUnraisable(char *name); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from extpropertyref */
+
+
+/* Declarations from implementation of extpropertyref */
 
 struct __pyx_obj_14extpropertyref_Spam {
   PyObject_HEAD
@@ -54,11 +56,17 @@ struct __pyx_obj_14extpropertyref_Spam {
 static PyTypeObject *__pyx_ptype_14extpropertyref_Spam = 0;
 static void __pyx_f_14extpropertyref_tomato(void); /*proto*/
 
+static char __pyx_k1[] = "eggs";
+
+static PyObject *__pyx_n_eggs;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_eggs, 1, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of extpropertyref */
 
@@ -71,7 +79,6 @@ static PyObject *__pyx_f_14extpropertyref_4Spam_4eggs___get__(PyObject *__pyx_v_
   Py_DECREF(__pyx_v_self);
   return __pyx_r;
 }
-
 
 static void __pyx_f_14extpropertyref_tomato(void) {
   struct __pyx_obj_14extpropertyref_Spam *__pyx_v_spam;
@@ -94,7 +101,6 @@ static void __pyx_f_14extpropertyref_tomato(void) {
   Py_DECREF(__pyx_v_spam);
   Py_DECREF(__pyx_v_lettuce);
 }
-
 
 static PyObject *__pyx_tp_new_14extpropertyref_Spam(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
@@ -285,11 +291,13 @@ static void __Pyx_WriteUnraisable(char *name) {
 	PyErr_WriteUnraisable(ctx);
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

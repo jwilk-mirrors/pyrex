@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,15 +39,24 @@ static char **__pyx_f;
 
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from tryfinally */
+
+
+/* Declarations from implementation of tryfinally */
+
+
 
 
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of tryfinally */
 
@@ -293,6 +301,18 @@ raise_error:
 	Py_XDECREF(type);
 	Py_XDECREF(tb);
 	return;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"

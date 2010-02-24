@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,16 +29,13 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
 static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
@@ -47,13 +44,55 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 /* Declarations from literals */
 
 
+/* Declarations from implementation of literals */
+
+
+static char __pyx_k1[] = "spanish inquisition";
+static char __pyx_k2[] = "thisparrotisresting";
+static char __pyx_k3[] = "single quoted string";
+static char __pyx_k4[] = "\"this is quoted\"";
+static char __pyx_k5[] = "Triple single quoted string.";
+static char __pyx_k6[] = "Triple double quoted string.";
+static char __pyx_k7[] = "Two line triple\nsingle quoted string.";
+static char __pyx_k8[] = "Two line triple\ndouble quoted string.";
+static char __pyx_k9[] = "This string has an ignored newline.";
+static char __pyx_k10[] = "One-char escapes: \'\"\\\a\b\f\n\r\t\v";
+static char __pyx_k11[] = "Oct and hex escapes: \1 \12 \123 \x045 \x0af \x0AF";
+static char __pyx_k12[] = "This is\\\na \\three \\line\nraw string with some backslashes.";
+static char __pyx_k13[] = "Three backslashed ordinaries: \\c\\g\\+";
+static char __pyx_k14[] = "Triple single quoted string \nwith \' and \" quotes";
+static char __pyx_k15[] = "Triple double quoted string \nwith \' and \" quotes";
+static char __pyx_k16[] = "name_like_string";
+static char __pyx_k17[] = "NameLikeString2";
+static char __pyx_k18[] = "99_percent_un_namelike";
+static char __pyx_k19[] = "Not an \\escape";
+
+static PyObject *__pyx_n_NameLikeString2;
+static PyObject *__pyx_n_name_like_string;
+static PyObject *__pyx_n_thisparrotisresting;
+
+static PyObject *__pyx_k1p;
+static PyObject *__pyx_k3p;
+static PyObject *__pyx_k4p;
+static PyObject *__pyx_k5p;
+static PyObject *__pyx_k6p;
+static PyObject *__pyx_k7p;
+static PyObject *__pyx_k8p;
+static PyObject *__pyx_k9p;
+static PyObject *__pyx_k10p;
+static PyObject *__pyx_k11p;
+static PyObject *__pyx_k12p;
+static PyObject *__pyx_k13p;
+static PyObject *__pyx_k14p;
+static PyObject *__pyx_k15p;
+static PyObject *__pyx_k18p;
+static PyObject *__pyx_k19p;
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_NameLikeString2, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_name_like_string, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_thisparrotisresting, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_NameLikeString2, 1, __pyx_k17, sizeof(__pyx_k17)},
+  {&__pyx_n_name_like_string, 1, __pyx_k16, sizeof(__pyx_k16)},
+  {&__pyx_n_thisparrotisresting, 1, __pyx_k2, sizeof(__pyx_k2)},
   {&__pyx_k1p, 0, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_k2p, 0, __pyx_k2, sizeof(__pyx_k2)},
   {&__pyx_k3p, 0, __pyx_k3, sizeof(__pyx_k3)},
   {&__pyx_k4p, 0, __pyx_k4, sizeof(__pyx_k4)},
   {&__pyx_k5p, 0, __pyx_k5, sizeof(__pyx_k5)},
@@ -67,14 +106,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_k13p, 0, __pyx_k13, sizeof(__pyx_k13)},
   {&__pyx_k14p, 0, __pyx_k14, sizeof(__pyx_k14)},
   {&__pyx_k15p, 0, __pyx_k15, sizeof(__pyx_k15)},
-  {&__pyx_k16p, 0, __pyx_k16, sizeof(__pyx_k16)},
+  {&__pyx_k18p, 0, __pyx_k18, sizeof(__pyx_k18)},
+  {&__pyx_k19p, 0, __pyx_k19, sizeof(__pyx_k19)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of literals */
-
-
-
 
 static PyObject *__pyx_f_8literals_foo(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_8literals_foo(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
@@ -398,8 +437,6 @@ static PyObject *__pyx_f_8literals_foo(PyObject *__pyx_self, PyObject *__pyx_arg
   return __pyx_r;
 }
 
-
-
 static struct PyMethodDef __pyx_methods[] = {
   {"foo", (PyCFunction)__pyx_f_8literals_foo, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
@@ -432,21 +469,13 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
-}
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
 		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

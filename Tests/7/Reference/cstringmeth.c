@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,28 +37,40 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from cstringmeth */
 
 
+/* Declarations from implementation of cstringmeth */
+
+
+static char __pyx_k1[] = "foo";
+static char __pyx_k2[] = "join";
+static char __pyx_k3[] = "y";
+static char __pyx_k4[] = "x";
+
+static PyObject *__pyx_n_foo;
+static PyObject *__pyx_n_join;
+static PyObject *__pyx_n_x;
+static PyObject *__pyx_n_y;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_foo, 1, __pyx_k1, sizeof(__pyx_k1)},
   {&__pyx_n_join, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_x, 1, __pyx_k3, sizeof(__pyx_k3)},
-  {&__pyx_n_y, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_x, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_y, 1, __pyx_k3, sizeof(__pyx_k3)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of cstringmeth */
-
-
-
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -108,22 +119,24 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
+}
+
 static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 	PyObject *result;
 	result = PyObject_GetAttr(dict, name);
 	if (!result)
 		PyErr_SetObject(PyExc_NameError, name);
 	return result;
-}
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
-	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
-		if (!*t->p)
-			return -1;
-		++t;
-	}
-	return 0;
 }
 
 #include "compile.h"

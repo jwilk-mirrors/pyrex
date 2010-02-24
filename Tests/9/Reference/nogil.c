@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -30,8 +30,7 @@
 #include "nogil.h"
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -39,9 +38,14 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from nogil */
+
+
+/* Declarations from implementation of nogil */
 
 static void (*__pyx_v_5nogil_fp)(PyObject *);
 static void (*__pyx_v_5nogil_fq)(PyObject *);
@@ -51,16 +55,20 @@ static void __pyx_f_5nogil_f(int); /*proto*/
 static void __pyx_f_5nogil_h(PyObject *); /*proto*/
 
 
+
+
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of nogil */
 
 static void __pyx_f_5nogil_f(int __pyx_v_x) {
   int __pyx_v_y;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":6 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":13 */
   __pyx_v_y = 42;
 
 }
@@ -68,19 +76,19 @@ static void __pyx_f_5nogil_f(int __pyx_v_x) {
 static void __pyx_f_5nogil_h(PyObject *__pyx_v_x) {
   void *__pyx_v_p;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":10 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":18 */
   g2(__pyx_v_x);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":11 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":19 */
   g2(((PyObject *)__pyx_v_p));
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":12 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":20 */
   __pyx_v_p = ((void *)__pyx_v_x);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":17 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":21 */
   e1();
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":18 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":22 */
   e2();
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":23 */
@@ -108,7 +116,7 @@ PyMODINIT_FUNC initnogil(void) {
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":8 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/9/nogil.pyx":15 */
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("nogil");
@@ -122,6 +130,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"

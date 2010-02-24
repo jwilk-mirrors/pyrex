@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,14 +29,15 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
 static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
@@ -74,10 +75,17 @@ struct __pyx_obj_5blarg_Blarg {
 
 static PyTypeObject *__pyx_ptype_5blarg_Blarg = 0;
 
+/* Declarations from implementation of blarg */
+
+
+
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of blarg */
 
@@ -265,7 +273,7 @@ PyMODINIT_FUNC initblarg(void) {
   if (PyType_Ready(&__pyx_type_5blarg_Blarg) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   if (PyObject_SetAttrString(__pyx_m, "Blarg", (PyObject *)&__pyx_type_5blarg_Blarg) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
   __pyx_ptype_5blarg_Blarg = &__pyx_type_5blarg_Blarg;
-  __pyx_ptype_3foo_Foo = __Pyx_ImportType("foo", "Foo", sizeof(struct __pyx_obj_3foo_Foo)); if (!__pyx_ptype_3foo_Foo) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_ptype_3foo_Foo = __Pyx_ImportType("foo", "Foo", sizeof(struct __pyx_obj_3foo_Foo)); if (!__pyx_ptype_3foo_Foo) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 6; goto __pyx_L1;}
   return;
   __pyx_L1:;
   __Pyx_AddTraceback("blarg");
@@ -280,6 +288,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #ifndef __PYX_HAVE_RT_ImportType

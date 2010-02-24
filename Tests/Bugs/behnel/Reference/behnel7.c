@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -40,9 +39,16 @@ static char **__pyx_f;
 
 static int __Pyx_GetStarArgs(PyObject **args, PyObject **kwds, char *kwd_list[], 	Py_ssize_t nargs, PyObject **args2, PyObject **kwds2, char rqd_kwds[]); /*proto*/
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from behnel7 */
+
+
+/* Declarations from implementation of behnel7 */
+
+
 
 
 
@@ -51,6 +57,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 
 static PyObject *__pyx_d1;
+
 
 /* Implementation of behnel7 */
 
@@ -207,6 +214,18 @@ bad:
 		Py_XDECREF(*kwds2);
 	}
 	return -1;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"

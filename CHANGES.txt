@@ -46,6 +46,8 @@ Bug fixes:
 	- Scope problem with extension types declared in pxd. [KS Sreeram]
 	
 	- Calling a builtin method of a subclass of a builtin class did not work.
+	
+	- Builtin hash() function had wrong return type. [John Arbash Meinel]
 
 
 Modifications:

@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -44,11 +43,14 @@ static PyObject *__Pyx_GetItemInt(PyObject *o, Py_ssize_t i); /*proto*/
 
 static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v); /*proto*/
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from inplace_lhs */
+
+
+/* Declarations from implementation of inplace_lhs */
 
 struct __pyx_t_11inplace_lhs_S {
   int q;
@@ -56,16 +58,25 @@ struct __pyx_t_11inplace_lhs_S {
 
 static int __pyx_f_11inplace_lhs_f(void); /*proto*/
 
+static char __pyx_k1[] = "g";
+static char __pyx_k2[] = "b";
+static char __pyx_k3[] = "c";
+
+static PyObject *__pyx_n_b;
+static PyObject *__pyx_n_c;
+static PyObject *__pyx_n_g;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_b, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_c, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_g, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_b, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_c, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_g, 1, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
 
-/* Implementation of inplace_lhs */
 
+
+/* Implementation of inplace_lhs */
 
 static int __pyx_f_11inplace_lhs_f(void) {
   int __pyx_v_i;
@@ -195,7 +206,6 @@ static int __pyx_f_11inplace_lhs_f(void) {
   return __pyx_r;
 }
 
-
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
 };
@@ -267,11 +277,13 @@ static int __Pyx_SetItemInt(PyObject *o, Py_ssize_t i, PyObject *v) {
 	return r;
 }
 
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;

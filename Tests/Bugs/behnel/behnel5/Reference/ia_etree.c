@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,14 +29,15 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
 static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static int __Pyx_ExportFunction(char *n, void *f, char *s); /*proto*/
 
@@ -64,11 +65,12 @@ __PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlDocumentType;
 
 __PYX_EXTERN_C DL_EXPORT(PyTypeObject) LxmlElementType;
 
-
 static PyTypeObject *__pyx_ptype_8ia_etree__BaseParser = 0;
 static PyTypeObject *__pyx_ptype_8ia_etree__Document = 0;
 static PyTypeObject *__pyx_ptype_8ia_etree__Element = 0;
 static PyObject *__pyx_f_8ia_etree_getAttributeValue(struct LxmlElement *,PyObject *,PyObject *); /*proto*/
+
+/* Declarations from implementation of ia_etree */
 
 struct __pyx_t_8ia_etree_Foo {
   int spam;
@@ -88,9 +90,13 @@ struct __pyx_obj_8ia_etree__BaseParser {
 static PyTypeObject *__pyx_ptype_8ia_etree_Vorpal = 0;
 
 
+
+
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of ia_etree */
 
@@ -757,6 +763,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 static int __Pyx_ExportFunction(char *n, void *f, char *s) {

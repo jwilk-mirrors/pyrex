@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,16 +37,25 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
+
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from inplace_ops */
 
+
+/* Declarations from implementation of inplace_ops */
+
 static int __pyx_f_11inplace_ops_f(void); /*proto*/
+
+
 
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of inplace_ops */
 
@@ -57,61 +65,62 @@ static int __pyx_f_11inplace_ops_f(void) {
   char *__pyx_v_p;
   int __pyx_r;
   PyObject *__pyx_1 = 0;
+  int __pyx_2;
   __pyx_v_a = Py_None; Py_INCREF(Py_None);
   __pyx_v_b = Py_None; Py_INCREF(Py_None);
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":3 */
-  __pyx_1 = PyNumber_InPlaceAdd(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 3; goto __pyx_L1;}
-  Py_DECREF(__pyx_v_a);
-  __pyx_v_a = __pyx_1;
-
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":4 */
-  __pyx_1 = PyNumber_InPlaceSubtract(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceAdd(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":5 */
-  __pyx_1 = PyNumber_InPlaceMultiply(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceSubtract(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 5; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":6 */
-  __pyx_1 = PyNumber_InPlaceDivide(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceMultiply(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 6; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":7 */
-  __pyx_1 = PyNumber_InPlaceRemainder(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceDivide(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 7; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":8 */
-  __pyx_1 = PyNumber_InPlacePower(__pyx_v_a, __pyx_v_b, Py_None); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceRemainder(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 8; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":9 */
-  __pyx_1 = PyNumber_InPlaceLshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlacePower(__pyx_v_a, __pyx_v_b, Py_None); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":10 */
-  __pyx_1 = PyNumber_InPlaceRshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceLshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 10; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":11 */
-  __pyx_1 = PyNumber_InPlaceAnd(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceRshift(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 11; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":12 */
-  __pyx_1 = PyNumber_InPlaceXor(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceAnd(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 12; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":13 */
-  __pyx_1 = PyNumber_InPlaceOr(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
+  __pyx_1 = PyNumber_InPlaceXor(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 13; goto __pyx_L1;}
+  Py_DECREF(__pyx_v_a);
+  __pyx_v_a = __pyx_1;
+
+  /* "/Local/Projects/D/Pyrex/Source/Tests/10/inplace_ops.pyx":14 */
+  __pyx_1 = PyNumber_InPlaceOr(__pyx_v_a, __pyx_v_b); if (!__pyx_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; goto __pyx_L1;}
   Py_DECREF(__pyx_v_a);
   __pyx_v_a = __pyx_1;
 
@@ -166,6 +175,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #include "compile.h"

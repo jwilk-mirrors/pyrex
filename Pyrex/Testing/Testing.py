@@ -374,9 +374,11 @@ def munge_c_line(line):
 	#   possible to make them unnecessary, and they
 	#   should be removed.
 	#
+	
 	# MINOR HACK: Ignore runtime support code
 	if line == "/* Runtime support code */":
 		raise StopComparison
+		
 	# Ignore comments and other easily recognisable junk
 	if line[:2] == "/*" and line[-2:] == "*/":
 		line = ""
@@ -402,25 +404,8 @@ def munge_c_line(line):
 	if line == "Py_ssize_t__pyx_x;":
 		line = ""
 	
-	## MINOR HACK: ignore gcc3.3 bug workaround lines
-	#if "__pyx_gcc33_" in line:
-	#	line = ""
-	
 	# ------ End of standing hacks -----
-	
-	# HACKS for string const changes
-	
-	if line.startswith("staticchar__pyx_k") \
-		or line.startswith("staticPyObject*__pyx_k") \
-		or line.startswith("staticPyObject*__pyx_n"):
-			line = ""
-	line = re.sub("__pyx_k[0-9]+", "__pyx_kx", line)
-	line = re.sub("__pyx_k[0-9]+p", "__pyx_kxp", line)
-	
-	# WIN32 hack
-	
-	line = line.replace('#ifndefWIN32', '#if!defined(WIN32)&&!defined(MS_WINDOWS)')
-	
+		
 	# ---------- END HACKS ----------
 
 	return line

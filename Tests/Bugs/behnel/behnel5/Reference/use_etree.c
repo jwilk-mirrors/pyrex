@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,17 +37,17 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
-
-static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 
 static int __Pyx_ImportFunction(PyObject *module, char *funcname, void **f, char *sig); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
+
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
+
+static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
@@ -81,19 +80,31 @@ static PyObject *(*__pyx_f_8ia_etree_getAttributeValue)(struct LxmlElement *,PyO
 /* Declarations from use_etree */
 
 
+/* Declarations from implementation of use_etree */
+
+
+static char __pyx_k1[] = "doc";
+static char __pyx_k2[] = "elem";
+static char __pyx_k3[] = "zax";
+static char __pyx_k4[] = "ftang";
+
+static PyObject *__pyx_n_doc;
+static PyObject *__pyx_n_elem;
+static PyObject *__pyx_n_ftang;
+static PyObject *__pyx_n_zax;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_doc, 1, __pyx_k1, sizeof(__pyx_k1)},
   {&__pyx_n_elem, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_ftang, 1, __pyx_k3, sizeof(__pyx_k3)},
-  {&__pyx_n_zax, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_ftang, 1, __pyx_k4, sizeof(__pyx_k4)},
+  {&__pyx_n_zax, 1, __pyx_k3, sizeof(__pyx_k3)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of use_etree */
-
-
-
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -153,31 +164,13 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
-	PyObject *result;
-	result = PyObject_GetAttr(dict, name);
-	if (!result)
-		PyErr_SetObject(PyExc_NameError, name);
-	return result;
-}
-
-static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
-	if (!type) {
-		PyErr_Format(PyExc_SystemError, "Missing type object");
-		return 0;
-	}
-	if (obj == Py_None || PyObject_TypeCheck(obj, type))
-		return 1;
-	PyErr_Format(PyExc_TypeError, "Cannot convert %s to %s",
-		obj->ob_type->tp_name, type->tp_name);
-	return 0;
-}
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -265,6 +258,26 @@ bad:
 	return 0;
 }
 #endif
+
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
+	PyObject *result;
+	result = PyObject_GetAttr(dict, name);
+	if (!result)
+		PyErr_SetObject(PyExc_NameError, name);
+	return result;
+}
+
+static int __Pyx_TypeTest(PyObject *obj, PyTypeObject *type) {
+	if (!type) {
+		PyErr_Format(PyExc_SystemError, "Missing type object");
+		return 0;
+	}
+	if (obj == Py_None || PyObject_TypeCheck(obj, type))
+		return 1;
+	PyErr_Format(PyExc_TypeError, "Cannot convert %s to %s",
+		obj->ob_type->tp_name, type->tp_name);
+	return 0;
+}
 
 #include "compile.h"
 #include "frameobject.h"

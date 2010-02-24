@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,14 +29,15 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
 static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
@@ -45,6 +46,9 @@ static PyObject *__Pyx_ImportModule(char *name); /*proto*/
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from casttoexttype */
+
+
+/* Declarations from implementation of casttoexttype */
 
 struct __pyx_obj_13casttoexttype_Spam {
   PyObject_HEAD
@@ -56,9 +60,13 @@ static void __pyx_f_13casttoexttype_foo(PyObject *); /*proto*/
 static void __pyx_f_13casttoexttype_blarg(void *,PyObject *); /*proto*/
 
 
+
+
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0}
 };
+
+
 
 /* Implementation of casttoexttype */
 
@@ -69,7 +77,6 @@ static void __pyx_f_13casttoexttype_foo(PyObject *__pyx_v_x) {
 }
 
 static void __pyx_f_13casttoexttype_blarg(void *__pyx_v_y,PyObject *__pyx_v_z) {
-  PyObject *__pyx_1 = 0;
   Py_INCREF(__pyx_v_z);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/7/casttoexttype.pyx":8 */
@@ -113,6 +120,18 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
+}
+
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+	while (t->p) {
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
+		if (!*t->p)
+			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
+		++t;
+	}
+	return 0;
 }
 
 #ifndef __PYX_HAVE_RT_ImportType

@@ -13,7 +13,7 @@
   #define PyInt_FromSsize_t(z) PyInt_FromLong(z)
   #define PyInt_AsSsize_t(o)	PyInt_AsLong(o)
 #endif
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MS_WINDOWS)
   #ifndef __stdcall
     #define __stdcall
   #endif
@@ -29,8 +29,7 @@
 #include <math.h>
 
 
-typedef struct {PyObject **p; char *s;} __Pyx_InternTabEntry; /*proto*/
-typedef struct {PyObject **p; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
+typedef struct {PyObject **p; int i; char *s; long n;} __Pyx_StringTabEntry; /*proto*/
 
 static PyObject *__pyx_m;
 static PyObject *__pyx_b;
@@ -38,13 +37,13 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t); /*proto*/
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name, long size);  /*proto*/
 
 static PyObject *__Pyx_ImportModule(char *name); /*proto*/
+
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
@@ -56,7 +55,7 @@ struct __pyx_t_4spam_Spam {
 };
 
 __PYX_EXTERN_C float tons;
-__PYX_EXTERN_C DL_EXPORT(void) eat(struct __pyx_t_4spam_Spam); /*proto*/
+__PYX_EXTERN_C DL_EXPORT(void) (*eat)(struct __pyx_t_4spam_Spam); /*proto*/
 
 /* Declarations from pkg.eggs */
 
@@ -72,20 +71,31 @@ static PyTypeObject *__pyx_ptype_3pkg_4eggs_Eggs = 0;
 
 /* Declarations from cimport */
 
+
+/* Declarations from implementation of cimport */
+
 static struct __pyx_t_4spam_Spam __pyx_v_7cimport_yummy;
 static struct __pyx_obj_3pkg_4eggs_Eggs *__pyx_v_7cimport_fried;
 
+static char __pyx_k1[] = "pkg";
+static char __pyx_k2[] = "eggs";
+static char __pyx_k3[] = "ova";
+
+static PyObject *__pyx_n_eggs;
+static PyObject *__pyx_n_ova;
+static PyObject *__pyx_n_pkg;
+
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
-  {&__pyx_n_eggs, 1, __pyx_k1, sizeof(__pyx_k1)},
-  {&__pyx_n_ova, 1, __pyx_k2, sizeof(__pyx_k2)},
-  {&__pyx_n_pkg, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_eggs, 1, __pyx_k2, sizeof(__pyx_k2)},
+  {&__pyx_n_ova, 1, __pyx_k3, sizeof(__pyx_k3)},
+  {&__pyx_n_pkg, 1, __pyx_k1, sizeof(__pyx_k1)},
   {0, 0, 0, 0}
 };
 
+
+
 /* Implementation of cimport */
-
-
 
 static struct PyMethodDef __pyx_methods[] = {
   {0, 0, 0, 0}
@@ -144,19 +154,13 @@ static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
 }
 
-static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
-	PyObject *result;
-	result = PyObject_GetAttr(dict, name);
-	if (!result)
-		PyErr_SetObject(PyExc_NameError, name);
-	return result;
-}
-
-static int __Pyx_InternStrings(__Pyx_InternTabEntry *t) {
+static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 	while (t->p) {
-		*t->p = PyString_InternFromString(t->s);
+		*t->p = PyString_FromStringAndSize(t->s, t->n - 1);
 		if (!*t->p)
 			return -1;
+		if (t->i)
+			PyString_InternInPlace(t->p);
 		++t;
 	}
 	return 0;
@@ -209,6 +213,14 @@ bad:
 	return 0;
 }
 #endif
+
+static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
+	PyObject *result;
+	result = PyObject_GetAttr(dict, name);
+	if (!result)
+		PyErr_SetObject(PyExc_NameError, name);
+	return result;
+}
 
 #include "compile.h"
 #include "frameobject.h"
