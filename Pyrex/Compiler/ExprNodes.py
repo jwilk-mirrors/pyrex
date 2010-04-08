@@ -892,15 +892,17 @@ class NameNode(AtomicExprNode):
 	def analyse_as_function(self, env):
 		self.lookup_entry(env)
 		if self.entry.is_type:
-			self.analyse_constructor_entry()
+			self.analyse_constructor_entry(env)
 		else:
 			self.analyse_rvalue_entry(env)
 	
-	def analyse_constructor_entry(self):
+	def analyse_constructor_entry(self, env):
 		entry = self.entry
 		type = entry.type
 		if type.is_struct_or_union:
 			self.type = entry.type.cplus_constructor_type
+		elif type.is_pyobject:
+			self.analyse_rvalue_entry(env)
 		else:
 			error(self.pos, "Type '%s' not callable as a C++ constructor" % type)
 			self.type = error_type
@@ -1937,7 +1939,7 @@ class AttributeNode(ExprNode):
 			entry = module_scope.lookup_here(self.attribute)
 			if entry and entry.is_type:
 				self.mutate_into_name_node(entry)
-				self.analyse_constructor_entry()
+				self.analyse_constructor_entry(env)
 				return
 		self.analyse_types(env)
 			

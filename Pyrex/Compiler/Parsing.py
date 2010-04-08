@@ -36,7 +36,7 @@ class Ctx(object):
 	def cplus_check(self, pos):
 		#if self.visibility <> 'extern':
 		#	error(pos, "C++ declarations must be 'extern'")
-		if not self.extern_from:
+		if self.cplus_flag and not self.extern_from:
 			error(pos, "C++ declarations must be in an 'extern from' block")
 
 

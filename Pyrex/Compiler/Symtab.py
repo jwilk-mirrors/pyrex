@@ -288,7 +288,7 @@ class Scope:
 				self.check_previous_visibility(entry, visibility, pos)
 				if scope:
 					entry.pos = pos
-					entry.type.scope = scope
+					entry.type.set_scope(scope)
 					self.type_entries.append(entry)
 		if not scope and not entry.type.scope:
 			self.check_for_illegal_incomplete_ctypedef(typedef_flag, pos)

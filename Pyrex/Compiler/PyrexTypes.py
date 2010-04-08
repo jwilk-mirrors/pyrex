@@ -719,15 +719,18 @@ class CStructOrUnionType(CType):
 		self.name = name
 		self.cname = cname
 		self.kind = kind
-		self.scope = scope
 		self.typedef_flag = typedef_flag
-		if scope.is_cplus:
-			self.cplus_constructor_type = COverloadedFuncType(self,
-				scope.cplus_constructors)
-		
+		self.set_scope(scope)
+	
 	def __repr__(self):
 		return "<CStructOrUnionType %s %s%s>" % (self.name, self.cname,
 			("", " typedef")[self.typedef_flag])
+	
+	def set_scope(self, scope):
+		self.scope = scope
+		if scope and scope.is_cplus:
+			self.cplus_constructor_type = COverloadedFuncType(self,
+				scope.cplus_constructors)
 
 	def declaration_code(self, entity_code, 
 			for_display = 0, dll_linkage = None, pyrex = 0):
