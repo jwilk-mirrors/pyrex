@@ -10,6 +10,9 @@ Modifications:
 	- PyString_InternFromString is now exposed under the name 'cintern' because
 		it is not a complete substitute for 'intern' (it can't handle strings
 		containing null bytes). [John Arbash Meinel]
+	
+	- Disabled size check for cimported types because it was generating too
+		many false positives in the field.
 
 Bug fixes:
 
