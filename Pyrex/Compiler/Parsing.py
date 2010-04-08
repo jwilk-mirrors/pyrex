@@ -1421,7 +1421,7 @@ def p_calling_convention(s):
 	else:
 		return ""
 
-calling_convention_words = ("__stdcall", "__cdecl")
+calling_convention_words = ("__stdcall", "__cdecl", "__fastcall")
 
 def p_c_complex_base_type(s):
 	# s.sy == '('
