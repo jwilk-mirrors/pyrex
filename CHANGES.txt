@@ -5,6 +5,17 @@ New features:
 
 	- C++ struct declarations, new and del.
 
+Modifications:
+
+	- PyString_InternFromString is now exposed under the name 'cintern' because
+		it is not a complete substitute for 'intern' (it can't handle strings
+		containing null bytes). [John Arbash Meinel]
+
+Bug fixes:
+
+	- When casting the result of a function call to a Python type, the
+		function could be called twice. [David Martinez]
+
 
 0.9.8.6
 -------

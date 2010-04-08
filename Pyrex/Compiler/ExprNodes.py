@@ -2754,9 +2754,11 @@ class TypecastNode(ExprNode):
 		from_py = self.operand.type.is_pyobject
 		if from_py and not to_py and self.operand.is_ephemeral():
 			error(self.pos, "Casting temporary Python object to non-Python type")
-		#if to_py and not from_py:
-		#	self.result_ctype = py_object_type
-		#	self.is_temp = 1		
+		#  Must do the following, so that the result can be increfed without
+		#  the operand getting evaluated twice.
+		if to_py and not from_py:
+			self.result_ctype = py_object_type
+			self.is_temp = 1
 	
 	def check_const(self):
 		self.operand.check_const()
