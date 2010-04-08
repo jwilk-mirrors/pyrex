@@ -16,7 +16,9 @@ class Ctx(object):
 	#  Parsing context
 	level = 'other'
 	visibility = 'private'
+	extern_from = False
 	cdef_flag = 0
+	cplus_flag = 0
 	typedef_flag = 0
 	api = 0
 	nogil = 0
@@ -30,6 +32,12 @@ class Ctx(object):
 		d.update(self.__dict__)
 		d.update(kwds)
 		return ctx
+
+	def cplus_check(self, pos):
+		#if self.visibility <> 'extern':
+		#	error(pos, "C++ declarations must be 'extern'")
+		if not self.extern_from:
+			error(pos, "C++ declarations must be in an 'extern from' block")
 
 
 def p_ident(s, message = "Expected an identifier"):
@@ -229,15 +237,19 @@ def p_sizeof(s):
 #power: atom trailer* ('**' factor)*
 
 def p_power(s):
-	n1 = p_atom(s)
-	while s.sy in ('(', '[', '.'):
-		n1 = p_trailer(s, n1)
+	n1 = p_primitive(s)
 	if s.sy == '**':
 		pos = s.position()
 		s.next()
 		n2 = p_factor(s)
 		n1 = ExprNodes.binop_node(pos, '**', n1, n2)
 	return n1
+
+def p_primitive(s):
+	n = p_atom(s)
+	while s.sy in ('(', '[', '.'):
+		n = p_trailer(s, n)
+	return n
 
 #trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
 
@@ -458,6 +470,8 @@ def p_atom(s):
 		s.next()
 		if name == "None":
 			return ExprNodes.NoneNode(pos)
+		elif name == "new" and s.sy == 'IDENT':
+			return p_new_call(s)
 		else:
 			return p_name_atom(s, name)
 	elif sy == 'NULL':
@@ -465,6 +479,14 @@ def p_atom(s):
 		return ExprNodes.NullNode(pos)
 	else:
 		s.error("Expected an identifier or literal")
+
+def p_new_call(s):
+	node = p_primitive(s)
+	if isinstance(node, ExprNodes.SimpleCallNode):
+		node.is_new = 1
+	else:
+		error(s.position(), "'new' must be followed by a C++ constructor call")
+	return node
 
 def p_name(s):
 	if s.sy == 'IDENT':
@@ -1289,6 +1311,7 @@ def p_IF_statement(s, ctx):
 	return result
 
 def p_statement(s, ctx):
+	pos = s.position()
 	cdef_flag = ctx.cdef_flag
 	if s.sy == 'ctypedef':
 		if ctx.level not in ('module', 'module_pxd'):
@@ -1304,6 +1327,9 @@ def p_statement(s, ctx):
 		if s.sy == 'cdef':
 			cdef_flag = 1
 			s.next()
+			if s.sy == '+':
+				ctx = ctx(cplus_flag = 1)
+				s.next()
 		if cdef_flag:
 			if ctx.level not in ('module', 'module_pxd', 'function', 'c_class', 'c_class_pxd'):
 				s.error('cdef statement not allowed here')
@@ -1711,7 +1737,7 @@ def p_cdef_extern_block(s, pos, ctx):
 		s.next()
 	else:
 		_, include_file = p_string_literal(s)
-	ctx = ctx(cdef_flag = 1, visibility = 'extern')
+	ctx = ctx(cdef_flag = 1, visibility = 'extern', extern_from = True)
 	if p_nogil(s):
 		ctx.nogil = 1
 	body = p_suite(s, ctx)
@@ -1775,9 +1801,21 @@ def p_c_enum_item(s, items):
 
 def p_c_struct_or_union_definition(s, pos, ctx):
 	# s.sy == ident 'struct' or 'union'
+	ctx.cplus_check(pos)
 	kind = s.systring
 	s.next()
 	module_path, name = p_qualified_name(s)
+	bases = []
+	if s.sy == '(':
+		s.next()
+		while s.sy == 'IDENT':
+			bases.append(p_qualified_name(s))
+			if s.sy <> ',':
+				break
+			s.next()
+		s.expect(')')
+	if bases and not ctx.cplus_flag:
+		error(s, "Only C++ struct may have bases")
 	cname = p_opt_cname(s)
 	s.add_type_name(name)
 	attributes = None
@@ -1802,7 +1840,9 @@ def p_c_struct_or_union_definition(s, pos, ctx):
 		kind = kind, attributes = attributes,
 		typedef_flag = ctx.typedef_flag,
 		visibility = ctx.visibility,
-		in_pxd = ctx.level == 'module_pxd')
+		in_pxd = ctx.level == 'module_pxd',
+		cplus_flag = ctx.cplus_flag,
+		bases = bases)
 
 def p_visibility(s, prev_visibility):
 	pos = s.position()

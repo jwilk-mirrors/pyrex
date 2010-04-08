@@ -2,7 +2,8 @@
 #   Code for automatically running tests
 #
 
-import glob, os, sys, re, traceback
+import os, sys, re, traceback
+from glob import glob
 from os import path
 from string import replace, strip
 
@@ -99,11 +100,16 @@ def run_test(item_path):
 		else:
 			return run_compile_test(item_path)
 
+def glob_pyx(dir):
+	items = glob(path.join(dir, "*.pyx")) + glob(path.join(dir, "*.pyx+"))
+	items.sort()
+	return items
+
 def run_tests_in_dir(dir):
 	"Run all tests in given directory."
 	#print "*** run_tests_in_dir:", dir ###
 	print "Running tests in", dir
-	items = glob.glob(path.join(dir, "*.pyx"))
+	items = glob_pyx(dir)
 	result = "passed"
 	for item in items:
 		#print "*** run_tests_in_dir: doing file", item ###
@@ -160,6 +166,7 @@ def run_compile_test(item, link = 0):
 			compare_with_reference(result.listing_file, show_diffs = 0,
 				line_munger = munge_error_line)
 			remove_file(replace_suffix(item, ".c"))
+			remove_file(replace_suffix(item, ".cpp"))
 		else:
 			if result.num_errors <> 0:
 				#display_files(replace_suffix(item, ".lis"))
@@ -212,7 +219,7 @@ def run_compile_test(item, link = 0):
 		return "failed"
 
 def run_functional_test_dir(dir, keep_files = 0):
-	pyx_files = glob.glob(path.join(dir, "*.pyx"))
+	pyx_files = glob_pyx(dir)
 	if not pyx_files:
 		fail("No .pyx file")
 	if len(pyx_files) > 1:

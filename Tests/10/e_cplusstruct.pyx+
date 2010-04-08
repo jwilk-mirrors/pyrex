@@ -1,0 +1,9 @@
+cdef+ struct S1:
+	pass
+
+cdef+ extern struct S2:
+	pass
+
+cdef int f():
+	cdef int i, j, k
+	i = new j

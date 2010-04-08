@@ -3,6 +3,8 @@
 #
 
 import sys
+from Filenames import pyx_suffixes
+from Pyrex.Utils import has_suffix
 
 usage = """\
 Usage: pyrexc [options] sourcefile...
@@ -74,7 +76,7 @@ def parse_command_line(args):
 				bad_usage()
 		else:
 			arg = pop_arg()
-			if arg.endswith(".pyx"):
+			if has_suffix(arg, pyx_suffixes):
 				sources.append(arg)
 			elif arg.endswith(".o"):
 				options.objects.append(arg)

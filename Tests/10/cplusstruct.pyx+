@@ -1,0 +1,2 @@
+cdef void f(Foo *foo):
+	foo.blarg()

@@ -1,0 +1,21 @@
+cdef+ extern from "cplusstruct.hpp":
+
+	struct Foo:
+		int i
+		int blarg()
+
+	struct Blarg:
+		int j
+		__init__(int, float)
+		__init__(int, char *)
+
+	struct SubFoo(Foo, Blarg):
+		int k
+		void zax()
+
+cdef void f():
+	cdef SubFoo *sf
+	sf.i = 1
+	sf.j = 2
+	sf.k = 3
+	sf.blarg()

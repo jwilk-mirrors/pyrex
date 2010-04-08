@@ -1,0 +1,4 @@
+cdef int f():
+	cdef int i, j[2], k
+	i = new j[k]()
+	i = new f()

@@ -148,7 +148,7 @@ class StatNode(Node):
 	def generate_execution_code(self, code):
 		raise InternalError("generate_execution_code not implemented for %s" % \
 			self.__class__.__name__)
-
+	
 
 class CDefExternNode(StatNode):
 	#  include_file   string or None
@@ -410,15 +410,27 @@ class CStructOrUnionDefNode(StatNode):
 	#  module_path   [string]
 	#  kind          "struct" or "union"
 	#  typedef_flag  boolean
+	#  cplus_flag    boolean
 	#  visibility    "public" or "private"
 	#  in_pxd        boolean
 	#  attributes    [CVarDefNode] or None
 	#  entry         Entry
+	#  bases         [([name, ...], name), ...]
 	
 	def analyse_declarations(self, env):
 		scope = None
+		base_scopes = []
+		for base in self.bases:
+			base_entry = env.find_qualified_name(base, self.pos)
+			if base_entry:
+				if base_entry.is_type and base_entry.type.is_struct_or_union \
+					and base_entry.type.scope.is_cplus:
+						base_scopes.append(base_entry.type.scope)
+				else:
+					error(self.pos, "Base type '%s' is not a C++ struct" %
+						".".join(base[0] + [base[1]]))
 		if self.attributes is not None:
-			scope = StructOrUnionScope()
+			scope = StructOrUnionScope(base_scopes = base_scopes, is_cplus = self.cplus_flag)
 		if self.module_path:
 			home_scope = env.find_imported_module(self.module_path, self.pos)
 			if not home_scope:
@@ -1657,9 +1669,12 @@ class DelStatNode(StatNode):
 	def analyse_expressions(self, env):
 		for arg in self.args:
 			arg.analyse_target_expression(env, None)
-			if not arg.type.is_pyobject:
-				error(arg.pos, "Deletion of non-Python object")
-			else:
+			type = arg.type
+			if not (type.is_pyobject
+				or (type.is_ptr and type.base_type.is_struct_or_union
+					and type.base_type.scope.is_cplus)):
+				error(arg.pos, "'del' can only be applied to Python object or pointer to C++ type")
+			if type.is_pyobject:
 				self.gil_check(env)
 	
 	gil_message = "Deleting Python object"
@@ -1668,7 +1683,10 @@ class DelStatNode(StatNode):
 		for arg in self.args:
 			if arg.type.is_pyobject:
 				arg.generate_deletion_code(code)
-			# else error reported earlier
+			else:
+				arg.generate_evaluation_code(code)
+				code.putln("delete %s;" % arg.result())
+				arg.generate_disposal_code(code)
 
 
 class PassStatNode(StatNode):

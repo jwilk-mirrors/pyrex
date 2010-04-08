@@ -1,0 +1,14 @@
+cimport cplusstruct
+
+ctypedef char *Baseless
+
+cdef+ extern from "cplusstruct.hpp":
+
+	struct S1(nothing.Blarg):
+		pass
+	
+	struct S2(cplusstruct.Nothing):
+		pass
+
+	struct S3(Baseless):
+		pass

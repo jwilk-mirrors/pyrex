@@ -9,7 +9,8 @@ from Errors import error, InternalError
 import Naming
 from Nodes import Node
 import PyrexTypes
-from PyrexTypes import py_object_type, c_long_type, typecast, error_type
+from PyrexTypes import py_object_type, c_long_type, typecast, error_type, \
+	CPtrType, CFuncType, COverloadedFuncType
 import Symtab
 import Options
 
@@ -282,6 +283,10 @@ class ExprNode(Node):
 		return temp_bool
 	
 	# --------------- Type Analysis ------------------
+	
+	def analyse_as_function(self, env):
+		# Analyse types for an expression that is to be called.
+		self.analyse_types(env)
 	
 	def analyse_as_module(self, env):
 		# If this node can be interpreted as a reference to a
@@ -856,12 +861,15 @@ class NameNode(AtomicExprNode):
 		self.entry = env.lookup_here(self.name)
 		if not self.entry:
 			self.entry = env.declare_var(self.name, py_object_type, self.pos)
-	
+
 	def analyse_types(self, env):
+		self.lookup_entry(env)
+		self.analyse_rvalue_entry(env)
+	
+	def lookup_entry(self, env):
 		self.entry = env.lookup(self.name)
 		if not self.entry:
 			self.entry = env.declare_builtin(self.name, self.pos)
-		self.analyse_rvalue_entry(env)
 		
 	def analyse_target_types(self, env):
 		self.analyse_entry(env)
@@ -881,6 +889,22 @@ class NameNode(AtomicExprNode):
 			self.type = PyrexTypes.error_type
 		self.entry.used = 1
 	
+	def analyse_as_function(self, env):
+		self.lookup_entry(env)
+		if self.entry.is_type:
+			self.analyse_constructor_entry()
+		else:
+			self.analyse_rvalue_entry(env)
+	
+	def analyse_constructor_entry(self):
+		entry = self.entry
+		type = entry.type
+		if type.is_struct_or_union:
+			self.type = entry.type.cplus_constructor_type
+		else:
+			error(self.pos, "Type '%s' not callable as a C++ constructor" % type)
+			self.type = error_type
+		
 	def analyse_rvalue_entry(self, env):
 		#print "NameNode.analyse_rvalue_entry:", self.name ###
 		#print "Entry:", self.entry.__dict__ ###
@@ -1536,12 +1560,16 @@ class SimpleCallNode(CallNode):
 	#  arg_tuple      ExprNode or None     used internally
 	#  self           ExprNode or None     used internally
 	#  coerced_self   ExprNode or None     used internally
+	#  function_type  PyrexType            used internally
 	
 	subexprs = ['self', 'coerced_self', 'function', 'args', 'arg_tuple']
 	
 	self = None
 	coerced_self = None
 	arg_tuple = None
+	is_new = False
+	
+	cplus_argless_constr_type = CFuncType(None, [])
 	
 	def compile_time_value(self, denv):
 		function = self.function.compile_time_value(denv)
@@ -1555,8 +1583,9 @@ class SimpleCallNode(CallNode):
 		#print "SimpleCallNode.analyse_types:", self.pos ###
 		function = self.function
 		function.is_called = 1
-		function.analyse_types(env)
+		function.analyse_as_function(env)
 		if function.is_name or function.is_attribute:
+			#print "SimpleCallNode.analyse_types:", self.pos, "is name or attribute" ###
 			func_entry = function.entry
 			if func_entry:
 				if func_entry.is_cmethod or func_entry.is_builtin_method:
@@ -1565,8 +1594,24 @@ class SimpleCallNode(CallNode):
 					#print "SimpleCallNode: Snarfing self argument" ###
 					self.self = function.obj
 					function.obj = CloneNode(self.self)
-		func_type = self.function_type()
+				elif self.is_new:
+					if not (func_entry.is_type and func_entry.type.is_struct_or_union
+							and func_entry.type.scope.is_cplus):
+						error(self.pos, "'new' operator can only be used on a C++ struct type")
+						self.type = error_type
+						return
+		else:
+			#print "SimpleCallNode.analyse_types:", self.pos, "not name or attribute" ###
+			if self.is_new:
+				error(self.pos, "Invalid use of 'new' operator")
+				self.type = error_type
+				return
+		func_type = self.function.type
+		if func_type.is_ptr:
+			func_type = func_type.base_type
+		self.function_type = func_type
 		if func_type.is_pyobject:
+			#print "SimpleCallNode: Python call" ###
 			if self.args:
 				self.arg_tuple = TupleNode(self.pos, args = self.args)
 				self.arg_tuple.analyse_types(env)
@@ -1582,35 +1627,54 @@ class SimpleCallNode(CallNode):
 			self.gil_check(env)
 			self.is_temp = 1
 		else:
+			#print "SimpleCallNode: C call" ###
 			for arg in self.args:
 				arg.analyse_types(env)
-			if self.self and func_type.args:
-				#print "SimpleCallNode: Inserting self into argument list" ###
-				# Coerce 'self' to the type expected by the method.
-				expected_type = func_type.args[0].type
-				self.coerced_self = CloneNode(self.self).coerce_to(
-					expected_type, env)
-				# Insert coerced 'self' argument into argument list.
-				self.args.insert(0, self.coerced_self)
+			if func_type.is_cfunction:
+				self.type = func_type.return_type
+				if self.is_new:
+					self.type = CPtrType(self.type)
+				if func_type.is_overloaded:
+					func_type = self.resolve_overloading()
+					if not func_type:
+						self.type = error_type
+						return
+				if self.self and func_type.args:
+					#print "SimpleCallNode: Inserting self into argument list" ###
+					# Coerce 'self' to the type expected by the method.
+					expected_type = func_type.args[0].type
+					self.coerced_self = CloneNode(self.self).coerce_to(
+						expected_type, env)
+					# Insert coerced 'self' argument into argument list.
+					self.args.insert(0, self.coerced_self)
 			self.analyse_c_function_call(env)
 	
-	def function_type(self):
-		# Return the type of the function being called, coercing a function
-		# pointer to a function if necessary.
-		func_type = self.function.type
-		if func_type.is_ptr:
-			func_type = func_type.base_type
-		return func_type
+	def resolve_overloading(self):
+		func_type = self.function_type
+		arg_types = [arg.type for arg in self.args]
+		signatures = func_type.signatures or [self.cplus_argless_constr_type]
+		for signature in signatures:
+			if signature.callable_with(arg_types):
+				signature.return_type = func_type.return_type
+				self.function_type = signature
+				return signature
+		def display_types(types):
+			return ", ".join([str(type) for type in types])
+		error(self.pos, "No matching signature found for argument types (%s)"
+			% display_types(arg_types))
+		if signatures:
+			error(self.pos, "Candidates are:")
+			for signature in signatures:
+				error(signature.pos, "(%s)" % display_types(signature.args))
 	
 	def analyse_c_function_call(self, env):
-		func_type = self.function_type()
+		func_type = self.function_type
 		# Check function type
 		if not func_type.is_cfunction:
 			if not func_type.is_error:
 				error(self.pos, "Calling non-function type '%s'" %
 					func_type)
 			self.type = PyrexTypes.error_type
-			#self.result_code = "<error>"
 			return
 		# Check no. of args
 		expected_nargs = len(func_type.args)
@@ -1625,7 +1689,6 @@ class SimpleCallNode(CallNode):
 						% (expected_str, actual_nargs))
 				self.args = None
 				self.type = PyrexTypes.error_type
-				#self.result_code = "<error>"
 				return
 		# Coerce arguments
 		for i in range(expected_nargs):
@@ -1635,8 +1698,8 @@ class SimpleCallNode(CallNode):
 			if self.args[i].type.is_pyobject:
 				error(self.args[i].pos, 
 					"Python object cannot be passed as a varargs parameter")
-		# Calc result type and code fragment
-		self.type = func_type.return_type
+		# Calc result code fragment
+		#print "SimpleCallNode.analyse_c_function_call: self.type =", self.type ###
 		if self.type.is_pyobject \
 			or func_type.exception_value is not None \
 			or func_type.exception_check:
@@ -1653,9 +1716,9 @@ class SimpleCallNode(CallNode):
 		return self.c_call_code()
 	
 	def c_call_code(self):
-		func_type = self.function_type()
-		if self.args is None or not func_type.is_cfunction:
+		if self.type.is_error or self.args is None or not self.function_type.is_cfunction:
 			return "<error>"
+		func_type = self.function_type
 		formal_args = func_type.args
 		arg_list_code = []
 		for (formal_arg, actual_arg) in zip(formal_args, self.args):
@@ -1665,10 +1728,14 @@ class SimpleCallNode(CallNode):
 			arg_list_code.append(actual_arg.result())
 		result = "%s(%s)" % (self.function.result(),
 			join(arg_list_code, ","))
+		if self.is_new:
+			result = "new " + result
 		return result
 	
 	def generate_result_code(self, code):
-		func_type = self.function_type()
+		if self.type.is_error:
+			return
+		func_type = self.function_type
 		result = self.result()
 		if func_type.is_pyobject:
 			if self.arg_tuple:
@@ -1864,6 +1931,16 @@ class AttributeNode(ExprNode):
 	def analyse_target_types(self, env):
 		self.analyse_types(env, target = 1)
 	
+	def analyse_as_function(self, env):
+		module_scope = self.obj.analyse_as_module(env)
+		if module_scope:
+			entry = module_scope.lookup_here(self.attribute)
+			if entry and entry.is_type:
+				self.mutate_into_name_node(entry)
+				self.analyse_constructor_entry()
+				return
+		self.analyse_types(env)
+			
 	def analyse_types(self, env, target = 0):
 		if self.analyse_as_cimported_attribute(env, target):
 			return
@@ -1882,7 +1959,11 @@ class AttributeNode(ExprNode):
 			if entry and (
 				entry.is_cglobal or entry.is_cfunction
 				or entry.is_type or entry.is_const):
-					self.mutate_into_name_node(env, entry, target)
+					self.mutate_into_name_node(entry)
+					if target:
+						self.analyse_target_types(env)
+					else:
+						self.analyse_rvalue_entry(env)
 					return 1
 		return 0
 	
@@ -1902,7 +1983,8 @@ class AttributeNode(ExprNode):
 					entry.type)
 				ubcm_entry.is_cfunction = 1
 				ubcm_entry.func_cname = entry.func_cname
-				self.mutate_into_name_node(env, ubcm_entry, None)
+				self.mutate_into_name_node(ubcm_entry)
+				self.analyse_rvalue_entry(env)
 				return 1
 		return 0
 	
@@ -1926,18 +2008,13 @@ class AttributeNode(ExprNode):
 				return entry.as_module
 		return None
 				
-	def mutate_into_name_node(self, env, entry, target):
-		# Mutate this node into a NameNode and complete the
-		# analyse_types phase.
+	def mutate_into_name_node(self, entry):
+		# Turn this node into a NameNode with the given entry.
 		self.__class__ = NameNode
 		self.name = self.attribute
 		self.entry = entry
 		del self.obj
 		del self.attribute
-		if target:
-			NameNode.analyse_target_types(self, env)
-		else:
-			NameNode.analyse_rvalue_entry(self, env)
 	
 	def analyse_as_ordinary_attribute(self, env, target):
 		self.obj.analyse_types(env)

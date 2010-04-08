@@ -9,9 +9,19 @@ try:
 except ImportError:
 	from sets import Set as set
 
+def has_suffix(path, suffixes):
+	for suffix in suffixes:
+		if path.endswith(suffix):
+			return True
+	return False
+
 def replace_suffix(path, newsuf):
 	base, _ = os.path.splitext(path)
 	return base + newsuf
+
+def map_suffix(path, mapping, default):
+	base, suffix = os.path.splitext(path)
+	return base + mapping.get(suffix, default)
 
 def open_new_file(path):
 	#  Open and truncate existing file to

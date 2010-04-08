@@ -1,0 +1,7 @@
+cdef extern from "cplusstruct.hpp":
+	cdef+ struct Foo:
+		__init__()
+
+cdef int f() except -1:
+	cdef Foo *foo
+	foo = new Foo()

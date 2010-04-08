@@ -1,0 +1,3 @@
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstructbase.pyx+:7:1: 'nothing' is not declared
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstructbase.pyx+:10:1: 'Nothing' is not declared in module 'cplusstruct'
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstructbase.pyx+:13:1: Base type 'Baseless' is not a C++ struct

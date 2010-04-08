@@ -1,0 +1,8 @@
+cdef+ extern from "cplusstruct.hpp":
+
+	struct Foo:
+		pass
+
+cdef void f():
+	cdef Foo *foo
+	del foo

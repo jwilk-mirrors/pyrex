@@ -1,0 +1,7 @@
+cdef+ extern from "cplusstruct.hpp":
+	struct Zax:
+		pass
+
+cdef int f() except -1:
+	cdef Zax *zax
+	zax = new Zax()

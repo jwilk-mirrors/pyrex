@@ -538,6 +538,7 @@ class CFuncType(CType):
 	#  with_gil         boolean    Acquire gil around function body
 	
 	is_cfunction = 1
+	is_overloaded = 0
 	
 	def __init__(self, return_type, args, has_varargs = 0,
 			exception_value = None, exception_check = 0, calling_convention = "",
@@ -560,6 +561,17 @@ class CFuncType(CType):
 			self.calling_convention_prefix(),
 			string.join(arg_reprs, ","))
 	
+	def callable_with(self, actual_arg_types):
+		formal_arg_types = self.args
+		nf = len(formal_arg_types)
+		na = len(actual_arg_types)
+		if not (nf == na or self.has_varargs and nf >= na):
+			return False
+		for formal_type, actual_type in zip(formal_arg_types, actual_arg_types):
+			if not formal_type.assignable_from(actual_type):
+				return False
+		return True
+
 	def calling_convention_prefix(self):
 		cc = self.calling_convention
 		if cc:
@@ -657,6 +669,22 @@ class CFuncType(CType):
 		return s
 
 
+class COverloadedFuncType(CType):
+	#  return_type      CType
+	#  signatures       [CFuncType]
+
+	is_cfunction = 1
+	is_overloaded = 1
+	
+	def __init__(self, return_type, signatures):
+		self.return_type = return_type
+		self.signatures = signatures
+	
+	def __str__(self):
+		return "COverloadedFuncType(%s, [%s])" % (self.return_type, 
+			", ".join(map(str, self.signatures)))
+		
+
 class CFuncTypeArg:
 	#  name       string
 	#  cname      string
@@ -677,11 +705,12 @@ class CFuncTypeArg:
 
 
 class CStructOrUnionType(CType):
-	#  name          string
-	#  cname         string
-	#  kind          string              "struct" or "union"
-	#  scope         StructOrUnionScope, or None if incomplete
-	#  typedef_flag  boolean
+	#  name                     string
+	#  cname                    string
+	#  kind                     string              "struct" or "union"
+	#  scope                    StructOrUnionScope, or None if incomplete
+	#  typedef_flag             boolean
+	#  cplus_constructor_type   COverloadedFuncType
 	
 	is_struct_or_union = 1
 	has_attributes = 1
@@ -692,6 +721,9 @@ class CStructOrUnionType(CType):
 		self.kind = kind
 		self.scope = scope
 		self.typedef_flag = typedef_flag
+		if scope.is_cplus:
+			self.cplus_constructor_type = COverloadedFuncType(self,
+				scope.cplus_constructors)
 		
 	def __repr__(self):
 		return "<CStructOrUnionType %s %s%s>" % (self.name, self.cname,

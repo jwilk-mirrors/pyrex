@@ -143,6 +143,7 @@ class Scope:
 	# #pystring_entries  [Entry]            String const entries newly used as
 	# #                                       Python strings in this scope
 	# nogil             boolean            In a nogil section
+	# is_cplus          boolean            Is a C++ struct namespace
 
 	is_py_class_scope = 0
 	is_c_class_scope = 0
@@ -419,7 +420,21 @@ class Scope:
 				error(pos, "'%s' is not a cimported module" % scope.qualified_name)
 				return None
 		return scope
-		
+	
+	def find_qualified_name(self, module_and_name, pos):
+		# Look up qualified name, report error if not found.
+		# module_and_name = [path, name] where path is a list of names.
+		module_path, name = module_and_name
+		scope = self.find_imported_module(module_path, pos)
+		if scope:
+			entry = scope.lookup_here(name)
+			if not entry:
+				mess = "'%s' is not declared" % name
+				if module_path:
+					mess = "%s in module '%s'" % (mess, ".".join(module_path))
+				error(pos, mess)
+			return entry
+
 	def lookup(self, name):
 		# Look up name in this scope or an enclosing one.
 		# Return None if not found.
@@ -1010,12 +1025,30 @@ class LocalScope(Scope):
 
 class StructOrUnionScope(Scope):
 	#  Namespace of a C struct or union.
+	#
+	#  cplus_constructors  [CFuncType]   C++ constructor signatures
 
-	def __init__(self):
+	def __init__(self, is_cplus = False, base_scopes = []):
 		Scope.__init__(self, "?", None, None)
+		self.base_scopes = base_scopes
+		self.is_cplus = is_cplus
+		if is_cplus:
+			constructors = []
+			for base in base_scopes:
+				constructors.extend(base.cplus_constructors)
+			self.cplus_constructors = constructors
+	
+	def lookup_here(self, name):
+		entry = Scope.lookup_here(self, name)
+		if not entry:
+			for base in self.base_scopes:
+				entry = base.lookup_here(name)
+				if entry:
+					break
+		return entry
 
 	def declare_var(self, name, type, pos, 
-			cname = None, visibility = 'private', is_cdef = 0):
+			cname = None, visibility = 'private', **kwds):
 		# Add an entry for an attribute.
 		if not cname:
 			cname = name
@@ -1030,11 +1063,18 @@ class StructOrUnionScope(Scope):
 				"C struct/union member cannot be declared %s" % visibility)
 		return entry
 	
-	def declare_cfunction(self, name, type, pos, *args, **kwds):
-		error(pos, "C struct/union member cannot be a function")
-		#  Define it anyway to suppress further errors
-		kwds['defining'] = 1
-		Scope.declare_cfunction(self, name, type, pos, *args, **kwds)
+	def declare_cfunction(self, name, type, pos, **kwds):
+		#print "StructOrUnionScope.declare_cfunction:", name ###
+		if not self.is_cplus:
+			error(pos, "C struct/union member cannot be a function")
+			#  Define it anyway to suppress further errors
+		elif name == "__init__":
+			type.pos = pos
+			self.cplus_constructors.append(type)
+			return
+		#kwds['defining'] = 1
+		#Scope.declare_cfunction(self, name, type, pos, *args, **kwds)
+		self.declare_var(name, type, pos, **kwds)
 
 
 class ClassScope(Scope):

@@ -1,0 +1,5 @@
+cimport cplusstruct
+
+cdef void f():
+	cdef cplusstruct.Foo *foo
+	foo = new cplusstruct.Foo()

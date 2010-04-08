@@ -1,0 +1,3 @@
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstruct.pyx+:1:6: C++ declarations must be in an 'extern from' block
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstruct.pyx+:4:6: C++ declarations must be in an 'extern from' block
+/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstruct.pyx+:9:10: 'new' must be followed by a C++ constructor call

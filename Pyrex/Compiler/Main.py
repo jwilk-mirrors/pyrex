@@ -18,7 +18,9 @@ from Errors import PyrexError, CompileError, error
 from Scanning import PyrexScanner
 from Symtab import BuiltinScope, DefinitionScope, ImplementationScope
 from Pyrex.Utils import set, replace_suffix, modification_time, \
-	file_newer_than, castrate_file
+	file_newer_than, castrate_file, map_suffix
+from Filenames import cplus_suffix, pxd_suffixes, pyx_suffixes, \
+	package_init_files, pyx_to_c_suffix
 
 verbose = 0
 debug_timestamps = 0
@@ -102,20 +104,21 @@ class Context:
 		#  the directory containing the source file is searched first
 		#  for a dotted filename, and its containing package root
 		#  directory is searched first for a non-dotted filename.
-		return self.search_package_directories(qualified_name, ".pxd", pos)
+		return self.search_package_directories(qualified_name, pxd_suffixes, pos)
 	
 	def find_pyx_file(self, qualified_name, pos):
 		#  Search include path for the .pyx file corresponding to the
 		#  given fully-qualified module name, as for find_pxd_file().
-		return self.search_package_directories(qualified_name, ".pyx", pos)
+		return self.search_package_directories(qualified_name, pyx_suffixes, pos)
 	
-	def search_package_directories(self, qualified_name, suffix, pos):
-		dotted_filename = qualified_name + suffix
+	def search_package_directories(self, qualified_name, suffixes, pos):
+		dotted_filenames = [qualified_name + suffix for suffix in suffixes]
 		if pos:
 			here = os.path.dirname(pos[0])
-			path = os.path.join(here, dotted_filename)
-			if os.path.exists(path):
-				return path
+			for dotted_filename in dotted_filenames:
+				path = os.path.join(here, dotted_filename)
+				if os.path.exists(path):
+					return path
 		dirs = self.include_directories
 		if pos:
 			here = self.find_root_package_dir(pos[0])
@@ -123,19 +126,22 @@ class Context:
 		names = qualified_name.split(".")
 		package_names = names[:-1]
 		module_name = names[-1]
-		filename = module_name + suffix
+		filenames = [module_name + suffix for suffix in suffixes]
 		for root in dirs:
-			path = os.path.join(root, dotted_filename)
-			if os.path.exists(path):
-				return path
+			for dotted_filename in dotted_filenames:
+				path = os.path.join(root, dotted_filename)
+				if os.path.exists(path):
+					return path
 			dir = self.descend_to_package_dir(root, package_names)
 			if dir:
-				path = os.path.join(dir, filename)
-				if os.path.exists(path):
-					return path
-				path = os.path.join(dir, module_name, "__init__" + suffix)
-				if os.path.exists(path):
-					return path
+				for filename in filenames:
+					path = os.path.join(dir, filename)
+					if os.path.exists(path):
+						return path
+				for init_filename in package_init_files:
+					path = os.path.join(dir, module_name, init_filename)
+					if os.path.exists(path):
+						return path
 	
 	def find_root_package_dir(self, file_path):
 		#  Given the full pathname of a source file, find the directory
@@ -156,14 +162,12 @@ class Context:
 		dir = root_dir
 		for name in package_names:
 			dir = os.path.join(dir, name)
-			for filename in ("__init__.py", "__init__.pyx"):
-				path = os.path.join(dir, filename)
-				if os.path.exists(path):
-					return dir
+			if self.is_package_dir(dir):
+				return dir
 	
 	def is_package_dir(self, dir_path):
 		#  Return true if the given directory is a package directory.
-		for filename in ("__init__.py", "__init__.pyx"):
+		for filename in package_init_files:
 			path = os.path.join(dir_path, filename)
 			if os.path.exists(path):
 				return 1
@@ -247,7 +251,7 @@ class Context:
 	def c_file_out_of_date(self, source_path):
 		if debug_timestamps:
 			print "Checking whether", source_path, "is out of date"
-		c_path = replace_suffix(source_path, ".c")
+		c_path = map_suffix(source_path, pyx_to_c_suffix, ".c")
 		if not os.path.exists(c_path):
 			if debug_timestamps:
 				print "...yes, c file doesn't exist"
@@ -316,10 +320,9 @@ class Context:
 			result.c_file = os.path.join(cwd, options.output_file)
 		else:
 			if options.cplus:
-				c_suffix = ".cpp"
+				result.c_file = replace_suffix(source, cplus_suffix)
 			else:
-				c_suffix = ".c"
-			result.c_file = replace_suffix(source, c_suffix)
+				result.c_file = map_suffix(source, pyx_to_c_suffix, ".c")
 		module_name = self.extract_module_name(source)
 		initial_pos = (source, 1, 0)
 		def_scope = self.find_module(module_name, pos = initial_pos, need_pxd = 0)
