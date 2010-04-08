@@ -609,9 +609,7 @@ class CFuncType(CType):
 		return 1
 	
 	def same_calling_convention_as(self, other):
-		sc1 = self.calling_convention == '__stdcall'
-		sc2 = other.calling_convention == '__stdcall'
-		return sc1 == sc2
+		return self.calling_convention == other.calling_convention
 	
 	def same_exception_signature_as(self, other_type):
 		return self.same_exception_signature_as_resolved_type(
