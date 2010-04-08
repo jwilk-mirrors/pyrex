@@ -16,6 +16,9 @@ Modifications:
 		
 	- Added __fastcall calling convention. Also no longer assuming that an
 		unspecified calling convention is the same as __cdecl.
+	
+	- Operations between signed and unsigned ints of the same size now have
+		an unsigned result.
 
 Bug fixes:
 

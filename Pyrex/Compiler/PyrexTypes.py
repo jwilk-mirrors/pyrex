@@ -885,8 +885,8 @@ rank_to_type_name = (
 	"short",        # 1
 	"int",          # 2
 	"long",         # 3
-	"PY_LONG_LONG", # 4
-	"Py_ssize_t",   # 5
+	"Py_ssize_t",   # 4
+	"PY_LONG_LONG", # 5
 	"float",        # 6
 	"double",       # 7
 	"long double",  # 8
@@ -903,14 +903,14 @@ sign_and_rank_to_type = {
 	(1, 1): c_short_type, 
 	(1, 2): c_int_type, 
 	(1, 3): c_long_type,
-	(1, 4): c_longlong_type,
-	(1, 5): c_py_ssize_t_type,
+	(1, 4): c_py_ssize_t_type,
+	(1, 5): c_longlong_type,
 	(2, 0): c_schar_type, 
 	(2, 1): c_sshort_type, 
 	(2, 2): c_sint_type, 
 	(2, 3): c_slong_type,
-	(2, 4): c_slonglong_type,
-	(2, 5): c_py_ssize_t_type,
+	(2, 4): c_py_ssize_t_type,
+	(2, 5): c_slonglong_type,
 	(1, 6): c_float_type, 
 	(1, 7): c_double_type,
 	(1, 8): c_longdouble_type,
@@ -947,10 +947,14 @@ def widest_numeric_type(type1, type2):
 	# encompassing both of them.
 	if type1.is_enum and type2.is_enum:
 		widest_type = c_int_type
-	elif type2.rank > type1.rank:
+	elif type1.rank < type2.rank:
 		widest_type = type2
-	else:
+	elif type1.rank > type2.rank
 		widest_type = type1
+	elif type1.signed == 0:
+		widest_type = type1
+	else:
+		widest_type = type2
 	return widest_type
 
 def simple_c_type(signed, longness, name):
