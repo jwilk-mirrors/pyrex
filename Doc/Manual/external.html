@@ -168,7 +168,7 @@ Types</h3><p>Pyrex predefines the name <span style="font-family: monospace;">Py_
 for use with Python/C API routines. To make your extensions compatible
 with 64-bit systems, you should always use this type where it is
 specified in the documentation of Python/C API routines.</p><h3><a name="CallingConventions"></a>Windows Calling
-Conventions</h3><p>The <span style="font-family: monospace;">__stdcall</span> and <span style="font-family: monospace;">__cdecl</span> calling
+Conventions</h3><p>The <span style="font-family: monospace;">__stdcall</span>, <span style="font-family: monospace;">__fastcall</span> and <span style="font-family: monospace;">__cdecl</span> calling
 convention specifiers can be used in Pyrex, with the same syntax as
 used by C compilers on Windows, for example,</p><pre style="margin-left: 40px;">cdef extern int __stdcall FrobnicateWindow(long handle)<br><br>cdef void (__stdcall *callback)(void *)<br></pre>If
 __stdcall is used, the function is only considered compatible with

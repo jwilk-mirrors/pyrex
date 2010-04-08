@@ -13,6 +13,9 @@ Modifications:
 	
 	- Disabled size check for cimported types because it was generating too
 		many false positives in the field.
+		
+	- Added __fastcall calling convention. Also no longer assuming that an
+		unspecified calling convention is the same as __cdecl.
 
 Bug fixes:
 
