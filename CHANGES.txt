@@ -19,6 +19,8 @@ Modifications:
 	
 	- Operations between signed and unsigned ints of the same size now have
 		an unsigned result.
+	
+	- Py_ssize_t now ranked between long and long long.
 
 Bug fixes:
 
