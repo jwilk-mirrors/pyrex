@@ -336,22 +336,29 @@ class CNumericType(CType):
 	#
 	#   rank      integer     Relative size
 	#   signed    integer     0 = unsigned, 1 = unspecified, 2 = explicitly signed
+	#   name      string      or None to construct from sign and rank
 	#
 	
 	is_numeric = 1
 	default_value = "0"
 	
 	parsetuple_formats = ( # rank -> format
-		"BHIkK????", # unsigned
-		"bhilL?fd?", # assumed signed
-		"bhilL?fd?", # explicitly signed
+		"BHIk?K???", # unsigned
+		"bhil?Lfd?", # assumed signed
+		"bhil?Lfd?", # explicitly signed
 	)
 	
 	sign_words = ("unsigned ", "", "signed ")
 	
-	def __init__(self, rank, signed = 1, pymemberdef_typecode = None):
+	def __init__(self, rank, signed = 1, pymemberdef_typecode = None, name = None):
 		self.rank = rank
 		self.signed = signed
+		if name:
+			self.name = name
+		else:
+			s = self.sign_words[signed]
+			n = rank_to_type_name[rank]
+			self.name = s + n
 		ptf = self.parsetuple_formats[signed][rank]
 		if ptf == '?':
 			ptf = None
@@ -359,9 +366,7 @@ class CNumericType(CType):
 		self.pymemberdef_typecode = pymemberdef_typecode
 	
 	def sign_and_name(self):
-		s = self.sign_words[self.signed]
-		n = rank_to_type_name[self.rank]
-		return s + n
+		return self.name
 	
 	def __repr__(self):
 		return "<CNumericType %s>" % self.sign_and_name()
@@ -379,8 +384,8 @@ class CIntType(CNumericType):
 	to_py_function = "PyInt_FromLong"
 	from_py_function = "PyInt_AsLong"
 
-	def __init__(self, rank, signed, pymemberdef_typecode = None, is_returncode = 0):
-		CNumericType.__init__(self, rank, signed, pymemberdef_typecode)
+	def __init__(self, rank, signed, pymemberdef_typecode = None, is_returncode = 0, name = None):
+		CNumericType.__init__(self, rank, signed, pymemberdef_typecode, name)
 		self.is_returncode = is_returncode
 	
 	def assignable_from_resolved_type(self, src_type):
@@ -847,20 +852,21 @@ c_uchar_type =       CIntType(0, 0, "T_UBYTE")
 c_ushort_type =      CIntType(1, 0, "T_USHORT")
 c_uint_type =        CUIntType(2, 0, "T_UINT")
 c_ulong_type =       CULongType(3, 0, "T_ULONG")
-c_ulonglong_type =   CULongLongType(4, 0, "T_ULONGLONG")
+c_size_t_type =      CPySSizeTType(4, 0, name = "size_t")
+c_ulonglong_type =   CULongLongType(5, 0, "T_ULONGLONG")
 
 c_char_type =        CIntType(0, 1, "T_CHAR")
 c_short_type =       CIntType(1, 1, "T_SHORT")
 c_int_type =         CIntType(2, 1, "T_INT")
 c_long_type =        CIntType(3, 1, "T_LONG")
-c_longlong_type =    CLongLongType(4, 1, "T_LONGLONG")
-c_py_ssize_t_type =  CPySSizeTType(5, 1)
+c_longlong_type =    CLongLongType(5, 1, "T_LONGLONG")
 
 c_schar_type =       CIntType(0, 2, "T_CHAR")
 c_sshort_type =      CIntType(1, 2, "T_SHORT")
 c_sint_type =        CIntType(2, 2, "T_INT")
 c_slong_type =       CIntType(3, 2, "T_LONG")
-c_slonglong_type =   CLongLongType(4, 2, "T_LONGLONG")
+c_py_ssize_t_type =  CPySSizeTType(4, 2, name = "Py_ssize_t")
+c_slonglong_type =   CLongLongType(5, 2, "T_LONGLONG")
 
 c_float_type =       CFloatType(6, "T_FLOAT")
 c_double_type =      CFloatType(7, "T_DOUBLE")
@@ -894,11 +900,12 @@ rank_to_type_name = (
 
 sign_and_rank_to_type = {
 	#(signed, rank)
-	(0, 0, ): c_uchar_type, 
+	(0, 0): c_uchar_type, 
 	(0, 1): c_ushort_type, 
 	(0, 2): c_uint_type, 
   (0, 3): c_ulong_type,
-  (0, 4): c_ulonglong_type,
+  (0, 4): c_size_t_type,
+  (0, 5): c_ulonglong_type,
 	(1, 0): c_char_type, 
 	(1, 1): c_short_type, 
 	(1, 2): c_int_type, 
