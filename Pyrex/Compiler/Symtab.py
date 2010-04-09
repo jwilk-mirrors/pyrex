@@ -1211,7 +1211,7 @@ class CClassScope(ClassScope):
 	def declare_pyfunction(self, name, pos):
 		# Add an entry for a method.
 		if name == "__new__":
-			warning(pos, "__new__ method of extension type will change semantics "
+			error(pos, "__new__ method of extension type will change semantics "
 				"in a future version of Pyrex. Use __cinit__ instead.")
 			name = "__cinit__"
 		entry = self.lookup_here(name)

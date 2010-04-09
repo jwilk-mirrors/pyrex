@@ -21,6 +21,9 @@ Modifications:
 		an unsigned result.
 	
 	- Py_ssize_t now ranked between long and long long.
+	
+	- Declaration of __new__ in an extension type is now an error, in
+		preparation for introducing new semantics.
 
 Bug fixes:
 

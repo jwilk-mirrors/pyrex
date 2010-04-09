@@ -949,7 +949,7 @@ def widest_numeric_type(type1, type2):
 		widest_type = c_int_type
 	elif type1.rank < type2.rank:
 		widest_type = type2
-	elif type1.rank > type2.rank
+	elif type1.rank > type2.rank:
 		widest_type = type1
 	elif type1.signed == 0:
 		widest_type = type1

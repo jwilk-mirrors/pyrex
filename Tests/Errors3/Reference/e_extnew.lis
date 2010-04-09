@@ -1,0 +1,1 @@
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_extnew.pyx:3:1: __new__ method of extension type will change semantics in a future version of Pyrex. Use __cinit__ instead.
