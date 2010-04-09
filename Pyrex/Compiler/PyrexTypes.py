@@ -350,15 +350,10 @@ class CNumericType(CType):
 	
 	sign_words = ("unsigned ", "", "signed ")
 	
-	def __init__(self, rank, signed = 1, pymemberdef_typecode = None, name = None):
+	def __init__(self, rank, signed, name, pymemberdef_typecode = None):
 		self.rank = rank
 		self.signed = signed
-		if name:
-			self.name = name
-		else:
-			s = self.sign_words[signed]
-			n = rank_to_type_name[rank]
-			self.name = s + n
+		self.name = name
 		ptf = self.parsetuple_formats[signed][rank]
 		if ptf == '?':
 			ptf = None
@@ -384,8 +379,8 @@ class CIntType(CNumericType):
 	to_py_function = "PyInt_FromLong"
 	from_py_function = "PyInt_AsLong"
 
-	def __init__(self, rank, signed, pymemberdef_typecode = None, is_returncode = 0, name = None):
-		CNumericType.__init__(self, rank, signed, pymemberdef_typecode, name)
+	def __init__(self, rank, signed, name, pymemberdef_typecode = None, is_returncode = 0, name = None):
+		CNumericType.__init__(self, rank, signed, name, pymemberdef_typecode)
 		self.is_returncode = is_returncode
 	
 	def assignable_from_resolved_type(self, src_type):
@@ -433,8 +428,8 @@ class CFloatType(CNumericType):
 	to_py_function = "PyFloat_FromDouble"
 	from_py_function = "PyFloat_AsDouble"
 	
-	def __init__(self, rank, pymemberdef_typecode = None):
-		CNumericType.__init__(self, rank, 1, pymemberdef_typecode)
+	def __init__(self, rank, name, pymemberdef_typecode = None):
+		CNumericType.__init__(self, rank, 1, name, pymemberdef_typecode)
 	
 	def assignable_from_resolved_type(self, src_type):
 		return src_type.is_numeric or src_type is error_type
@@ -848,25 +843,25 @@ c_void_type =         CVoidType()
 c_void_ptr_type =     CPtrType(c_void_type)
 c_void_ptr_ptr_type = CPtrType(c_void_ptr_type)
 
-c_uchar_type =       CIntType(0, 0, "T_UBYTE")
-c_ushort_type =      CIntType(1, 0, "T_USHORT")
-c_uint_type =        CUIntType(2, 0, "T_UINT")
-c_ulong_type =       CULongType(3, 0, "T_ULONG")
-c_size_t_type =      CPySSizeTType(4, 0, name = "size_t")
-c_ulonglong_type =   CULongLongType(5, 0, "T_ULONGLONG")
+c_uchar_type =       CIntType(0, 0, "unsigned char", "T_UBYTE")
+c_ushort_type =      CIntType(1, 0, "unsigned short", "T_USHORT")
+c_uint_type =        CUIntType(2, 0, "unsigned int", "T_UINT")
+c_ulong_type =       CULongType(3, 0, "unsigned long", "T_ULONG")
+c_size_t_type =      CPySSizeTType(4, 0, "size_t")
+c_ulonglong_type =   CULongLongType(5, 0, "unsigned long long", "T_ULONGLONG")
 
-c_char_type =        CIntType(0, 1, "T_CHAR")
-c_short_type =       CIntType(1, 1, "T_SHORT")
-c_int_type =         CIntType(2, 1, "T_INT")
-c_long_type =        CIntType(3, 1, "T_LONG")
-c_longlong_type =    CLongLongType(5, 1, "T_LONGLONG")
+c_char_type =        CIntType(0, 1, "char", "T_CHAR")
+c_short_type =       CIntType(1, 1, "short", "T_SHORT")
+c_int_type =         CIntType(2, 1, "int", "T_INT")
+c_long_type =        CIntType(3, 1, "long", "T_LONG")
+c_longlong_type =    CLongLongType(5, 1, "long long", "T_LONGLONG")
 
-c_schar_type =       CIntType(0, 2, "T_CHAR")
-c_sshort_type =      CIntType(1, 2, "T_SHORT")
-c_sint_type =        CIntType(2, 2, "T_INT")
-c_slong_type =       CIntType(3, 2, "T_LONG")
-c_py_ssize_t_type =  CPySSizeTType(4, 2, name = "Py_ssize_t")
-c_slonglong_type =   CLongLongType(5, 2, "T_LONGLONG")
+c_schar_type =       CIntType(0, 2, "signed char", "T_CHAR")
+c_sshort_type =      CIntType(1, 2, "signed short", "T_SHORT")
+c_sint_type =        CIntType(2, 2, "signed int", "T_INT")
+c_slong_type =       CIntType(3, 2, "signed long", "T_LONG")
+c_py_ssize_t_type =  CPySSizeTType(4, 2, "Py_ssize_t")
+c_slonglong_type =   CLongLongType(5, 2, "signed long long", "T_LONGLONG")
 
 c_float_type =       CFloatType(6, "T_FLOAT")
 c_double_type =      CFloatType(7, "T_DOUBLE")
@@ -884,69 +879,41 @@ c_anon_enum_type =    CAnonEnumType(-1, 1)
 
 error_type =    ErrorType()
 
-lowest_float_rank = 6
+# Signedness values
+UNSIGNED = 0
+NOSIGN = 1
+SIGNED = 2
 
-rank_to_type_name = (
-	"char",         # 0
-	"short",        # 1
-	"int",          # 2
-	"long",         # 3
-	"Py_ssize_t",   # 4
-	"PY_LONG_LONG", # 5
-	"float",        # 6
-	"double",       # 7
-	"long double",  # 8
-)
-
-sign_and_rank_to_type = {
-	#(signed, rank)
-	(0, 0): c_uchar_type, 
-	(0, 1): c_ushort_type, 
-	(0, 2): c_uint_type, 
-  (0, 3): c_ulong_type,
-  (0, 4): c_size_t_type,
-  (0, 5): c_ulonglong_type,
-	(1, 0): c_char_type, 
-	(1, 1): c_short_type, 
-	(1, 2): c_int_type, 
-	(1, 3): c_long_type,
-	(1, 4): c_py_ssize_t_type,
-	(1, 5): c_longlong_type,
-	(2, 0): c_schar_type, 
-	(2, 1): c_sshort_type, 
-	(2, 2): c_sint_type, 
-	(2, 3): c_slong_type,
-	(2, 4): c_py_ssize_t_type,
-	(2, 5): c_slonglong_type,
-	(1, 6): c_float_type, 
-	(1, 7): c_double_type,
-	(1, 8): c_longdouble_type,
-}
+# Longness values
+SHORT = -1
+NOLEN = 0
+LONG = 1
+LONGLONG = 2
 
 modifiers_and_name_to_type = {
-	#(signed, longness, name)
-	(0, 0, "char"): c_uchar_type, 
-	(0, -1, "int"): c_ushort_type, 
-	(0, 0, "int"): c_uint_type, 
-  (0, 1, "int"): c_ulong_type,
-  (0, 2, "int"): c_ulonglong_type,
-	(1, 0, "void"): c_void_type,
-	(1, 0, "char"): c_char_type, 
-	(1, -1, "int"): c_short_type, 
-	(1, 0, "int"): c_int_type, 
-	(1, 1, "int"): c_long_type,
-	(1, 2, "int"): c_longlong_type,
-	(1, 0, "Py_ssize_t"): c_py_ssize_t_type,
-	(1, 0, "float"): c_float_type, 
-	(1, 0, "double"): c_double_type,
-	(1, 1, "double"): c_longdouble_type,
-	(1, 0, "object"): py_object_type,
-	(2, 0, "char"): c_schar_type, 
-	(2, -1, "int"): c_sshort_type, 
-	(2, 0, "int"): c_sint_type, 
-	(2, 1, "int"): c_slong_type,
-	(2, 2, "int"): c_slonglong_type,
-	(2, 0, "Py_ssize_t"): c_py_ssize_t_type,
+	#(signedness, longness, name)
+	(UNSIGNED, NOLEN, "char"): c_uchar_type, 
+	(UNSIGNED, SHORT, "int"): c_ushort_type, 
+	(UNSIGNED, NOLEN, "int"): c_uint_type, 
+  (UNSIGNED, LONG, "int"): c_ulong_type,
+  (UNSIGNED, LONGLONG, "int"): c_ulonglong_type,
+	(NOSIGN, NOLEN, "void"): c_void_type,
+	(NOSIGN, NOLEN, "char"): c_char_type, 
+	(NOSIGN, SHORT, "int"): c_short_type, 
+	(NOSIGN, NOLEN, "int"): c_int_type,
+	(NOSIGN, NOLEN, "size_t"): c_size_t_type,
+	(NOSIGN, NOLEN, "Py_ssize_t"): c_py_ssize_t_type,
+	(NOSIGN, LONG, "int"): c_long_type,
+	(NOSIGN, LONGLONG, "int"): c_longlong_type,
+	(NOSIGN, NOLEN, "float"): c_float_type, 
+	(NOSIGN, NOLEN, "double"): c_double_type,
+	(NOSIGN, LONG, "double"): c_longdouble_type,
+	(NOSIGN, NOLEN, "object"): py_object_type,
+	(SIGNED, NOLEN, "char"): c_schar_type, 
+	(SIGNED, SHORT, "int"): c_sshort_type, 
+	(SIGNED, NOLEN, "int"): c_sint_type, 
+	(SIGNED, LONG, "int"): c_slong_type,
+	(SIGNED, LONGLONG, "int"): c_slonglong_type,
 }
 
 def widest_numeric_type(type1, type2):
@@ -958,7 +925,7 @@ def widest_numeric_type(type1, type2):
 		widest_type = type2
 	elif type1.rank > type2.rank:
 		widest_type = type1
-	elif type1.signed == 0:
+	elif type1.signed < type2.signed:
 		widest_type = type1
 	else:
 		widest_type = type2
