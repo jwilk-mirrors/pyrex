@@ -1175,14 +1175,18 @@ def p_except_clause(s):
 	s.next()
 	exc_type = None
 	exc_value = None
+	tb_value = None
 	if s.sy <> ':':
 		exc_type = p_simple_expr(s)
 		if s.sy == ',':
 			s.next()
 			exc_value = p_simple_expr(s)
+			if s.sy == ',':
+				s.next()
+				tb_value = p_simple_expr(s)
 	body = p_suite(s)
 	return Nodes.ExceptClauseNode(pos,
-		pattern = exc_type, target = exc_value, body = body)
+		pattern = exc_type, exc_target = exc_value, tb_target = tb_value, body = body)
 
 def p_include_statement(s, ctx):
 	pos = s.position()
@@ -1660,26 +1664,28 @@ def p_optional_ellipsis(s):
 
 def p_c_arg_decl(s, ctx, in_pyfunc, cmethod_flag = 0, nonempty = 0, kw_only = 0):
 	pos = s.position()
-	not_none = 0
+	allow_none = None
+	#not_none = 0
 	default = None
 	base_type = p_c_base_type(s, cmethod_flag)
 	declarator = p_c_declarator(s, ctx, nonempty = nonempty)
-	if s.sy == 'not':
+	if s.sy in ('or', 'not'):
+		or_not = s.sy
 		s.next()
 		if s.sy == 'IDENT' and s.systring == 'None':
 			s.next()
 		else:
 			s.error("Expected 'None'")
 		if not in_pyfunc:
-			error(pos, "'not None' only allowed in Python functions")
-		not_none = 1
+			error(pos, "'%s None' only allowed in Python functions" % or_not)
+		allow_none = or_not == 'or'
 	if s.sy == '=':
 		s.next()
 		default = p_simple_expr(s)
 	return Nodes.CArgDeclNode(pos,
 		base_type = base_type,
 		declarator = declarator,
-		not_none = not_none,
+		allow_none = allow_none,
 		default = default,
 		kw_only = kw_only)
 

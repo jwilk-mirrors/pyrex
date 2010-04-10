@@ -43,5 +43,3 @@ def f(a, b, c, x):
 		i = 1
 	except:
 		raise
-
-		

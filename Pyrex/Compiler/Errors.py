@@ -5,6 +5,7 @@
 import sys
 from Pyrex.Utils import open_new_file
 
+warnings_issued = {}
 
 class PyrexError(EnvironmentError):
 	pass
@@ -64,6 +65,11 @@ def report(position, message):
 
 def warning(position, message):
 	return report(position, "Warning: %s" % message)
+
+def one_time_warning(position, key, message):
+	if key not in warnings_issued:
+		warnings_issued[key] = 1
+		warning(position, message)
 
 def error(position, message):
 	global num_errors

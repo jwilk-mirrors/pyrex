@@ -1,4 +1,7 @@
 #!/bin/sh
 export MACOSX_DEPLOYMENT_TARGET=10.3
-gcc -g -c -fno-strict-aliasing -Wno-long-double -no-cpp-precomp -mno-fused-madd -fno-common -dynamic -Wno-long-long -Wno-unused-function -I/Library/Frameworks/Python.framework/Versions/2.6/Headers /Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/excbug.c -o /Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/excbug.o
-gcc -Wl,-F.,-w -bundle -undefined dynamic_lookup /Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/excbug.o -o /Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/excbug.so
+gcc -g -c -fno-strict-aliasing -Wno-long-double -no-cpp-precomp -mno-fused-madd \
+	-fno-common -dynamic -Wno-long-long -Wno-unused-function \
+	-I/Library/Frameworks/Python.framework/Versions/2.6/Headers \
+	excbug.c -o excbug.o
+gcc -Wl,-F.,-w -bundle -undefined dynamic_lookup excbug.o -o excbug.so

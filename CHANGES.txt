@@ -3,9 +3,19 @@
 
 New features:
 
-	- C++ struct declarations, new and del.
+	- C++ struct declarations, 'new' operator, and del for C++ delete.
+	
+	- As well as the 'not None' modifier for extension type arguments, there
+		is now 'or None' to explicitly allow passing None. It is planned to make
+		'not None' the default in a future version. For now, a warning is issued
+		(once per Pyrex run) if you do not specify one or the other.
 
 Modifications:
+
+	- Exceptions caught by an except clause are no longer put into the thread
+		state and cannot be retrieved using sys.exc_info(). To access the caught
+		exception, it must be bound to a name in the except clause. A third name
+		can be supplied to capture the traceback.
 
 	- PyString_InternFromString is now exposed under the name 'cintern' because
 		it is not a complete substitute for 'intern' (it can't handle strings
@@ -34,6 +44,8 @@ Bug fixes:
 	
 	- __Pyx_GetException was not taking account of the fact that the traceback
 		could be NULL.
+	
+	- sizeof(module.typename) did not work. [Daniele Pianu]
 
 
 0.9.8.6

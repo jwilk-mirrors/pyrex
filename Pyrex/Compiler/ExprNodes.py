@@ -1205,7 +1205,7 @@ class NextNode(AtomicExprNode):
 class ExcValueNode(AtomicExprNode):
 	#  Node created during analyse_types phase
 	#  of an ExceptClauseNode to fetch the current
-	#  exception value.
+	#  exception or traceback value.
 	
 	def __init__(self, pos, env, var):
 		ExprNode.__init__(self, pos)
@@ -1950,7 +1950,7 @@ class AttributeNode(ExprNode):
 			return
 		self.analyse_as_ordinary_attribute(env, target)
 	
-	def analyse_as_cimported_attribute(self, env, target):
+	def analyse_as_cimported_attribute(self, env, target = 0, allow_type = 0):
 		# Try to interpret this as a reference to an imported
 		# C const, type, var or function. If successful, mutates
 		# this node into a NameNode and returns 1, otherwise
@@ -1962,7 +1962,9 @@ class AttributeNode(ExprNode):
 				entry.is_cglobal or entry.is_cfunction
 				or entry.is_type or entry.is_const):
 					self.mutate_into_name_node(entry)
-					if target:
+					if entry.is_type and allow_type:
+						pass
+					elif target:
 						self.analyse_target_types(env)
 					else:
 						self.analyse_rvalue_entry(env)
@@ -2786,10 +2788,31 @@ class TypecastNode(ExprNode):
 
 
 class SizeofNode(ExprNode):
-	#  Abstract base class for sizeof(x) expression nodes.
+	#  Base class for sizeof(x) expression nodes.
+	#
+	#  sizeof_code   string
 
+	subexprs = []
+	
 	def check_const(self):
 		pass
+	
+	def analyse_types(self, env):
+		self.analyse_argument(env)
+		self.type = PyrexTypes.c_size_t_type
+
+	def analyse_type_argument(self, arg_type):
+		if arg_type.is_pyobject:
+			error(self.pos, "Cannot take sizeof Python object")
+		elif arg_type.is_void:
+			error(self.pos, "Cannot take sizeof void")
+		elif not arg_type.is_complete():
+			error(self.pos, "Cannot take sizeof incomplete type '%s'" % arg_type)
+		arg_code = arg_type.declaration_code("")
+		self.sizeof_code = "(sizeof(%s))" % arg_code
+		
+	def calculate_result_code(self):
+		return self.sizeof_code
 
 	def generate_result_code(self, code):
 		pass
@@ -2801,41 +2824,30 @@ class SizeofTypeNode(SizeofNode):
 	#  base_type   CBaseTypeNode
 	#  declarator  CDeclaratorNode
 	
-	subexprs = []
-	
-	def analyse_types(self, env):
+	def analyse_argument(self, env):
 		base_type = self.base_type.analyse(env)
 		_, arg_type = self.declarator.analyse(base_type, env)
-		self.arg_type = arg_type
-		if arg_type.is_pyobject:
-			error(self.pos, "Cannot take sizeof Python object")
-		elif arg_type.is_void:
-			error(self.pos, "Cannot take sizeof void")
-		elif not arg_type.is_complete():
-			error(self.pos, "Cannot take sizeof incomplete type '%s'" % arg_type)
-		self.type = PyrexTypes.c_size_t_type
-		
-	def calculate_result_code(self):
-		arg_code = self.arg_type.declaration_code("")
-		return "(sizeof(%s))" % arg_code
-	
 
+		
 class SizeofVarNode(SizeofNode):
-	#  C sizeof function applied to a variable
+	#  C sizeof function applied to a variable or qualified name
+	#  (which may actually refer to a type)
 	#
 	#  operand   ExprNode
 	
-	subexprs = ['operand']
+	#subexprs = ['operand']
 	
-	def analyse_types(self, env):
-		self.operand.analyse_types(env)
-		self.type = PyrexTypes.c_size_t_type
-	
-	def calculate_result_code(self):
-		return "(sizeof(%s))" % self.operand.result()
-	
-	def generate_result_code(self, code):
-		pass
+	def analyse_argument(self, env):
+		is_type = 0
+		operand = self.operand
+		if operand.analyse_as_cimported_attribute(env, allow_type = 1):
+			if operand.entry.is_type:
+				is_type = 1
+				self.analyse_type_argument(operand.entry.type)
+		else:
+			self.operand.analyse_types(env)
+		if not is_type:
+			self.sizeof_code = "(sizeof(%s))" % operand.result()
 
 
 #-------------------------------------------------------------------

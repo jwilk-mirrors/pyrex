@@ -5,7 +5,7 @@
 import string, sys
 
 import Code
-from Errors import error, InternalError
+from Errors import error, one_time_warning, InternalError
 import Naming
 import PyrexTypes
 from PyrexTypes import py_object_type, c_int_type, error_type, \
@@ -289,7 +289,8 @@ class CArgDeclNode(Node):
 	#
 	# base_type      CBaseTypeNode
 	# declarator     CDeclaratorNode
-	# not_none       boolean            Tagged with 'not None'
+	# #not_none       boolean            Tagged with 'not None'
+	# allow_none     tristate           True == 'or None', False == 'not None', None = unspecified
 	# default        ExprNode or None
 	# default_entry  Symtab.Entry       Entry for the variable holding the default value
 	# is_self_arg    boolean            Is the "self" arg of an extension type method
@@ -845,9 +846,9 @@ class DefNode(FuncDefNode):
 			arg.needs_conversion = 0
 			arg.needs_type_test = 0
 			arg.is_generic = 1
-			if arg.not_none and not arg.type.is_extension_type:
+			if arg.allow_none is not None and not arg.type.is_extension_type:
 				error(self.pos,
-					"Only extension type arguments can have 'not None'")
+					"Only extension type arguments can have 'or None' or 'not None'")
 		self.declare_pyfunction(env)
 		self.analyse_signature(env)
 		self.return_type = self.entry.signature.return_type()
@@ -1205,9 +1206,14 @@ class DefNode(FuncDefNode):
 				'if (!__Pyx_ArgTypeTest(%s, %s, %d, "%s")) %s' % (
 					arg_code, 
 					typeptr_cname,
-					not arg.not_none,
+					#not arg.not_none,
+					arg.allow_none <> False,
 					arg.name,
 					code.error_goto(arg.pos)))
+			if arg.allow_none is None:
+				one_time_warning(arg.pos, 'or_none',
+					"'not None' will become the default in a future version of Pyrex. "
+					"Use 'or None' to allow passing None.")
 		else:
 			error(arg.pos, "Cannot test type of extern C class "
 				"without type object name specification")
@@ -1818,7 +1824,6 @@ class RaiseStatNode(StatNode):
 			self.exc_value.release_temp(env)
 		if self.exc_tb:
 			self.exc_tb.release_temp(env)
-#		env.use_utility_code(raise_utility_code)
 		self.gil_check(env)
 	
 	gil_message = "Raising exception"
@@ -1839,16 +1844,12 @@ class RaiseStatNode(StatNode):
 			tb_code = self.exc_tb.py_result()
 		else:
 			tb_code = "0"
-		if self.exc_type or self.exc_value or self.exc_tb:
-			code.use_utility_code(raise_utility_code)
-			code.putln(
-				"__Pyx_Raise(%s, %s, %s);" % (
-					type_code,
-					value_code,
-					tb_code))
-		else:
-			code.putln(
-				"__Pyx_ReRaise();")
+		code.use_utility_code(raise_utility_code)
+		code.putln(
+			"__Pyx_Raise(%s, %s, %s);" % (
+				type_code,
+				value_code,
+				tb_code))
 		if self.exc_type:
 			self.exc_type.generate_disposal_code(code)
 		if self.exc_value:
@@ -1862,7 +1863,7 @@ class RaiseStatNode(StatNode):
 class ReraiseStatNode(StatNode):
 
 	def analyse_expressions(self, env):
-#		env.use_utility_code(raise_utility_code)
+		env.reraise_used = 1
 		self.gil_check(env)
 	
 	gil_message = "Raising exception"
@@ -2237,20 +2238,24 @@ class ExceptClauseNode(Node):
 	#  Part of try ... except statement.
 	#
 	#  pattern        ExprNode
-	#  target         ExprNode or None
+	#  exc_target     ExprNode or None
+	#  tb_target      ExprNode or None
 	#  body           StatNode
 	#  match_flag     string             result of exception match
 	#  exc_value      ExcValueNode       used internally
+	#  tb_value       ExcValueNode       used internally
 	#  function_name  string             qualified name of enclosing function
 	#  exc_vars       (string * 3)       local exception variables
+	#  reraise_used   boolean            body contains reraise statement
 	
 	def analyse_declarations(self, env):
-		if self.target:
-			self.target.analyse_target_declaration(env)
+		if self.exc_target:
+			self.exc_target.analyse_target_declaration(env)
+		if self.tb_target:
+			self.tb_target.analyse_target_declaration(env)
 		self.body.analyse_declarations(env)
 	
 	def analyse_expressions(self, env):
-		import ExprNodes
 		genv = env.global_scope()
 		self.function_name = env.qualified_name
 		if self.pattern:
@@ -2260,14 +2265,23 @@ class ExceptClauseNode(Node):
 			self.pattern.release_temp(env)
 			env.release_temp(self.match_flag)
 		self.exc_vars = [env.allocate_temp(py_object_type) for i in xrange(3)]
-		if self.target:
-			self.exc_value = ExprNodes.ExcValueNode(self.pos, env, self.exc_vars[1])
-			self.exc_value.allocate_temps(env)
-			self.target.analyse_target_expression(env, self.exc_value)
+		self.exc_value = self.analyse_target(env, self.exc_target, 1)
+		self.tb_value = self.analyse_target(env, self.tb_target, 2)
+		old_reraise_used = env.reraise_used
+		env.reraise_used = False
 		self.body.analyse_expressions(env)
+		self.reraise_used = env.reraise_used
+		env.reraise_used = old_reraise_used
 		for var in self.exc_vars:
 			env.release_temp(var)
-#		env.use_utility_code(get_exception_utility_code)
+	
+	def analyse_target(self, env, target, var_no):
+		if target:
+			import ExprNodes
+			value = ExprNodes.ExcValueNode(self.pos, env, self.exc_vars[var_no])
+			value.allocate_temps(env)
+			target.analyse_target_expression(env, value)
+			return value
 
 	def generate_handling_code(self, code, end_label):
 		code.mark_pos(self.pos)
@@ -2284,20 +2298,23 @@ class ExceptClauseNode(Node):
 		else:
 			code.putln(
 				"/*except:*/ {")
-		code.putln(
-			'%s; __Pyx_AddTraceback("%s");' % (
-				code.error_setup(self.pos),
-				self.function_name))
-		# We always have to fetch the exception value even if
-		# there is no target, because this also normalises the 
-		# exception and stores it in the thread state.
-		exc_args = "&%s, &%s, &%s" % tuple(self.exc_vars)
-		code.use_utility_code(get_exception_utility_code)
-		code.putln("if (__Pyx_GetException(%s) < 0) %s" % (exc_args,
-			code.error_goto(self.pos)))
-		if self.target:
-			self.exc_value.generate_evaluation_code(code)
-			self.target.generate_assignment_code(self.exc_value, code)
+		any_bindings = self.exc_target or self.tb_target
+		if any_bindings or self.reraise_used:
+			if any_bindings:
+				code.putln(
+					'%s; __Pyx_AddTraceback("%s");' % (
+						code.error_setup(self.pos),
+						self.function_name))
+			exc_args = "&%s, &%s, &%s" % tuple(self.exc_vars)
+			code.use_utility_code(get_exception_utility_code)
+			code.putln("if (__Pyx_GetException(%s) < 0) %s" % (exc_args,
+				code.error_goto(self.pos)))
+			if self.exc_target:
+				self.exc_value.generate_evaluation_code(code)
+				self.exc_target.generate_assignment_code(self.exc_value, code)
+			if self.tb_target:
+				self.tb_value.generate_evaluation_code(code)
+				self.tb_target.generate_assignment_code(self.tb_value, code)
 		old_exc_vars = code.exc_vars
 		code.exc_vars = self.exc_vars
 		self.body.generate_execution_code(code)
@@ -3144,12 +3161,52 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 
 #------------------------------------------------------------------------------------
 
+#get_exception_utility_code = [
+#"""
+#static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
+#""","""
+#static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
+#	PyThreadState *tstate = PyThreadState_Get();
+#	PyObject *old_type, *old_value, *old_tb;
+#	PyErr_Fetch(type, value, tb);
+#	PyErr_NormalizeException(type, value, tb);
+#	if (PyErr_Occurred())
+#		goto bad;
+#	if (!*tb) {
+#		printf("no traceback\n");
+#		*tb = Py_None;
+#		Py_INCREF(*tb);
+#	}
+##if 1
+#	Py_INCREF(*type);
+#	Py_INCREF(*value);
+#	Py_INCREF(*tb);
+#	old_type = tstate->exc_type;
+#	old_value = tstate->exc_value;
+#	old_tb = tstate->exc_traceback;
+#	tstate->exc_type = *type;
+#	tstate->exc_value = *value;
+#	tstate->exc_traceback = *tb;
+#	Py_XDECREF(old_type);
+#	Py_XDECREF(old_value);
+#	Py_XDECREF(old_tb);
+##endif
+#	return 0;
+#bad:
+#	Py_XDECREF(*type);
+#	Py_XDECREF(*value);
+#	Py_XDECREF(*tb);
+#	return -1;
+#}
+#"""]
+
+#------------------------------------------------------------------------------------
+
 get_exception_utility_code = [
 """
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 ""","""
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
-	PyThreadState *tstate = PyThreadState_Get();
 	PyErr_Fetch(type, value, tb);
 	PyErr_NormalizeException(type, value, tb);
 	if (PyErr_Occurred())
@@ -3158,15 +3215,6 @@ static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) 
 		*tb = Py_None;
 		Py_INCREF(*tb);
 	}
-	Py_INCREF(*type);
-	Py_INCREF(*value);
-	Py_INCREF(*tb);
-	Py_XDECREF(tstate->exc_type);
-	Py_XDECREF(tstate->exc_value);
-	Py_XDECREF(tstate->exc_traceback);
-	tstate->exc_type = *type;
-	tstate->exc_value = *value;
-	tstate->exc_traceback = *tb;
 	return 0;
 bad:
 	Py_XDECREF(*type);
