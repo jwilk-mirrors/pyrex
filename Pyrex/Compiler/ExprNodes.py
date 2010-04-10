@@ -2757,8 +2757,9 @@ class TypecastNode(ExprNode):
 		#  Must do the following, so that the result can be increfed without
 		#  the operand getting evaluated twice.
 		if to_py and not from_py:
-			self.result_ctype = py_object_type
-			self.is_temp = 1
+			#self.result_ctype = py_object_type
+			#self.is_temp = 1
+			self.operand = self.operand.coerce_to_simple(env)
 	
 	def check_const(self):
 		self.operand.check_const()
@@ -2812,7 +2813,7 @@ class SizeofTypeNode(SizeofNode):
 			error(self.pos, "Cannot take sizeof void")
 		elif not arg_type.is_complete():
 			error(self.pos, "Cannot take sizeof incomplete type '%s'" % arg_type)
-		self.type = PyrexTypes.c_int_type
+		self.type = PyrexTypes.c_size_t_type
 		
 	def calculate_result_code(self):
 		arg_code = self.arg_type.declaration_code("")
@@ -2828,7 +2829,7 @@ class SizeofVarNode(SizeofNode):
 	
 	def analyse_types(self, env):
 		self.operand.analyse_types(env)
-		self.type = PyrexTypes.c_int_type
+		self.type = PyrexTypes.c_size_t_type
 	
 	def calculate_result_code(self):
 		return "(sizeof(%s))" % self.operand.result()

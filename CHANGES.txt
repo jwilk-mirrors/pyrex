@@ -24,11 +24,16 @@ Modifications:
 	
 	- Declaration of __new__ in an extension type is now an error, in
 		preparation for introducing new semantics.
+	
+	- Added size_t type, and made sizeof() return it.
 
 Bug fixes:
 
 	- When casting the result of a function call to a Python type, the
 		function could be called twice. [David Martinez]
+	
+	- __Pyx_GetException was not taking account of the fact that the traceback
+		could be NULL.
 
 
 0.9.8.6

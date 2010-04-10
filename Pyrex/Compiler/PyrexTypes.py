@@ -379,7 +379,7 @@ class CIntType(CNumericType):
 	to_py_function = "PyInt_FromLong"
 	from_py_function = "PyInt_AsLong"
 
-	def __init__(self, rank, signed, name, pymemberdef_typecode = None, is_returncode = 0, name = None):
+	def __init__(self, rank, signed, name, pymemberdef_typecode = None, is_returncode = 0):
 		CNumericType.__init__(self, rank, signed, name, pymemberdef_typecode)
 		self.is_returncode = is_returncode
 	
@@ -848,24 +848,24 @@ c_ushort_type =      CIntType(1, 0, "unsigned short", "T_USHORT")
 c_uint_type =        CUIntType(2, 0, "unsigned int", "T_UINT")
 c_ulong_type =       CULongType(3, 0, "unsigned long", "T_ULONG")
 c_size_t_type =      CPySSizeTType(4, 0, "size_t")
-c_ulonglong_type =   CULongLongType(5, 0, "unsigned long long", "T_ULONGLONG")
+c_ulonglong_type =   CULongLongType(5, 0, "unsigned PY_LONG_LONG", "T_ULONGLONG")
 
 c_char_type =        CIntType(0, 1, "char", "T_CHAR")
 c_short_type =       CIntType(1, 1, "short", "T_SHORT")
 c_int_type =         CIntType(2, 1, "int", "T_INT")
 c_long_type =        CIntType(3, 1, "long", "T_LONG")
-c_longlong_type =    CLongLongType(5, 1, "long long", "T_LONGLONG")
+c_longlong_type =    CLongLongType(5, 1, "PY_LONG_LONG", "T_LONGLONG")
 
 c_schar_type =       CIntType(0, 2, "signed char", "T_CHAR")
 c_sshort_type =      CIntType(1, 2, "signed short", "T_SHORT")
 c_sint_type =        CIntType(2, 2, "signed int", "T_INT")
 c_slong_type =       CIntType(3, 2, "signed long", "T_LONG")
 c_py_ssize_t_type =  CPySSizeTType(4, 2, "Py_ssize_t")
-c_slonglong_type =   CLongLongType(5, 2, "signed long long", "T_LONGLONG")
+c_slonglong_type =   CLongLongType(5, 2, "signed PY_LONG_LONG", "T_LONGLONG")
 
-c_float_type =       CFloatType(6, "T_FLOAT")
-c_double_type =      CFloatType(7, "T_DOUBLE")
-c_longdouble_type =  CFloatType(8)
+c_float_type =       CFloatType(6, "float", "T_FLOAT")
+c_double_type =      CFloatType(7, "double", "T_DOUBLE")
+c_longdouble_type =  CFloatType(8, "long double")
 
 c_null_ptr_type =     CNullPtrType(c_void_type)
 c_char_array_type =   CCharArrayType(None)
@@ -873,9 +873,9 @@ c_char_ptr_type =     CCharPtrType()
 c_char_ptr_ptr_type = CPtrType(c_char_ptr_type)
 c_int_ptr_type =      CPtrType(c_int_type)
 
-c_returncode_type =   CIntType(2, 1, "T_INT", is_returncode = 1)
+c_returncode_type =   CIntType(2, 1, "int", "T_INT", is_returncode = 1)
 
-c_anon_enum_type =    CAnonEnumType(-1, 1)
+c_anon_enum_type =    CAnonEnumType(-1, 1, "<enum>")
 
 error_type =    ErrorType()
 
@@ -901,8 +901,8 @@ modifiers_and_name_to_type = {
 	(NOSIGN, NOLEN, "char"): c_char_type, 
 	(NOSIGN, SHORT, "int"): c_short_type, 
 	(NOSIGN, NOLEN, "int"): c_int_type,
-	(NOSIGN, NOLEN, "size_t"): c_size_t_type,
-	(NOSIGN, NOLEN, "Py_ssize_t"): c_py_ssize_t_type,
+	#(NOSIGN, NOLEN, "size_t"): c_size_t_type,
+	#(NOSIGN, NOLEN, "Py_ssize_t"): c_py_ssize_t_type,
 	(NOSIGN, LONG, "int"): c_long_type,
 	(NOSIGN, LONGLONG, "int"): c_longlong_type,
 	(NOSIGN, NOLEN, "float"): c_float_type, 

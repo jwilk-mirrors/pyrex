@@ -9,7 +9,7 @@ cdef int f() except -1:
 	x = getattr(y, 'spam')
 	i = hasattr(y, 'spam')
 	i = hash(y)
-	x = intern(y)
+	x = cintern(y)
 	i = isinstance(y, z)
 	i = issubclass(y, z)
 	x = iter(y)

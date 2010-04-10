@@ -2285,7 +2285,9 @@ class ExceptClauseNode(Node):
 			code.putln(
 				"/*except:*/ {")
 		code.putln(
-			'__Pyx_AddTraceback("%s");' % (self.function_name))
+			'%s; __Pyx_AddTraceback("%s");' % (
+				code.error_setup(self.pos),
+				self.function_name))
 		# We always have to fetch the exception value even if
 		# there is no target, because this also normalises the 
 		# exception and stores it in the thread state.
@@ -3152,6 +3154,10 @@ static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) 
 	PyErr_NormalizeException(type, value, tb);
 	if (PyErr_Occurred())
 		goto bad;
+	if (!*tb) {
+		*tb = Py_None;
+		Py_INCREF(*tb);
+	}
 	Py_INCREF(*type);
 	Py_INCREF(*value);
 	Py_INCREF(*tb);

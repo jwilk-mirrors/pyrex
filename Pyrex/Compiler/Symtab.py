@@ -239,7 +239,7 @@ class Scope:
 		entry.value = value
 		return entry
 	
-	def declare_type(self, name, type, pos, 
+	def declare_type(self, name, type, pos,
 			cname = None, visibility = 'private', defining = 1):
 		# Add an entry for a type definition.
 		if not cname:
@@ -568,6 +568,11 @@ class BuiltinScope(Scope):
 		entry.is_variable = 1
 		entry.is_cglobal = 1
 		entry.is_readonly = 1
+		return entry
+	
+	def declare_builtin_c_type(self, name, type):
+		entry = self.declare_type(name, type, pos = None)
+		self.type_names[name] = 1
 		return entry
 	
 	def declare_builtin_cfunction(self, name, type, cname, python_equiv = None,

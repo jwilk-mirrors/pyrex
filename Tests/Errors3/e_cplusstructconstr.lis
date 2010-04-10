@@ -1,2 +1,2 @@
-/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstructconstr.pyx+:3:13: Invalid use of 'new' operator
-/Local/Projects/D/Pyrex/Source/Tests/10/e_cplusstructconstr.pyx+:4:10: 'new' operator can only be used on a C++ struct type
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_cplusstructconstr.pyx+:3:13: Invalid use of 'new' operator
+/Local/Projects/D/Pyrex/Source/Tests/Errors3/e_cplusstructconstr.pyx+:4:10: 'new' operator can only be used on a C++ struct type

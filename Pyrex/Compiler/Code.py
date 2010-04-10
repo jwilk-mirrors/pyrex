@@ -298,13 +298,17 @@ class MainCCodeWriter(CCodeWriter):
 	def error_goto(self, pos):
 		lbl = self.error_label
 		self.use_label(lbl)
-		return "{%s = %s[%s]; %s = %s; goto %s;}" % (
+		return "{%s; goto %s;}" % (
+			self.error_setup(pos),
+			lbl)
+	
+	def error_setup(self, pos):
+		return "%s = %s[%s]; %s = %s" % (
 			Naming.filename_cname,
 			Naming.filetable_cname,
 			self.lookup_filename(pos[0]),
 			Naming.lineno_cname,
-			pos[1],
-			lbl)
+			pos[1])
 		
 	def lookup_filename(self, filename):
 		return self.global_state.lookup_filename(filename)

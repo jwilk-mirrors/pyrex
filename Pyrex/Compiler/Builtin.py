@@ -4,7 +4,7 @@
 
 from Symtab import BuiltinScope
 from TypeSlots import Signature
-from PyrexTypes import py_type_type
+from PyrexTypes import py_type_type, c_size_t_type, c_py_ssize_t_type
 
 builtin_constant_table = [
 	# name,         type/ctype,  C API name
@@ -160,6 +160,11 @@ slice_members = [
 	("step",       "O"),
 ]
 
+builtin_c_type_table = [
+	("size_t", c_size_t_type),
+	("Py_ssize_t", c_py_ssize_t_type),
+]
+
 builtin_type_table = [
 	# name,  objstruct,      typeobj,      methods,        members,     flags
 #  bool - function
@@ -182,9 +187,6 @@ builtin_type_table = [
 	("type",  "PyTypeObject",  "PyType_Type", []),
 #  xrange - constant
 ]
-
-# Builtin types
-#  list
 
 getattr3_utility_code = ["""
 static PyObject *__Pyx_GetAttr3(PyObject *, PyObject *, PyObject *); /*proto*/
@@ -236,6 +238,9 @@ def declare_builtin_method(self_type, name, args, ret, cname):
 def declare_builtin_member(self_type, name, typecode, cname = None):
 	member_type = Signature.format_map[typecode]
 	self_type.scope.declare_builtin_var(name, member_type, cname)
+	
+def declare_builtin_c_type(name, type):
+	builtin_scope.declare_builtin_c_type(name, type)
 
 def declare_builtin_type(name, objstruct, typeobj, methods, members = [],
 		flags = []):
@@ -257,6 +262,8 @@ def init_builtin_funcs():
 		declare_builtin_func(*desc)
 
 def init_builtin_types():
+	for desc in builtin_c_type_table:
+		declare_builtin_c_type(*desc)
 	for desc in builtin_type_table:
 		declare_builtin_type(*desc)
 	py_type_type.define(builtin_scope.find_type("type"))

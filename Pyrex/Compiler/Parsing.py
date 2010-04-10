@@ -1482,8 +1482,8 @@ def looking_at_dotted_name(s):
 	else:
 		return 0
 
-basic_c_type_names = ("void", "char", "int", "float", "double",
-	"size_t", "Py_ssize_t")
+basic_c_type_names = ("void", "char", "int", "float", "double") #,
+	#"size_t", "Py_ssize_t")
 
 sign_and_longness_words = ("short", "long", "signed", "unsigned")
 

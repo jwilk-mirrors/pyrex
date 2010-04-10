@@ -186,12 +186,14 @@ static PyTypeObject *__Pyx_ImportType(char *module_name, char *class_name,
 			module_name, class_name);
 		goto bad;
 	}
+#ifdef __PYX_CHECK_IMPORTED_TYPES
 	if (((PyTypeObject *)result)->tp_basicsize != size) {
 		PyErr_Format(PyExc_ValueError, 
 			"%s.%s does not appear to be the correct type object",
 			module_name, class_name);
 		goto bad;
 	}
+#endif
 	return (PyTypeObject *)result;
 bad:
 	Py_XDECREF(result);

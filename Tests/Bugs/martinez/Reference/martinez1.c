@@ -46,14 +46,14 @@ static void __Pyx_AddTraceback(char *funcname); /*proto*/
 
 /* Declarations from implementation of szabo1 */
 
-struct __pyx_obj_6szabo1_CoordSyst {
+struct __pyx_obj_9martinez1_CoordSyst {
   PyObject_HEAD
 };
 
 
-static PyTypeObject *__pyx_ptype_6szabo1_CoordSyst = 0;
+static PyTypeObject *__pyx_ptype_9martinez1_CoordSyst = 0;
 __PYX_EXTERN_C DL_EXPORT(void) *chunk_get_ptr(void); /*proto*/
-static int __pyx_f_6szabo1_f(void); /*proto*/
+static int __pyx_f_9martinez1_f(void); /*proto*/
 
 
 
@@ -66,35 +66,34 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 
 /* Implementation of szabo1 */
 
-static int __pyx_f_6szabo1_f(void) {
-  struct __pyx_obj_6szabo1_CoordSyst *__pyx_v_parent;
+static int __pyx_f_9martinez1_f(void) {
+  struct __pyx_obj_9martinez1_CoordSyst *__pyx_v_parent;
   int __pyx_r;
-  PyObject *__pyx_1 = 0;
-  __pyx_v_parent = ((struct __pyx_obj_6szabo1_CoordSyst *)Py_None); Py_INCREF(Py_None);
+  void *__pyx_1;
+  __pyx_v_parent = ((struct __pyx_obj_9martinez1_CoordSyst *)Py_None); Py_INCREF(Py_None);
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/szabo1.pyx":8 */
-  __pyx_1 = ((PyObject *)chunk_get_ptr());
-  Py_INCREF(__pyx_1);
+  __pyx_1 = chunk_get_ptr();
+  Py_INCREF(((PyObject *)__pyx_1));
   Py_DECREF(((PyObject *)__pyx_v_parent));
-  __pyx_v_parent = ((struct __pyx_obj_6szabo1_CoordSyst *)__pyx_1);
-  __pyx_1 = 0;
+  __pyx_v_parent = ((struct __pyx_obj_9martinez1_CoordSyst *)__pyx_1);
 
   __pyx_r = 0;
   Py_DECREF(__pyx_v_parent);
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_6szabo1_CoordSyst(PyTypeObject *t, PyObject *a, PyObject *k) {
+static PyObject *__pyx_tp_new_9martinez1_CoordSyst(PyTypeObject *t, PyObject *a, PyObject *k) {
   PyObject *o = (*t->tp_alloc)(t, 0);
   if (!o) return 0;
   return o;
 }
 
-static void __pyx_tp_dealloc_6szabo1_CoordSyst(PyObject *o) {
+static void __pyx_tp_dealloc_9martinez1_CoordSyst(PyObject *o) {
   (*o->ob_type->tp_free)(o);
 }
 
-static struct PyMethodDef __pyx_methods_6szabo1_CoordSyst[] = {
+static struct PyMethodDef __pyx_methods_9martinez1_CoordSyst[] = {
   {0, 0, 0, 0}
 };
 
@@ -168,13 +167,13 @@ static PyBufferProcs __pyx_tp_as_buffer_CoordSyst = {
   0, /*bf_getcharbuffer*/
 };
 
-PyTypeObject __pyx_type_6szabo1_CoordSyst = {
+PyTypeObject __pyx_type_9martinez1_CoordSyst = {
   PyObject_HEAD_INIT(0)
   0, /*ob_size*/
-  "szabo1.CoordSyst", /*tp_name*/
-  sizeof(struct __pyx_obj_6szabo1_CoordSyst), /*tp_basicsize*/
+  "martinez1.CoordSyst", /*tp_name*/
+  sizeof(struct __pyx_obj_9martinez1_CoordSyst), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6szabo1_CoordSyst, /*tp_dealloc*/
+  __pyx_tp_dealloc_9martinez1_CoordSyst, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -197,7 +196,7 @@ PyTypeObject __pyx_type_6szabo1_CoordSyst = {
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
   0, /*tp_iternext*/
-  __pyx_methods_6szabo1_CoordSyst, /*tp_methods*/
+  __pyx_methods_9martinez1_CoordSyst, /*tp_methods*/
   0, /*tp_members*/
   0, /*tp_getset*/
   0, /*tp_base*/
@@ -207,7 +206,7 @@ PyTypeObject __pyx_type_6szabo1_CoordSyst = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6szabo1_CoordSyst, /*tp_new*/
+  __pyx_tp_new_9martinez1_CoordSyst, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -223,28 +222,28 @@ static struct PyMethodDef __pyx_methods[] = {
 
 static void __pyx_init_filenames(void); /*proto*/
 
-PyMODINIT_FUNC initszabo1(void); /*proto*/
-PyMODINIT_FUNC initszabo1(void) {
+PyMODINIT_FUNC initmartinez1(void); /*proto*/
+PyMODINIT_FUNC initmartinez1(void) {
   __pyx_init_filenames();
-  __pyx_m = Py_InitModule4("szabo1", __pyx_methods, 0, 0, PYTHON_API_VERSION);
+  __pyx_m = Py_InitModule4("martinez1", __pyx_methods, 0, 0, PYTHON_API_VERSION);
   if (!__pyx_m) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   Py_INCREF(__pyx_m);
   __pyx_b = PyImport_AddModule("__builtin__");
   if (!__pyx_b) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;};
-  if (PyType_Ready(&__pyx_type_6szabo1_CoordSyst) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
-  if (PyObject_SetAttrString(__pyx_m, "CoordSyst", (PyObject *)&__pyx_type_6szabo1_CoordSyst) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
-  __pyx_ptype_6szabo1_CoordSyst = &__pyx_type_6szabo1_CoordSyst;
+  if (PyType_Ready(&__pyx_type_9martinez1_CoordSyst) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
+  if (PyObject_SetAttrString(__pyx_m, "CoordSyst", (PyObject *)&__pyx_type_9martinez1_CoordSyst) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; goto __pyx_L1;}
+  __pyx_ptype_9martinez1_CoordSyst = &__pyx_type_9martinez1_CoordSyst;
 
-  /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/szabo1.pyx":6 */
+  /* "/Local/Projects/D/Pyrex/Source/Tests/Bugs/szabo/martinez1.pyx":6 */
   return;
   __pyx_L1:;
-  __Pyx_AddTraceback("szabo1");
+  __Pyx_AddTraceback("martinez1");
 }
 
 static char *__pyx_filenames[] = {
-  "szabo1.pyx",
+  "martinez1.pyx",
 };
 
 /* Runtime support code */
