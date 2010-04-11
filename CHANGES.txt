@@ -9,6 +9,8 @@ New features:
 		is now 'or None' to explicitly allow passing None. It is planned to make
 		'not None' the default in a future version. For now, a warning is issued
 		(once per Pyrex run) if you do not specify one or the other.
+	
+	- Extension types may have a 'nogc' option to suppress GC support.
 
 Modifications:
 

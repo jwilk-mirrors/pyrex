@@ -49,10 +49,7 @@
    <li><a href="#SubclassingExtTypes">Subclassing</a></li>
 
 
-   <li> <a href="#CMethods">C Methods</a><br>
-
-
-   <a href="#ForwardDeclaringExtTypes">Forward-declaring extension types</a></li>
+   <li> <a href="#CMethods">C Methods</a></li><li><a href="#ForwardDeclaringExtTypes">Forward-declaring extension types</a></li>
 
   <li><a href="#WeakRefs">Making extension types weak-referenceable</a><span style="color: rgb(255, 0, 0);"></span><br>
 
@@ -781,7 +778,7 @@ type <span style="font-family: monospace;">object</span> called <span style="fon
 <br>
 
 
-<div style="margin-left: 40px;"><span style="font-family: monospace;">cdef class ExplodingAnimal:</span><br style="font-family: monospace;">
+<div style="margin-left: 40px;"><span style="font-family: monospace;">cdef class ExplodingAnimal:<br><br style="font-family: monospace;"></span>
 
 
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; """This animal will self-destruct when it is</span><br>
@@ -799,7 +796,11 @@ type <span style="font-family: monospace;">object</span> called <span style="fon
 </div>
 
 
-<br>
+<h2>Garbage Collection</h2>Normally, any extension type which has
+Python-valued attributes automatically participates in cyclic garbage
+collection. You can prevent this as follows:<br><pre style="margin-left: 40px;">cdef class Hovercraft [nogc]:<br><br>    """This object will not participate in cyclic gc<br>       even though it has a Python attribute."""<br><br>    cdef object eels<br></pre>However,
+if there is a base type with Python attributes that participates in GC,
+any subclasses of it will also participate in GC regardless of their <span style="font-family: monospace;">nogc</span> options.
 
 
 <h2><a name="PublicAndExtern"></a>Public and external extension types</h2>

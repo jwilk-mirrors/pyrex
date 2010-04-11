@@ -1318,8 +1318,10 @@ class CClassDefNode(StatNode):
 	#  as_name            string or None    Name to declare as in this scope
 	#  base_class_module  string or None    Module containing the base class
 	#  base_class_name    string or None    Name of the base class
-	#  objstruct_name     string or None    Specified C name of object struct
-	#  typeobj_name       string or None    Specified C name of type object
+	#  options            CClassOptions:
+	#    objstruct_name     string or None    Specified C name of object struct
+	#    typeobj_name       string or None    Specified C name of type object
+	#    no_gc              boolean           Suppress GC support
 	#  in_pxd             boolean           Is in a .pxd file
 	#  doc                string or None
 	#  body               StatNode or None
@@ -1332,7 +1334,7 @@ class CClassDefNode(StatNode):
 		#print "CClassDefNode.analyse_declarations:", self.class_name
 		#print "...visibility =", self.visibility
 		#print "...module_name =", self.module_name
-		if env.in_cinclude and not self.objstruct_name:
+		if env.in_cinclude and not self.options.objstruct_name:
 			error(self.pos, "Object struct name specification required for "
 				"C class defined in 'extern from' block")
 		self.base_type = None
@@ -1367,11 +1369,10 @@ class CClassDefNode(StatNode):
 			implementing = has_body and not self.in_pxd,
 			module_name = self.module_name,
 			base_type = self.base_type,
-			objstruct_cname = self.objstruct_name,
-			typeobj_cname = self.typeobj_name,
 			visibility = self.visibility,
 			typedef_flag = self.typedef_flag,
-			api = self.api)
+			api = self.api,
+			options = self.options)
 		if home_scope is not env and self.visibility == 'extern':
 			env.add_imported_entry(self.class_name, self.entry, pos)
 		scope = self.entry.type.scope

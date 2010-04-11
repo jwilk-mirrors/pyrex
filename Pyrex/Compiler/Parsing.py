@@ -1982,6 +1982,13 @@ def p_qualified_name(s):
 		name = p_ident(s)
 	return path, name
 
+class CClassOptions:
+
+	objstruct_cname = None
+	typeobj_cname = None
+	no_gc = 0
+
+
 def p_c_class_definition(s, pos, ctx):
 	# s.sy == 'class'
 	s.next()
@@ -1992,8 +1999,7 @@ def p_c_class_definition(s, pos, ctx):
 	else:
 		as_name = class_name
 	s.add_type_name(as_name)
-	objstruct_name = None
-	typeobj_name = None
+	options = CClassOptions()
 	base_class_module = None
 	base_class_name = None
 	if s.sy == '(':
@@ -2004,9 +2010,7 @@ def p_c_class_definition(s, pos, ctx):
 		s.expect(')')
 		base_class_module = ".".join(base_class_path)
 	if s.sy == '[':
-		if ctx.visibility not in ('public', 'extern'):
-			error(s.position(), "Name options only allowed for 'public' or 'extern' C class")
-		objstruct_name, typeobj_name = p_c_class_options(s)
+		p_c_class_options(s, ctx, options)
 	if s.sy == ':':
 		if ctx.level == 'module_pxd':
 			body_level = 'c_class_pxd'
@@ -2023,9 +2027,9 @@ def p_c_class_definition(s, pos, ctx):
 		if typeobj_name:
 			error(pos, "Type object name specification not allowed for 'extern' C class")
 	elif ctx.visibility == 'public':
-		if not objstruct_name:
+		if not options.objstruct_name:
 			error(pos, "Object struct name specification required for 'public' C class")
-		if not typeobj_name:
+		if not options.typeobj_name:
 			error(pos, "Type object name specification required for 'public' C class")
 	else:
 		if ctx.api:
@@ -2039,30 +2043,35 @@ def p_c_class_definition(s, pos, ctx):
 		as_name = as_name,
 		base_class_module = base_class_module,
 		base_class_name = base_class_name,
-		objstruct_name = objstruct_name,
-		typeobj_name = typeobj_name,
+		options = options,
 		in_pxd = ctx.level == 'module_pxd',
 		doc = doc,
 		body = body)
 
-def p_c_class_options(s):
-	objstruct_name = None
-	typeobj_name = None
+def p_c_class_options(s, ctx, options):
 	s.expect('[')
 	while 1:
 		if s.sy <> 'IDENT':
 			break
 		if s.systring == 'object':
+			if ctx.visibility not in ('public', 'extern'):
+				error(s.position(), "Object name option only allowed for 'public' or 'extern' C class")
 			s.next()
-			objstruct_name = p_ident(s)
+			options.objstruct_cname = p_ident(s)
 		elif s.systring == 'type':
+			if ctx.visibility not in ('public', 'extern'):
+				error(s.position(), "Type name option only allowed for 'public' or 'extern' C class")
 			s.next()
-			typeobj_name = p_ident(s)
+			options.typeobj_cname = p_ident(s)
+		elif s.systring == 'nogc':
+			s.next()
+			options.no_gc = 1
+		else:
+			s.error("Unrecognised C class option '%s'" % s.systring)
 		if s.sy <> ',':
 			break
 		s.next()
-	s.expect(']', "Expected 'object' or 'type'")
-	return objstruct_name, typeobj_name
+	s.expect(']', "Expected a C class option")
 
 def p_property_decl(s):
 	pos = s.position()

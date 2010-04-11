@@ -755,8 +755,8 @@ class ModuleScope(Scope):
 #		self.utility_code_used.append(new_code)
 	
 	def declare_c_class(self, name, pos, defining = 0, implementing = 0,
-		module_name = None, base_type = None, objstruct_cname = None,
-		typeobj_cname = None, visibility = 'private', typedef_flag = 0, api = 0):
+		module_name = None, base_type = None, visibility = 'private',
+		typedef_flag = 0, api = 0, options = None):
 		#
 		#  Look for previous declaration as a type
 		#
@@ -787,8 +787,8 @@ class ModuleScope(Scope):
 			type.typeptr_cname = self.mangle(Naming.typeptr_prefix, name)
 			entry = self.declare_type(name, type, pos, visibility = visibility,
 				defining = 0)
-			if objstruct_cname:
-				type.objstruct_cname = objstruct_cname
+			if options.objstruct_cname:
+				type.objstruct_cname = options.objstruct_cname
 			elif not entry.in_cinclude:
 				type.objstruct_cname = self.mangle(Naming.objstruct_prefix, name)				
 			else:
@@ -803,7 +803,7 @@ class ModuleScope(Scope):
 		if not scope:
 			if defining or implementing:
 				scope = CClassScope(name = name, outer_scope = self,
-					visibility = visibility)
+					visibility = visibility, no_gc = options.no_gc)
 				if base_type:
 					scope.declare_inherited_c_attributes(base_type.scope)
 				type.set_scope(scope)
@@ -828,14 +828,14 @@ class ModuleScope(Scope):
 				% (name, entry.visibility))
 		if api:
 			entry.api = 1
-		if objstruct_cname:
-			if type.objstruct_cname and type.objstruct_cname <> objstruct_cname:
+		if options.objstruct_cname:
+			if type.objstruct_cname and type.objstruct_cname <> options.objstruct_cname:
 				error(pos, "Object struct name differs from previous declaration")
-			type.objstruct_cname = objstruct_cname		
-		if typeobj_cname:
-			if type.typeobj_cname and type.typeobj_cname <> typeobj_cname:
+			type.objstruct_cname = options.objstruct_cname		
+		if options.typeobj_cname:
+			if type.typeobj_cname and type.typeobj_cname <> options.typeobj_cname:
 					error(pos, "Type object name differs from previous declaration")
-			type.typeobj_cname = typeobj_cname
+			type.typeobj_cname = options.typeobj_cname
 		#
 		#  Return new or existing entry	
 		#
@@ -1150,10 +1150,11 @@ class CClassScope(ClassScope):
 	#  defined               boolean  Defined in .pxd file
 	#  implemented           boolean  Defined in .pyx file
 	#  inherited_var_entries [Entry]  Adapted var entries from base class
+	#  no_gc                 boolean  No GC even if there are Python attributes
 	
 	is_c_class_scope = 1
 	
-	def __init__(self, name, outer_scope, visibility):
+	def __init__(self, name, outer_scope, visibility, no_gc = 0):
 		ClassScope.__init__(self, name, outer_scope)
 		if visibility <> 'extern':
 			self.method_table_cname = outer_scope.mangle(Naming.methtab_prefix, name)
@@ -1166,6 +1167,7 @@ class CClassScope(ClassScope):
 		self.inherited_var_entries = []
 		self.defined = 0
 		self.implemented = 0
+		self.no_gc = no_gc
 	
 	def needs_gc(self):
 		# If the type or any of its base types have Python-valued
