@@ -6,7 +6,7 @@ cdef class Spam:
 
   cdef int amount
 
-  def __new__(self):
+  def __cinit__(self):
     self.amount = 0
 
   def __dealloc__(self):

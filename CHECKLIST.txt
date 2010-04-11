@@ -1,7 +1,7 @@
 Release Checklist
 =================
 
-# Update CHANGES.txt
+* Update CHANGES.txt
 
 * Ensure all tests pass
 
