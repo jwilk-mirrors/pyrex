@@ -1,24 +1,24 @@
 Calling c(1, 2)
-Caught: function takes exactly 3 arguments (2 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling c(1, 2, 3)
 a = 1 b = 2 c = 3
 Okay
 
 Calling c(1, 2, 3, 4)
-Caught: function takes exactly 3 arguments (4 given)
+Caught: <type 'exceptions.TypeError'>
 
 --------------------
 
 Calling d(1)
-Caught: function takes at least 2 arguments (1 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling d(1, 2)
 a = 1 b = 2 c = 88
 Okay
 
 Calling d(1, 2, 3)
-Caught: function takes at most 2 positional arguments (3 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling d(1, 2, c = 3)
 a = 1 b = 2 c = 3
@@ -27,7 +27,7 @@ Okay
 --------------------
 
 Calling e(1)
-Caught: function takes at least 2 arguments (1 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling e(1, 2)
 a = 1 b = 2 c = 88 kwds = {}
@@ -38,7 +38,7 @@ a = 1 b = 2 c = 3 kwds = {}
 Okay
 
 Calling e(1, 2, 3, 4)
-Caught: function takes at most 3 positional arguments (4 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling e(1, b = 2, c = 3)
 a = 1 b = 2 c = 3 kwds = {}
@@ -55,13 +55,13 @@ Okay
 --------------------
 
 Calling f(1)
-Caught: required keyword argument 'c' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling f(1, 2)
-Caught: required keyword argument 'c' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling f(1, 2, 3)
-Caught: function takes at most 2 positional arguments (3 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling f(1, 2, c = 3)
 a = 1 b = 2 c = 3 d = 42
@@ -72,18 +72,18 @@ a = 1 b = 2 c = 3 d = 4
 Okay
 
 Calling f(1, 2, c = 3, d = 4, e = 5)
-Caught: 'e' is an invalid keyword argument for this function
+Caught: <type 'exceptions.TypeError'>
 
 --------------------
 
 Calling g(1, 2)
-Caught: required keyword argument 'c' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling g(1, 2, 3)
-Caught: function takes at most 2 positional arguments (3 given)
+Caught: <type 'exceptions.TypeError'>
 
 Calling g(1, 2, c = 3)
-Caught: required keyword argument 'f' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling g(1, 2, c = 3, f = 4)
 a = 1 b = 2 c = 3 d = 42 e = 17 f = 4 kwds = {}
@@ -100,10 +100,10 @@ Okay
 --------------------
 
 Calling h(1, 2)
-Caught: required keyword argument 'c' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling h(1, 2, c = 3)
-Caught: required keyword argument 'f' is missing
+Caught: <type 'exceptions.TypeError'>
 
 Calling h(1, 2, c = 3, f = 4)
 a = 1 b = 2 args = () c = 3 d = 42 e = 17 f = 4 kwds = {}

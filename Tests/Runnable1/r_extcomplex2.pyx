@@ -7,7 +7,7 @@ cdef extern from "complexobject.h":
 	ctypedef class __builtin__.complex [object PyComplexObject]:
 		cdef Py_complex cval
 	
-def spam(complex c):
+def spam(complex c or None):
 	print "Real:", c.cval.real
 	print "Imag:", c.cval.imag
 

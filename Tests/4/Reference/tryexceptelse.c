@@ -175,12 +175,7 @@ static PyObject *__pyx_f_13tryexceptelse_g(PyObject *__pyx_self, PyObject *__pyx
   __pyx_2 = PyErr_ExceptionMatches(__pyx_1);
   Py_DECREF(__pyx_1); __pyx_1 = 0;
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexceptelse.g");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; goto __pyx_L1;}
     __pyx_v_i = 3;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L3;
   }
   goto __pyx_L1;

@@ -37,8 +37,6 @@ static int __pyx_lineno;
 static char *__pyx_filename;
 static char **__pyx_f;
 
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
@@ -368,11 +366,6 @@ static int __pyx_f_12builtinconst_f(void) {
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/builtinconst.pyx":65 */
   __pyx_1 = PyErr_ExceptionMatches(PyExc_ValueError);
   if (__pyx_1) {
-    __Pyx_AddTraceback("builtinconst.f");
-    if (__Pyx_GetException(&__pyx_2, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; goto __pyx_L1;}
-    Py_DECREF(__pyx_2); __pyx_2 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L3;
   }
   goto __pyx_L1;
@@ -421,29 +414,6 @@ static char *__pyx_filenames[] = {
 
 static void __pyx_init_filenames(void) {
   __pyx_f = __pyx_filenames;
-}
-
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
-	PyThreadState *tstate = PyThreadState_Get();
-	PyErr_Fetch(type, value, tb);
-	PyErr_NormalizeException(type, value, tb);
-	if (PyErr_Occurred())
-		goto bad;
-	Py_INCREF(*type);
-	Py_INCREF(*value);
-	Py_INCREF(*tb);
-	Py_XDECREF(tstate->exc_type);
-	Py_XDECREF(tstate->exc_value);
-	Py_XDECREF(tstate->exc_traceback);
-	tstate->exc_type = *type;
-	tstate->exc_value = *value;
-	tstate->exc_traceback = *tb;
-	return 0;
-bad:
-	Py_XDECREF(*type);
-	Py_XDECREF(*value);
-	Py_XDECREF(*tb);
-	return -1;
 }
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

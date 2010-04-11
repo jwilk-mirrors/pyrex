@@ -1334,7 +1334,7 @@ class CClassDefNode(StatNode):
 		#print "CClassDefNode.analyse_declarations:", self.class_name
 		#print "...visibility =", self.visibility
 		#print "...module_name =", self.module_name
-		if env.in_cinclude and not self.options.objstruct_name:
+		if env.in_cinclude and not self.options.objstruct_cname:
 			error(self.pos, "Object struct name specification required for "
 				"C class defined in 'extern from' block")
 		self.base_type = None
@@ -1872,7 +1872,9 @@ class ReraiseStatNode(StatNode):
 	def generate_execution_code(self, code):
 		vars = code.exc_vars
 		if vars:
-			code.putln("PyErr_Restore(&%s, &%s, &%s);" % tuple(vars))
+			tvars = tuple(vars)
+			code.putln("PyErr_Restore(%s, %s, %s);" % tvars)
+			code.putln("%s = %s = %s = 0;" % tvars)
 			code.putln(code.error_goto(self.pos))
 		else:
 			error(self.pos, "Reraise not inside except clause")
@@ -3227,7 +3229,7 @@ normalize_exception_utility_code = [
 """
 static int __Pyx_NormalizeException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 ""","""
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
+static int __Pyx_NormalizeException(PyObject **type, PyObject **value, PyObject **tb) {
 	PyErr_NormalizeException(type, value, tb);
 	if (PyErr_Occurred())
 		goto bad;

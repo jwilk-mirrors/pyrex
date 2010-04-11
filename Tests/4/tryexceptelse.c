@@ -41,8 +41,6 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name); /*proto*/
 
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*/
 
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
-
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t); /*proto*/
 
 static void __Pyx_AddTraceback(char *funcname); /*proto*/
@@ -175,12 +173,7 @@ static PyObject *__pyx_f_13tryexceptelse_g(PyObject *__pyx_self, PyObject *__pyx
   __pyx_2 = PyErr_ExceptionMatches(__pyx_1);
   Py_DECREF(__pyx_1); __pyx_1 = 0;
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexceptelse.g");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 18; goto __pyx_L1;}
     __pyx_v_i = 3;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L3;
   }
   goto __pyx_L1;
@@ -242,23 +235,17 @@ static PyObject *__Pyx_GetName(PyObject *dict, PyObject *name) {
 }
 
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
+	if (value == Py_None)
+		value = NULL;
+	if (tb == Py_None)
+		tb = NULL;
 	Py_XINCREF(type);
 	Py_XINCREF(value);
 	Py_XINCREF(tb);
-	/* First, check the traceback argument, replacing None with NULL. */
-	if (tb == Py_None) {
-		Py_DECREF(tb);
-		tb = 0;
-	}
-	else if (tb != NULL && !PyTraceBack_Check(tb)) {
+	if (tb && !PyTraceBack_Check(tb)) {
 		PyErr_SetString(PyExc_TypeError,
 			"raise: arg 3 must be a traceback or None");
 		goto raise_error;
-	}
-	/* Next, replace a missing value with None */
-	if (value == NULL) {
-		value = Py_None;
-		Py_INCREF(value);
 	}
 	#if PY_VERSION_HEX < 0x02050000
 	if (!PyClass_Check(type))
@@ -267,13 +254,12 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
 	#endif
 	{
 		/* Raising an instance.  The value should be a dummy. */
-		if (value != Py_None) {
+		if (value) {
 			PyErr_SetString(PyExc_TypeError,
 				"instance exception may not have a separate value");
 			goto raise_error;
 		}
 		/* Normalize to raise <class>, <instance> */
-		Py_DECREF(value);
 		value = type;
 		#if PY_VERSION_HEX < 0x02050000
 			if (PyInstance_Check(type)) {
@@ -302,29 +288,6 @@ raise_error:
 	Py_XDECREF(type);
 	Py_XDECREF(tb);
 	return;
-}
-
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
-	PyThreadState *tstate = PyThreadState_Get();
-	PyErr_Fetch(type, value, tb);
-	PyErr_NormalizeException(type, value, tb);
-	if (PyErr_Occurred())
-		goto bad;
-	Py_INCREF(*type);
-	Py_INCREF(*value);
-	Py_INCREF(*tb);
-	Py_XDECREF(tstate->exc_type);
-	Py_XDECREF(tstate->exc_value);
-	Py_XDECREF(tstate->exc_traceback);
-	tstate->exc_type = *type;
-	tstate->exc_value = *value;
-	tstate->exc_traceback = *tb;
-	return 0;
-bad:
-	Py_XDECREF(*type);
-	Py_XDECREF(*value);
-	Py_XDECREF(*tb);
-	return -1;
 }
 
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {

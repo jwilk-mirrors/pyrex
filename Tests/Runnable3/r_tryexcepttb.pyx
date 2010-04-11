@@ -3,4 +3,4 @@ def test():
 		raise ValueError("Too many eels in hovercraft")
 	except ValueError, e, t:
 		print "Exception:", e
-		print "Traceback:", t
+		print "Traceback type:", type(t)

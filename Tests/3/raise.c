@@ -154,23 +154,17 @@ static void __pyx_init_filenames(void) {
 }
 
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
+	if (value == Py_None)
+		value = NULL;
+	if (tb == Py_None)
+		tb = NULL;
 	Py_XINCREF(type);
 	Py_XINCREF(value);
 	Py_XINCREF(tb);
-	/* First, check the traceback argument, replacing None with NULL. */
-	if (tb == Py_None) {
-		Py_DECREF(tb);
-		tb = 0;
-	}
-	else if (tb != NULL && !PyTraceBack_Check(tb)) {
+	if (tb && !PyTraceBack_Check(tb)) {
 		PyErr_SetString(PyExc_TypeError,
 			"raise: arg 3 must be a traceback or None");
 		goto raise_error;
-	}
-	/* Next, replace a missing value with None */
-	if (value == NULL) {
-		value = Py_None;
-		Py_INCREF(value);
 	}
 	#if PY_VERSION_HEX < 0x02050000
 	if (!PyClass_Check(type))
@@ -179,13 +173,12 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
 	#endif
 	{
 		/* Raising an instance.  The value should be a dummy. */
-		if (value != Py_None) {
+		if (value) {
 			PyErr_SetString(PyExc_TypeError,
 				"instance exception may not have a separate value");
 			goto raise_error;
 		}
 		/* Normalize to raise <class>, <instance> */
-		Py_DECREF(value);
 		value = type;
 		#if PY_VERSION_HEX < 0x02050000
 			if (PyInstance_Check(type)) {

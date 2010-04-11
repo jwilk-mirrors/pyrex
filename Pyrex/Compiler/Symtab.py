@@ -787,7 +787,7 @@ class ModuleScope(Scope):
 			type.typeptr_cname = self.mangle(Naming.typeptr_prefix, name)
 			entry = self.declare_type(name, type, pos, visibility = visibility,
 				defining = 0)
-			if options.objstruct_cname:
+			if options and options.objstruct_cname:
 				type.objstruct_cname = options.objstruct_cname
 			elif not entry.in_cinclude:
 				type.objstruct_cname = self.mangle(Naming.objstruct_prefix, name)				
@@ -828,14 +828,15 @@ class ModuleScope(Scope):
 				% (name, entry.visibility))
 		if api:
 			entry.api = 1
-		if options.objstruct_cname:
-			if type.objstruct_cname and type.objstruct_cname <> options.objstruct_cname:
-				error(pos, "Object struct name differs from previous declaration")
-			type.objstruct_cname = options.objstruct_cname		
-		if options.typeobj_cname:
-			if type.typeobj_cname and type.typeobj_cname <> options.typeobj_cname:
-					error(pos, "Type object name differs from previous declaration")
-			type.typeobj_cname = options.typeobj_cname
+		if options:
+			if options.objstruct_cname:
+				if type.objstruct_cname and type.objstruct_cname <> options.objstruct_cname:
+					error(pos, "Object struct name differs from previous declaration")
+				type.objstruct_cname = options.objstruct_cname		
+			if options.typeobj_cname:
+				if type.typeobj_cname and type.typeobj_cname <> options.typeobj_cname:
+						error(pos, "Type object name differs from previous declaration")
+				type.typeobj_cname = options.typeobj_cname
 		#
 		#  Return new or existing entry	
 		#

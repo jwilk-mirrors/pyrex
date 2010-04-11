@@ -2024,12 +2024,12 @@ def p_c_class_definition(s, pos, ctx):
 	if ctx.visibility == 'extern':
 		if not module_path:
 			error(pos, "Module name required for 'extern' C class")
-		if typeobj_name:
+		if options.typeobj_cname:
 			error(pos, "Type object name specification not allowed for 'extern' C class")
 	elif ctx.visibility == 'public':
-		if not options.objstruct_name:
+		if not options.objstruct_cname:
 			error(pos, "Object struct name specification required for 'public' C class")
-		if not options.typeobj_name:
+		if not options.typeobj_cname:
 			error(pos, "Type object name specification required for 'public' C class")
 	else:
 		if ctx.api:

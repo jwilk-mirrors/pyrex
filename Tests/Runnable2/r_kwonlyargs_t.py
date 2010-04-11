@@ -10,7 +10,7 @@ def test(func, *args, **kwds):
 	try:
 		func(*args, **kwds)
 	except Exception, e:
-		print "Caught:", e
+		print "Caught:", e.__class__
 	else:
 		print "Okay"
 	print

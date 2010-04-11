@@ -13,7 +13,7 @@ cdef class Spam:
 	def eat(self):
 		gobble(self.eggs, self.ham)
 
-def f(Spam spam):
+def f(Spam spam or None):
 	x = spam.eggs
 	y = spam.ham
 	z = spam.foo

@@ -368,11 +368,6 @@ static int __pyx_f_12builtinconst_f(void) {
   /* "/Local/Projects/D/Pyrex/Source/Tests/10/builtinconst.pyx":65 */
   __pyx_1 = PyErr_ExceptionMatches(PyExc_ValueError);
   if (__pyx_1) {
-    __Pyx_AddTraceback("builtinconst.f");
-    if (__Pyx_GetException(&__pyx_2, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; goto __pyx_L1;}
-    Py_DECREF(__pyx_2); __pyx_2 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L3;
   }
   goto __pyx_L1;

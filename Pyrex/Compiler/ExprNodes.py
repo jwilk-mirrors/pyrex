@@ -298,6 +298,11 @@ class ExprNode(Node):
 		# extension type, return its type, else None.
 		return None
 	
+	def analyse_as_cimported_attribute(self, env, *args, **kwds):
+		# If this node can be interpreted as a cimported name,
+		# finish type analysis and return true, else return false.
+		return 0
+	
 	def analyse_types(self, env):
 		self.not_implemented("analyse_types")
 	
@@ -439,6 +444,10 @@ class ExprNode(Node):
 				node.release_temp(env)
 	
 	# ---------------- Code Generation -----------------
+	
+	def mark_vars_used(self):
+		for node in self.subexpr_nodes():
+			node.mark_vars_used()
 	
 	def make_owned_reference(self, code):
 		#  If result is a pyobject, make sure we own
@@ -983,8 +992,6 @@ class NameNode(AtomicExprNode):
 		entry = self.entry
 		if entry:
 			entry.used = 1
-#			if entry.utility_code:
-#				env.use_utility_code(entry.utility_code)
 		
 	def calculate_result_code(self):
 		entry = self.entry
@@ -1077,7 +1084,11 @@ class NameNode(AtomicExprNode):
 				Naming.module_cname,
 				cname,
 				code.error_goto(self.pos)))
-			
+	
+	def mark_vars_used(self):
+		if self.entry:
+			self.entry.used = 1
+
 
 class BackquoteNode(ExprNode):
 	#  `expr`
@@ -2827,6 +2838,7 @@ class SizeofTypeNode(SizeofNode):
 	def analyse_argument(self, env):
 		base_type = self.base_type.analyse(env)
 		_, arg_type = self.declarator.analyse(base_type, env)
+		self.analyse_type_argument(arg_type)
 
 		
 class SizeofVarNode(SizeofNode):
@@ -2846,6 +2858,7 @@ class SizeofVarNode(SizeofNode):
 				self.analyse_type_argument(operand.entry.type)
 		else:
 			self.operand.analyse_types(env)
+			self.operand.mark_vars_used()
 		if not is_type:
 			self.sizeof_code = "(sizeof(%s))" % operand.result()
 

@@ -3,5 +3,5 @@ cdef extern class somewhere.Swallow:
 
 cdef Swallow swallow
 
-def spam(x = swallow, Swallow y = swallow):
+def spam(x = swallow, Swallow y or None = swallow):
 	pass

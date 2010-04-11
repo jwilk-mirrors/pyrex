@@ -110,12 +110,7 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":9 */
   __pyx_2 = PyErr_ExceptionMatches(__pyx_v_a);
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 9; goto __pyx_L1;}
     __pyx_v_i = 3;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L3;
   }
   goto __pyx_L1;
@@ -133,24 +128,14 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":14 */
   __pyx_2 = PyErr_ExceptionMatches(__pyx_v_a);
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 14; goto __pyx_L1;}
     __pyx_v_i = 2;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L5;
   }
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":16 */
   __pyx_2 = PyErr_ExceptionMatches(__pyx_v_b);
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; goto __pyx_L1;}
     __pyx_v_i = 3;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L5;
   }
   goto __pyx_L1;
@@ -168,15 +153,16 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":21 */
   __pyx_2 = PyErr_ExceptionMatches(__pyx_v_a);
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; goto __pyx_L1;}
+    __pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __Pyx_AddTraceback("tryexcept.f");
+    PyErr_Fetch(&__pyx_1, &__pyx_3, &__pyx_4);
+    if (__Pyx_NormalizeException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; goto __pyx_L1;}
     Py_INCREF(__pyx_3);
     Py_DECREF(__pyx_v_b);
     __pyx_v_b = __pyx_3;
     __pyx_v_i = 2;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
+    Py_XDECREF(__pyx_1); __pyx_1 = 0;
+    Py_XDECREF(__pyx_3); __pyx_3 = 0;
+    Py_XDECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L7;
   }
   goto __pyx_L1;
@@ -194,23 +180,13 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":26 */
   __pyx_2 = PyErr_ExceptionMatches(__pyx_v_a);
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 26; goto __pyx_L1;}
     __pyx_v_i = 2;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L9;
   }
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":28 */
   /*except:*/ {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_3, &__pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; goto __pyx_L1;}
     __pyx_v_i = 3;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
     goto __pyx_L9;
   }
   __pyx_L9:;
@@ -233,15 +209,16 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
   __pyx_2 = PyErr_ExceptionMatches(__pyx_1);
   Py_DECREF(__pyx_1); __pyx_1 = 0;
   if (__pyx_2) {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_3, &__pyx_4, &__pyx_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
+    __pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __Pyx_AddTraceback("tryexcept.f");
+    PyErr_Fetch(&__pyx_3, &__pyx_4, &__pyx_1);
+    if (__Pyx_NormalizeException(&__pyx_3, &__pyx_4, &__pyx_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
     __pyx_5 = PyInt_FromLong(42); if (!__pyx_5) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
     if (PyObject_SetItem(__pyx_v_c, __pyx_5, __pyx_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; goto __pyx_L1;}
     Py_DECREF(__pyx_5); __pyx_5 = 0;
     __pyx_v_i = 2;
-    Py_DECREF(__pyx_3); __pyx_3 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
+    Py_XDECREF(__pyx_3); __pyx_3 = 0;
+    Py_XDECREF(__pyx_4); __pyx_4 = 0;
+    Py_XDECREF(__pyx_1); __pyx_1 = 0;
     goto __pyx_L11;
   }
   goto __pyx_L1;
@@ -274,12 +251,7 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
 
     /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":39 */
     /*except:*/ {
-      __Pyx_AddTraceback("tryexcept.f");
-      if (__Pyx_GetException(&__pyx_1, &__pyx_4, &__pyx_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 39; goto __pyx_L1;}
       __pyx_v_i = 17;
-      Py_DECREF(__pyx_1); __pyx_1 = 0;
-      Py_DECREF(__pyx_4); __pyx_4 = 0;
-      Py_DECREF(__pyx_5); __pyx_5 = 0;
       goto __pyx_L15;
     }
     __pyx_L15:;
@@ -298,13 +270,18 @@ static PyObject *__pyx_f_9tryexcept_f(PyObject *__pyx_self, PyObject *__pyx_args
 
   /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":44 */
   /*except:*/ {
-    __Pyx_AddTraceback("tryexcept.f");
-    if (__Pyx_GetException(&__pyx_1, &__pyx_4, &__pyx_5) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; goto __pyx_L1;}
-    __Pyx_Raise(__pyx_1, __pyx_4, __pyx_5);
+    PyErr_Fetch(&__pyx_3, &__pyx_4, &__pyx_1);
+
+    /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":45 */
+    __pyx_v_i = 2;
+
+    /* "/Local/Projects/D/Pyrex/Source/Tests/4/tryexcept.pyx":46 */
+    PyErr_Restore(__pyx_3, __pyx_4, __pyx_1);
+    __pyx_3 = __pyx_4 = __pyx_1 = 0;
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; goto __pyx_L1;}
-    Py_DECREF(__pyx_1); __pyx_1 = 0;
-    Py_DECREF(__pyx_4); __pyx_4 = 0;
-    Py_DECREF(__pyx_5); __pyx_5 = 0;
+    Py_XDECREF(__pyx_1); __pyx_1 = 0;
+    Py_XDECREF(__pyx_4); __pyx_4 = 0;
+    Py_XDECREF(__pyx_5); __pyx_5 = 0;
     goto __pyx_L17;
   }
   __pyx_L17:;
