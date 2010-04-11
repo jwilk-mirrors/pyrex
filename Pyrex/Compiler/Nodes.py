@@ -1871,8 +1871,7 @@ class ReraiseStatNode(StatNode):
 	def generate_execution_code(self, code):
 		vars = code.exc_vars
 		if vars:
-			code.use_utility_code(raise_utility_code)
-			code.putln("__Pyx_Raise(%s, %s, %s);" % tuple(vars))
+			code.putln("PyErr_Restore(&%s, &%s, &%s);" % tuple(vars))
 			code.putln(code.error_goto(self.pos))
 		else:
 			error(self.pos, "Reraise not inside except clause")
@@ -2299,16 +2298,19 @@ class ExceptClauseNode(Node):
 			code.putln(
 				"/*except:*/ {")
 		any_bindings = self.exc_target or self.tb_target
-		if any_bindings or self.reraise_used:
+		exc_vars_used = any_bindings or self.reraise_used
+		if exc_vars_used:
 			if any_bindings:
 				code.putln(
 					'%s; __Pyx_AddTraceback("%s");' % (
 						code.error_setup(self.pos),
 						self.function_name))
 			exc_args = "&%s, &%s, &%s" % tuple(self.exc_vars)
-			code.use_utility_code(get_exception_utility_code)
-			code.putln("if (__Pyx_GetException(%s) < 0) %s" % (exc_args,
-				code.error_goto(self.pos)))
+			code.putln("PyErr_Fetch(%s);" % exc_args)
+			if any_bindings:
+				code.use_utility_code(normalize_exception_utility_code)
+				code.putln("if (__Pyx_NormalizeException(%s) < 0) %s" % (exc_args,
+					code.error_goto(self.pos)))
 			if self.exc_target:
 				self.exc_value.generate_evaluation_code(code)
 				self.exc_target.generate_assignment_code(self.exc_value, code)
@@ -2319,8 +2321,9 @@ class ExceptClauseNode(Node):
 		code.exc_vars = self.exc_vars
 		self.body.generate_execution_code(code)
 		code.exc_vars = old_exc_vars
-		for var in self.exc_vars:
-			code.putln("Py_DECREF(%s); %s = 0;" % (var, var))
+		if exc_vars_used:
+			for var in self.exc_vars:
+				code.putln("Py_XDECREF(%s); %s = 0;" % (var, var))
 		code.put_goto(end_label)
 		code.putln(
 			"}")
@@ -2744,23 +2747,17 @@ raise_utility_code = [
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb); /*proto*/
 ""","""
 static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
+	if (value == Py_None)
+		value = NULL;
+	if (tb == Py_None)
+		tb = NULL;
 	Py_XINCREF(type);
 	Py_XINCREF(value);
 	Py_XINCREF(tb);
-	/* First, check the traceback argument, replacing None with NULL. */
-	if (tb == Py_None) {
-		Py_DECREF(tb);
-		tb = 0;
-	}
-	else if (tb != NULL && !PyTraceBack_Check(tb)) {
+	if (tb && !PyTraceBack_Check(tb)) {
 		PyErr_SetString(PyExc_TypeError,
 			"raise: arg 3 must be a traceback or None");
 		goto raise_error;
-	}
-	/* Next, replace a missing value with None */
-	if (value == NULL) {
-		value = Py_None;
-		Py_INCREF(value);
 	}
 	#if PY_VERSION_HEX < 0x02050000
 	if (!PyClass_Check(type))
@@ -2769,13 +2766,12 @@ static void __Pyx_Raise(PyObject *type, PyObject *value, PyObject *tb) {
 	#endif
 	{
 		/* Raising an instance.  The value should be a dummy. */
-		if (value != Py_None) {
+		if (value) {
 			PyErr_SetString(PyExc_TypeError,
 				"instance exception may not have a separate value");
 			goto raise_error;
 		}
 		/* Normalize to raise <class>, <instance> */
-		Py_DECREF(value);
 		value = type;
 		#if PY_VERSION_HEX < 0x02050000
 			if (PyInstance_Check(type)) {
@@ -2809,21 +2805,21 @@ raise_error:
 
 #------------------------------------------------------------------------------------
 
-reraise_utility_code = [
-"""
-static void __Pyx_ReRaise(void); /*proto*/
-""","""
-static void __Pyx_ReRaise(void) {
-	PyThreadState *tstate = PyThreadState_Get();
-	PyObject *type = tstate->exc_type;
-	PyObject *value = tstate->exc_value;
-	PyObject *tb = tstate->exc_traceback;
-	Py_XINCREF(type);
-	Py_XINCREF(value);
-	Py_XINCREF(tb);
-	PyErr_Restore(type, value, tb);
-}
-"""]
+#reraise_utility_code = [
+#"""
+#static void __Pyx_ReRaise(void); /*proto*/
+#""","""
+#static void __Pyx_ReRaise(void) {
+#	PyThreadState *tstate = PyThreadState_Get();
+#	PyObject *type = tstate->exc_type;
+#	PyObject *value = tstate->exc_value;
+#	PyObject *tb = tstate->exc_traceback;
+#	Py_XINCREF(type);
+#	Py_XINCREF(value);
+#	Py_XINCREF(tb);
+#	PyErr_Restore(type, value, tb);
+#}
+#"""]
 
 #------------------------------------------------------------------------------------
 
@@ -3202,12 +3198,35 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
 
 #------------------------------------------------------------------------------------
 
-get_exception_utility_code = [
+#get_exception_utility_code = [
+#"""
+#static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
+#""","""
+#static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
+#	PyErr_Fetch(type, value, tb);
+#	PyErr_NormalizeException(type, value, tb);
+#	if (PyErr_Occurred())
+#		goto bad;
+#	if (!*tb) {
+#		*tb = Py_None;
+#		Py_INCREF(*tb);
+#	}
+#	return 0;
+#bad:
+#	Py_XDECREF(*type);
+#	Py_XDECREF(*value);
+#	Py_XDECREF(*tb);
+#	return -1;
+#}
+#"""]
+
+#------------------------------------------------------------------------------------
+
+normalize_exception_utility_code = [
 """
-static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
+static int __Pyx_NormalizeException(PyObject **type, PyObject **value, PyObject **tb); /*proto*/
 ""","""
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb) {
-	PyErr_Fetch(type, value, tb);
 	PyErr_NormalizeException(type, value, tb);
 	if (PyErr_Occurred())
 		goto bad;

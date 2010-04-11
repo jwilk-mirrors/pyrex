@@ -42,4 +42,5 @@ def f(a, b, c, x):
 	try:
 		i = 1
 	except:
+		i = 2
 		raise
