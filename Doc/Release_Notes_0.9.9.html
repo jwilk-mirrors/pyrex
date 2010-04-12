@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>0.9.9 Release Notes</title></head><body><h1>Release Notes for Pyrex 0.9.9</h1><h2>C++ Features</h2>Some features for interfacing with C++ code have been introduced in this release. Structs declared with '<span style="font-family: monospace;">cdef+ struct</span>' may have constructors and member functions, there is a '<span style="font-family: monospace;">new</span>' operator for instantiating them, and they may be deallocated using the '<span style="font-family: monospace;">del</span>' operator. Details may be found in the <a href="LanguageOverview.html">Language Overview</a> under <a href="Manual/using_with_c++.html">Using Pyrex with C++</a>.<br><h2>Changes to Exception Semantics</h2>The
+behaviour surrounding exceptions caught using a try-except statement
+were previously an inconsistent mixture of Pyrex and Python semantics.
+Attempts to make the behaviour match Python more closely were requiring
+the generation of increasingly convoluted and inefficient code, so I
+decided to backtrack and return to something simpler.<br><br>Pyrex no
+longer places caught exceptions into the thread state. This ensures
+that exceptions and tracebacks do not leak out of the except clause
+that caught them, unless you do something to explicitly preserve them.<br><br>It also means that you <span style="font-style: italic;">cannot</span> retrieve an caught exception in Pyrex using <span style="font-family: monospace;">sys.exc_info()</span>. If you want to capture the exception, you need to bind it to a name in the <span style="font-family: monospace;">except</span> clause.<br><br>To capture the traceback, the syntax of the <span style="font-family: monospace;">except</span> clause has been extended to allow a third argument. For example,<br><pre style="margin-left: 40px;">try:<br>  start_vehicle()<br>except HovercraftError, err, tb:<br>  print "Can't start:", err<br>  traceback.print_tb(tb)<br></pre>As previously, a <span style="font-family: monospace;">raise</span> statement with no arguments must be lexically enclosed in the <span style="font-family: monospace;">except</span>
+clause which caught the exception that you are trying to re-raise. In
+order to re-raise it from somewhere else, you will need to explicity
+communicate the exception and traceback to that place and use an
+ordinary <span style="font-family: monospace;">raise</span> statement.<br><h2>Planned Change to None-checking</h2>Currently,
+an argument to a Python function that is declared as an extension type
+will, by default, be allowed to receive the value None; to prevent
+this, you must qualify the argument declaration with '<span style="font-family: monospace;">not None</span>'.<br><br>This
+arrangement has proved to be error-prone, because it requires the
+programmer to be aware of the 'not None' feature and to remember to use
+it everywhere necessary. Failure to do so results in a Pyrex module
+that is prone to being crashed hard if it is passed a None value that
+it is not expecting.<br><br>To improve this situation, I am planning to make '<span style="font-family: monospace;">not None</span>' the default in a future release of Pyrex. In order to allow None as a legal argument value, it will be necessary to use an '<span style="font-family: monospace;">or None</span>' qualifier.<br><br>In release 0.9.9, the '<span style="font-family: monospace;">or None</span>'
+qualifier may be used, but it is optional. In preparation for the
+change of default, the Pyrex compiler will issue a warning (once per
+run) if it encounters an extension type argument that is not qualified
+with either 'or None' or 'not None'. For example, if <span style="font-family: monospace;">Spam</span> and <span style="font-family: monospace;">Eggs</span> are extension types and you have a function declared as<br><pre style="margin-left: 40px;">def frobulate(Spam s, Eggs e not None):<br>  ...<br></pre>then in order to eliminate the warning, you will need to change it to<br><pre style="margin-left: 40px;">def frobulate(Spam s or None, Eggs e not None):<br>  ...</pre>In a later release, when 'not None' has become the default, it will be possible to drop the 'not None' qualifiers.<br><h2>Non-GC Extension Types</h2>It
+is now possible to define and extension type with Python attributes
+that does not participate in cyclic garbage collection, using a new <span style="font-family: monospace;">nogc</span> option, for example:<br><pre style="margin-left: 40px;">cdef class Spam [nogc]:<br>  """This class doesn't participate in GC even though<br>     it has a Python attribute."""<br>  object sausages</pre><h2>Other New Features</h2>Some other minor feature additions and modifications have been made.<br><ul><li><span style="font-family: monospace;">size_t </span>is now a built-in type and is the type returned by the <span style="font-family: monospace;">sizeof</span> operator. Also, the sizes of <span style="font-family: monospace;">size_t</span> and <span style="font-family: monospace;">Py_ssize_t</span> are now assumed to be somewhere between <span style="font-family: monospace;">long</span> and <span style="font-family: monospace;">long long</span>.<br><br></li><li>Operations
+between two int types of the same rank now return an
+unsigned result if either of the operands is unsigned; if the ranks
+differ, the result has the same type as the wider-ranked operand. I
+think this is the best
+approximation of the ANSI C rules that is possible without knowing the
+exact sizes of the types.<br><br><span style="font-family: monospace;"></span></li><li><span style="font-family: monospace;">PyString_InternFromString</span> is now exposed under the name <span style="font-family: monospace; font-weight: bold;">cintern</span><span style="font-weight: bold;"> </span>rather than <span style="font-family: monospace;">intern</span>, because it is not a complete replacement for the Python <span style="font-family: monospace;">intern</span> function (it can't handle strings containing null bytes).<br></li><li>The
+size check that was previously generated when importing an extension
+type has been disabled for the time being until I can think of
+something better. It was generating too many false positives, for
+example from different versions of numpy.<br><br></li><li>The <span style="font-family: monospace;">__fastcall</span> calling convention option is now supported. Also, Pyrex no longer assumes that <span style="font-family: monospace;">__cdecl</span>
+is the default calling convention. To be considered compatible, two
+function types must either be declared with the same calling
+convention, or both must leave it unspecified.<br><br></li><li>As I have been threatening for some time, using <span style="font-family: monospace;">__new__</span>
+as the name of the initialisation method of an extension type has
+become an error rather than just a warning. In some future release, <span style="font-family: monospace;">__new__</span> will re-emerge with more Python-like semantics.</li></ul><br></body></html>
