@@ -46,8 +46,12 @@ def c_compile(c_file, verbose_flag = 0, cplus = 0, obj_suffix = ".o",
 	o_file = replace_suffix(c_file, obj_suffix)
 	if use_timestamps and not file_newer_than_file(c_file, o_file):
 		return
+	include_dirs = []
+	if options:
+		include_dirs.extend(options.include_path)
+	include_dirs.extend(py_include_dirs)
 	include_options = []
-	for dir in py_include_dirs:
+	for dir in include_dirs:
 		include_options.append("-I%s" % dir)
 	compiler = compilers[bool(cplus)]
 	args = [compiler] + compiler_options + include_options + [c_file, "-o", o_file]
