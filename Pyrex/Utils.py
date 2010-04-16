@@ -53,3 +53,10 @@ def modification_time(path):
 def file_newer_than(path, time):
 	ftime = modification_time(path)
 	return ftime > time
+
+def file_newer_than_file(path1, path2):
+	if not os.path.exists(path2):
+		return 1
+	t1 = modification_time(path1)
+	t2 = modification_time(path2)
+	return t1 > t2

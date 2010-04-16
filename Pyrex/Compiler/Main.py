@@ -302,28 +302,15 @@ class Context:
 				if len(chunks) == 2:
 					yield chunks
 			f.close()
-
-	def compile(self, source, options = None):
+	
+	def compile(self, source, options, result):
 		# Compile a Pyrex implementation file in this context
 		# and return a CompilationResult.
-		if not options:
-			options = default_options
-		result = CompilationResult()
-		cwd = os.getcwd()
-		source = os.path.join(cwd, source)
 		if options.use_listing_file:
-			result.listing_file = replace_suffix(source, ".lis")
 			Errors.open_listing_file(result.listing_file,
 				echo_to_stderr = options.errors_to_stderr)
 		else:
 			Errors.open_listing_file(None)
-		if options.output_file:
-			result.c_file = os.path.join(cwd, options.output_file)
-		else:
-			if options.cplus:
-				result.c_file = replace_suffix(source, cplus_suffix)
-			else:
-				result.c_file = map_suffix(source, pyx_to_c_suffix, ".c")
 		module_name = self.extract_module_name(source)
 		initial_pos = (source, 1, 0)
 		def_scope = self.find_module(module_name, pos = initial_pos, need_pxd = 0)
@@ -345,16 +332,21 @@ class Context:
 			except EnvironmentError:
 				pass
 			result.c_file = None
+	
+	def c_compile_link(self, options, result, timestamps = 0):
 		if result.c_file and not options.c_only and c_compile:
 			result.object_file = c_compile(result.c_file,
 				verbose_flag = options.show_version,
-				cplus = options.cplus)
-			if not options.obj_only and c_link:
-				result.extension_file = c_link(result.object_file,
-					extra_objects = options.objects,
-					verbose_flag = options.show_version,
-					cplus = options.cplus)
-		return result
+				cplus = options.cplus,
+				use_timestamps = timestamps,
+				options = options)
+		if result.object_file and not options.obj_only and c_link:
+			result.extension_file = c_link(result.object_file,
+				extra_objects = options.objects,
+				verbose_flag = options.show_version,
+				cplus = options.cplus,
+				use_timestamps = timestamps,
+				options = options)
 
 #------------------------------------------------------------------------
 #
@@ -400,7 +392,7 @@ class CompilationOptions:
 			self.c_only = 0
 		if c_link:
 			self.obj_only = 0
-
+	
 
 class CompilationResult:
 	"""
@@ -416,7 +408,7 @@ class CompilationResult:
 	num_errors       integer          Number of compilation errors
 	"""
 	
-	def __init__(self):
+	def __init__(self, source, options):
 		self.c_file = None
 		self.h_file = None
 		self.i_file = None
@@ -424,6 +416,17 @@ class CompilationResult:
 		self.listing_file = None
 		self.object_file = None
 		self.extension_file = None
+		cwd = os.getcwd()
+		source = os.path.join(cwd, source)
+		if options.use_listing_file:
+			self.listing_file = replace_suffix(source, ".lis")
+		if options.output_file:
+			self.c_file = os.path.join(cwd, options.output_file)
+		else:
+			if options.cplus:
+				self.c_file = replace_suffix(source, cplus_suffix)
+			else:
+				self.c_file = map_suffix(source, pyx_to_c_suffix, ".c")
 
 
 class CompilationResultSet(dict):
@@ -451,7 +454,10 @@ def compile_single(source, options):
 	recursion.
 	"""
 	context = Context(options.include_path)
-	return context.compile(source, options)
+	result = CompilationResult(source, options)
+	context.compile(source, options, result)
+	context.c_compile_link(options, result)
+	return result
 
 def compile_multiple(sources, options):
 	"""
@@ -472,10 +478,13 @@ def compile_multiple(sources, options):
 	verbose = options.verbose or ((recursive or timestamps) and not options.quiet)
 	for source in sources:
 		if source not in processed:
+			result = CompilationResult(source, options)
 			if not timestamps or context.c_file_out_of_date(source):
 				if verbose:
 					print >>sys.stderr, "Compiling", source
-				result = context.compile(source, options)
+				context.compile(source, options, result)
+			context.c_compile_link(options, result, timestamps)	
+			if result.any_results():
 				results.add(source, result)
 			processed.add(source)
 			if recursive:
@@ -498,8 +507,7 @@ def compile(source, options = None, c_compile = 0, c_link = 0, **kwds):
 	checking is requested, a CompilationResult is returned, otherwise a
 	CompilationResultSet is returned.
 	"""
-	options = CompilationOptions(defaults = options, c_compile = c_compile,
-		c_link = c_link, **kwds)
+	options = CompilationOptions(defaults = options, **kwds)
 	if isinstance(source, basestring) and not options.timestamps \
 			and not options.recursive:
 		return compile_single(source, options)

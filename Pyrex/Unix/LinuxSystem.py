@@ -8,7 +8,7 @@ gcc_warnings_are_errors = True
 gcc_all_warnings = True
 
 import os, sys
-from Pyrex.Utils import replace_suffix
+from Pyrex.Utils import replace_suffix, file_newer_than_file
 from Pyrex.Compiler.Errors import PyrexError
 
 version = "%s.%s" % sys.version[:2]
@@ -37,12 +37,15 @@ linker_options = \
 class CCompilerError(PyrexError):
 	pass
 
-def c_compile(c_file, verbose_flag = 0, cplus = 0, obj_suffix = ".o"):
+def c_compile(c_file, verbose_flag = 0, cplus = 0, obj_suffix = ".o",
+		use_timestamps = 0):
 	#  Compile the given C source file to produce
 	#  an object file. Returns the pathname of the
 	#  resulting file.
 	c_file = os.path.join(os.getcwd(), c_file)
 	o_file = replace_suffix(c_file, obj_suffix)
+	if use_timestamps and not file_newer_than_file(c_file, o_file):
+		return
 	include_options = []
 	for dir in py_include_dirs:
 		include_options.append("-I%s" % dir)
@@ -56,14 +59,19 @@ def c_compile(c_file, verbose_flag = 0, cplus = 0, obj_suffix = ".o"):
 		raise CCompilerError("C compiler returned status %s" % status)
 	return o_file
 
-def c_link(obj_file, verbose_flag = 0, extra_objects = [], cplus = 0):
-	return c_link_list([obj_file] + extra_objects, verbose_flag, cplus)
+def c_link(obj_file, verbose_flag = 0, extra_objects = [], cplus = 0,
+		use_timestamps = 0):
+	return c_link_list([obj_file] + extra_objects, verbose_flag, cplus,
+		use_timestamps)
 
 def c_link_list(obj_files, verbose_flag = 0, cplus = 0):
 	#  Link the given object files into a dynamically
 	#  loadable extension file. Returns the pathname
 	#  of the resulting file.
-	out_file = replace_suffix(obj_files[0], ".so")
+	in_file = obj_files[0]
+	out_file = replace_suffix(in_file, ".so")
+	if use_timestamps and not file_newer_than_file(in_file, out_file):
+		return
 	linker = linkers[bool(cplus)]
 	args = [linker] + linker_options + obj_files + ["-o", out_file]
 	if verbose_flag or verbose:
