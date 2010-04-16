@@ -104,14 +104,26 @@ class Context:
 		#  the directory containing the source file is searched first
 		#  for a dotted filename, and its containing package root
 		#  directory is searched first for a non-dotted filename.
-		return self.search_package_directories(qualified_name, pxd_suffixes, pos)
+		print "Pyrex.Compiler.Main.find_pxd_file:" ###
+		print "...qualified_name =", qualified_name ###
+		print "...pos =", pos ###
+		result = self.search_package_directories(qualified_name, pxd_suffixes, pos)
+		print "Pyrex.Compiler.Main.find_pxd_file: result =", result ###
+		return result
 	
 	def find_pyx_file(self, qualified_name, pos):
 		#  Search include path for the .pyx file corresponding to the
 		#  given fully-qualified module name, as for find_pxd_file().
-		return self.search_package_directories(qualified_name, pyx_suffixes, pos)
+		print "Pyrex.Compiler.Main.find_pyx_file:", qualified_name, pos ###
+		result = self.search_package_directories(qualified_name, pyx_suffixes, pos)
+		print "Pyrex.Compiler.Main.find_pyx_file: result =", result ###
+		return result
 	
 	def search_package_directories(self, qualified_name, suffixes, pos):
+		print "Pyrex.Compiler.Main.search_package_directories:" ###
+		print "...qualified_name =", qualified_name ###
+		print "...suffixes =", suffixes ###
+		print "...pos =", pos ###
 		dotted_filenames = [qualified_name + suffix for suffix in suffixes]
 		if pos:
 			here = os.path.dirname(pos[0])
@@ -122,20 +134,27 @@ class Context:
 		dirs = self.include_directories
 		if pos:
 			here = self.find_root_package_dir(pos[0])
+			print "...root package dir =", here ###
 			dirs = [here] + dirs
 		names = qualified_name.split(".")
 		package_names = names[:-1]
 		module_name = names[-1]
 		filenames = [module_name + suffix for suffix in suffixes]
+		print "...package names =", package_names ###
+		print "...module name =", module_name ###
+		print "...filenames =", filenames ###
 		for root in dirs:
+			print "...looking in root", root ###
 			for dotted_filename in dotted_filenames:
 				path = os.path.join(root, dotted_filename)
 				if os.path.exists(path):
 					return path
 			dir = self.descend_to_package_dir(root, package_names)
+			print "......package dir =", dir ###
 			if dir:
 				for filename in filenames:
 					path = os.path.join(dir, filename)
+					print "......looking for path", path ###
 					if os.path.exists(path):
 						return path
 				for init_filename in package_init_files:
@@ -162,8 +181,9 @@ class Context:
 		dir = root_dir
 		for name in package_names:
 			dir = os.path.join(dir, name)
-			if self.is_package_dir(dir):
-				return dir
+			if not self.is_package_dir(dir):
+				return
+		return dir
 	
 	def is_package_dir(self, dir_path):
 		#  Return true if the given directory is a package directory.
