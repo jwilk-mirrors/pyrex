@@ -1,6 +1,11 @@
 0.9.9.1
 -------
 
+Modifications:
+
+	- Added --numpy command line option to include numpy header directory
+		when using -C.
+
 Bug fixes:
 
 	- Pxd files corresponding to pyx files in packages nested more than

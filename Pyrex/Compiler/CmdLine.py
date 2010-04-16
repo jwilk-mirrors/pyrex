@@ -9,23 +9,35 @@ from Pyrex.Utils import has_suffix
 usage = """\
 Usage: pyrexc [options] sourcefile...
 Options:
-  -v, --version                  Display version number of pyrex compiler
-  -l, --create-listing           Write error messages to a listing file
-  -I, --include-dir <directory>  Search for include files in named directory
-  -o, --output-file <filename>   Specify name of generated C file
-  -r, --recursive                Recursively find and compile dependencies
-  -t, --timestamps               Only compile newer source files (implied with -r)
-  -f, --force                    Compile all source files (overrides implied -t)
-  -q, --quiet                    Don't print module names in recursive mode
+  -v, --version             Display version number of pyrex compiler
+  -l, --create-listing      Write error messages to a listing file
+  -I, --include-dir <dir>   Search for include files in named directory
+  -+, --cplus               Use .cpp as extension of generated C files
+  -o, --output-file <file>  Specify name of generated C file
+  -r, --recursive           Recursively find and compile dependencies
+  -t, --timestamps          Only compile newer source files (implied by -r)
+  -f, --force               Compile all source files (overrides implied -t)
+  -q, --quiet               Don't print module names in recursive mode
 The following experimental options are supported only on MacOSX:
   -C, --compile    Compile generated .c file to .o file
   -X, --link       Link .o file to produce extension module (implies -C)
   -+, --cplus      Use C++ compiler for compiling and linking
+  -N, --numpy      Include numpy header directory in search path
   Additional .o files to link may be supplied when using -X."""
 
-def bad_usage():
-	print >>sys.stderr, usage
+def fail(mess):
+	print >>sys.stderr, mess
 	sys.exit(1)
+
+def bad_usage():
+	fail(usage)
+
+def get_numpy_include_dir():
+	try:
+		import numpy
+	except ImportError:
+		fail("pyrexc: Unable to import numpy to find include directory")
+	return numpy.get_include()
 
 def parse_command_line(args):
 	from Pyrex.Compiler.Main import \
@@ -72,6 +84,8 @@ def parse_command_line(args):
 				options.timestamps = 1
 			elif option in ("-f", "--force"):
 				options.timestamps = 0
+			elif option in ("-N", "--numpy"):
+				options.include_path.append(get_numpy_include_dir())
 			else:
 				bad_usage()
 		else:
