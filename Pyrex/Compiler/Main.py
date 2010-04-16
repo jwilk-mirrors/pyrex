@@ -408,14 +408,16 @@ class CompilationResult:
 	num_errors       integer          Number of compilation errors
 	"""
 	
+	c_file = None
+	h_file = None
+	i_file = None
+	api_file = None
+	listing_file = None
+	object_file = None
+	extension_file = None
+	num_errors = 0
+	
 	def __init__(self, source, options):
-		self.c_file = None
-		self.h_file = None
-		self.i_file = None
-		self.api_file = None
-		self.listing_file = None
-		self.object_file = None
-		self.extension_file = None
 		cwd = os.getcwd()
 		source = os.path.join(cwd, source)
 		if options.use_listing_file:
@@ -427,11 +429,6 @@ class CompilationResult:
 				self.c_file = replace_suffix(source, cplus_suffix)
 			else:
 				self.c_file = map_suffix(source, pyx_to_c_suffix, ".c")
-	
-	def any_results(self):
-		return bool(self.c_file or self.h_file or self.i_file or self.api_file
-			or self.listing_file or self.object_file or self.extension_file
-			or self.num_errors)
 
 
 class CompilationResultSet(dict):
@@ -489,8 +486,7 @@ def compile_multiple(sources, options):
 					print >>sys.stderr, "Compiling", source
 				context.compile(source, options, result)
 			context.c_compile_link(options, result, timestamps)	
-			if result.any_results():
-				results.add(source, result)
+			results.add(source, result)
 			processed.add(source)
 			if recursive:
 				for module_name in context.find_cimported_module_names(source):
