@@ -427,6 +427,11 @@ class CompilationResult:
 				self.c_file = replace_suffix(source, cplus_suffix)
 			else:
 				self.c_file = map_suffix(source, pyx_to_c_suffix, ".c")
+	
+	def any_results(self):
+		return bool(self.c_file or self.h_file or self.i_file or self.api_file
+			or self.listing_file or self.object_file or self.extension_file
+			or self.num_errors)
 
 
 class CompilationResultSet(dict):
