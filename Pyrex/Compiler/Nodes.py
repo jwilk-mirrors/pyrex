@@ -424,12 +424,16 @@ class CStructOrUnionDefNode(StatNode):
 		for base in self.bases:
 			base_entry = env.find_qualified_name(base, self.pos)
 			if base_entry:
-				if base_entry.is_type and base_entry.type.is_struct_or_union \
-					and base_entry.type.scope.is_cplus:
-						base_scopes.append(base_entry.type.scope)
+				if not base_entry.is_type:
+					self.base_error(base, "is not a type")
+				elif not base_entry.type.is_struct_or_union:
+					self.base_error(base, "is not a struct")
+				elif not base_entry.type.scope:
+					self.base_error(base, "is incomplete")
+				elif not base_entry.type.scope.is_cplus:
+					self.base_error(base, "is not a C++ struct")
 				else:
-					error(self.pos, "Base type '%s' is not a C++ struct" %
-						".".join(base[0] + [base[1]]))
+					base_scopes.append(base_entry.type.scope)
 		if self.attributes is not None:
 			scope = StructOrUnionScope(base_scopes = base_scopes, is_cplus = self.cplus_flag)
 		if self.module_path:
@@ -452,6 +456,10 @@ class CStructOrUnionDefNode(StatNode):
 				attr.analyse_declarations(env, scope)
 		if self.typedef_flag:
 			declare()
+
+	def base_error(self, base, mess):
+		error(self.pos, "Base '%s' %s" % (
+			".".join(base[0] + [base[1]]), mess))
 
 	def analyse_expressions(self, env):
 		pass
