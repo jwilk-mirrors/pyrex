@@ -9,6 +9,15 @@ Modifications:
 	- The short option for "version" has been changed to "-V" to avoid
 		confusion with "verbose".
 
+Bug fixes:
+
+	- Compiler crash declaring C++ struct with incomplete base type.
+	
+	- Compiler crash applying 'del' to pointer to incomplete type.
+	
+	- Base types of C++ struct were not taken into account when checking
+		assignment compatibility.
+
 
 0.9.9.1
 -------

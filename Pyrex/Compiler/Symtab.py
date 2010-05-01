@@ -266,7 +266,8 @@ class Scope:
 		return entry
 		
 	def declare_struct_or_union(self, name, kind, scope, 
-			typedef_flag, pos, cname = None, visibility = 'private', is_cplus = 0):
+			typedef_flag, pos, cname = None, visibility = 'private', is_cplus = 0,
+			base_types = None):
 		# Add an entry for a struct or union definition.
 		if not cname:
 			if self.in_cinclude or visibility == 'public':
@@ -276,7 +277,7 @@ class Scope:
 		entry = self.lookup_here(name)
 		if not entry:
 			type = CStructOrUnionType(name, kind, scope, typedef_flag, cname,
-				is_cplus = is_cplus)
+				is_cplus = is_cplus, base_types = base_types)
 			entry = self.declare_type(name, type, pos, cname,
 				visibility = visibility, defining = scope is not None)
 			self.sue_entries.append(entry)
@@ -1035,7 +1036,8 @@ class LocalScope(Scope):
 class StructOrUnionScope(Scope):
 	#  Namespace of a C struct or union.
 	#
-	#  cplus_constructors  [CFuncType]   C++ constructor signatures
+	#  cplus_constructors  [CFuncType]           C++ constructor signatures
+	#  base_scopes         [StructOrUnionScope]
 
 	def __init__(self, is_cplus = False, base_scopes = []):
 		Scope.__init__(self, "?", None, None)

@@ -420,19 +420,22 @@ class CStructOrUnionDefNode(StatNode):
 	
 	def analyse_declarations(self, env):
 		scope = None
+		base_types = []
 		base_scopes = []
 		for base in self.bases:
 			base_entry = env.find_qualified_name(base, self.pos)
 			if base_entry:
+				base_type = base_entry.type
 				if not base_entry.is_type:
 					self.base_error(base, "is not a type")
-				elif not base_entry.type.is_struct_or_union:
+				elif not base_type.is_struct_or_union:
 					self.base_error(base, "is not a struct")
-				elif not base_entry.type.scope:
+				elif not base_type.scope:
 					self.base_error(base, "is incomplete")
-				elif not base_entry.type.scope.is_cplus:
-					self.base_error(base, "is not a C++ struct")
+				elif not base_type.is_cplus:
+					self.base_error(base, "is not a C++ type")
 				else:
+					base_types.append(base_type)
 					base_scopes.append(base_entry.type.scope)
 		if self.attributes is not None:
 			scope = StructOrUnionScope(base_scopes = base_scopes, is_cplus = self.cplus_flag)
@@ -445,7 +448,8 @@ class CStructOrUnionDefNode(StatNode):
 		def declare():
 			self.entry = home_scope.declare_struct_or_union(
 				self.name, self.kind, scope, self.typedef_flag, self.pos,
-				self.cname, visibility = self.visibility, is_cplus = self.cplus_flag)
+				self.cname, visibility = self.visibility, is_cplus = self.cplus_flag,
+				base_types = base_types)
 			if self.attributes is not None:
 				if self.in_pxd and not env.in_cinclude:
 					self.entry.defined_in_pxd = 1

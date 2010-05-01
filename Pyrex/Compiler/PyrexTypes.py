@@ -508,19 +508,20 @@ class CPtrType(CType):
 			for_display, dll_linkage, pyrex)
 	
 	def assignable_from_resolved_type(self, other_type):
+		base_type = self.base_type
 		if other_type is error_type:
 			return 1
 		if other_type.is_null_ptr:
 			return 1
-		if self.base_type.is_cfunction:
+		if base_type.is_cfunction:
 			if other_type.is_ptr:
 				other_type = other_type.base_type.resolve()
 			if other_type.is_cfunction:
-				return self.base_type.pointer_assignable_from_resolved_type(other_type)
+				return base_type.pointer_assignable_from_resolved_type(other_type)
 			else:
 				return 0
 		if other_type.is_array or other_type.is_ptr:
-			return self.base_type.is_void or self.base_type.same_as(other_type.base_type)
+			return base_type.is_void or other_type.base_type.subtype_of(base_type) #base_type.same_as(other_type.base_type)
 		return 0
 
 
@@ -714,18 +715,30 @@ class CStructOrUnionType(CType):
 	
 	is_struct_or_union = 1
 	has_attributes = 1
+	base_types = ()
 	
-	def __init__(self, name, kind, scope, typedef_flag, cname, is_cplus = 0):
+	def __init__(self, name, kind, scope, typedef_flag, cname, is_cplus = 0,
+			base_types = None):
 		self.name = name
 		self.cname = cname
 		self.kind = kind
 		self.typedef_flag = typedef_flag
 		self.is_cplus = is_cplus
+		if base_types:
+			self.base_types = base_types
 		self.set_scope(scope)
 	
 	def __repr__(self):
 		return "<CStructOrUnionType %s %s%s>" % (self.name, self.cname,
 			("", " typedef")[self.typedef_flag])
+	
+	def subtype_of_resolved_type(self, other_type):
+		if self.same_as_resolved_type(other_type):
+			return 1
+		for base_type in self.base_types:
+			if base_type.subtype_of_resolved_type(other_type):
+				return 1
+		return 0
 	
 	def set_scope(self, scope):
 		self.scope = scope
