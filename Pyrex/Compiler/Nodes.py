@@ -445,7 +445,7 @@ class CStructOrUnionDefNode(StatNode):
 		def declare():
 			self.entry = home_scope.declare_struct_or_union(
 				self.name, self.kind, scope, self.typedef_flag, self.pos,
-				self.cname, visibility = self.visibility)
+				self.cname, visibility = self.visibility, is_cplus = self.cplus_flag)
 			if self.attributes is not None:
 				if self.in_pxd and not env.in_cinclude:
 					self.entry.defined_in_pxd = 1
@@ -1686,8 +1686,7 @@ class DelStatNode(StatNode):
 			arg.analyse_target_expression(env, None)
 			type = arg.type
 			if not (type.is_pyobject
-				or (type.is_ptr and type.base_type.is_struct_or_union
-					and type.base_type.scope.is_cplus)):
+				or (type.is_ptr and type.base_type.is_cplus)):
 				error(arg.pos, "'del' can only be applied to Python object or pointer to C++ type")
 			if type.is_pyobject:
 				self.gil_check(env)

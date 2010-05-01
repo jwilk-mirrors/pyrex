@@ -266,7 +266,7 @@ class Scope:
 		return entry
 		
 	def declare_struct_or_union(self, name, kind, scope, 
-			typedef_flag, pos, cname = None, visibility = 'private'):
+			typedef_flag, pos, cname = None, visibility = 'private', is_cplus = 0):
 		# Add an entry for a struct or union definition.
 		if not cname:
 			if self.in_cinclude or visibility == 'public':
@@ -275,7 +275,8 @@ class Scope:
 				cname = self.mangle(Naming.type_prefix, name)
 		entry = self.lookup_here(name)
 		if not entry:
-			type = CStructOrUnionType(name, kind, scope, typedef_flag, cname)
+			type = CStructOrUnionType(name, kind, scope, typedef_flag, cname,
+				is_cplus = is_cplus)
 			entry = self.declare_type(name, type, pos, cname,
 				visibility = visibility, defining = scope is not None)
 			self.sue_entries.append(entry)

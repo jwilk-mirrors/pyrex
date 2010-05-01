@@ -40,6 +40,7 @@ class PyrexType(BaseType):
 	#  is_returncode         boolean     Is used only to signal exceptions
 	#  is_sequence           boolean     Is a sequence type
 	#  is_builtin            boolean     Is a built-in Python type
+	#  is_cplus              boolean     Is a C++ type
 	#  is_error              boolean     Is the dummy error type
 	#  has_attributes        boolean     Has C dot-selectable attributes
 	#  default_value         string      Initial value
@@ -88,6 +89,7 @@ class PyrexType(BaseType):
 	is_returncode = 0
 	is_sequence = 0
 	is_builtin = 0
+	is_cplus = 0
 	is_error = 0
 	has_attributes = 0
 	default_value = ""
@@ -562,13 +564,13 @@ class CFuncType(CType):
 			string.join(arg_reprs, ","))
 	
 	def callable_with(self, actual_arg_types):
-		formal_arg_types = self.args
-		nf = len(formal_arg_types)
+		formal_args = self.args
+		nf = len(formal_args)
 		na = len(actual_arg_types)
 		if not (nf == na or self.has_varargs and nf >= na):
 			return False
-		for formal_type, actual_type in zip(formal_arg_types, actual_arg_types):
-			if not formal_type.assignable_from(actual_type):
+		for formal_arg, actual_type in zip(formal_args, actual_arg_types):
+			if not formal_arg.type.assignable_from(actual_type):
 				return False
 		return True
 
@@ -713,11 +715,12 @@ class CStructOrUnionType(CType):
 	is_struct_or_union = 1
 	has_attributes = 1
 	
-	def __init__(self, name, kind, scope, typedef_flag, cname):
+	def __init__(self, name, kind, scope, typedef_flag, cname, is_cplus = 0):
 		self.name = name
 		self.cname = cname
 		self.kind = kind
 		self.typedef_flag = typedef_flag
+		self.is_cplus = is_cplus
 		self.set_scope(scope)
 	
 	def __repr__(self):

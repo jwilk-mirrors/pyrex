@@ -4,6 +4,7 @@
 #
 #------------------------------------------------------------------------------
 
+import os
 from Pyrex.Unix.UnixSystems import UnixSystem, CCompilerError
 
 #version_string = "%s.%s" % sys.version_info[:2]
