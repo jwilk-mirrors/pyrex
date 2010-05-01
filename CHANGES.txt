@@ -1,3 +1,15 @@
+1.0
+---
+
+Modifications:
+
+	- The short form of the command line option for creating a listing file
+		has been changed to "-e", to free up "-l" for specifying libraries.
+
+	- The short option for "version" has been changed to "-V" to avoid
+		confusion with "verbose".
+
+
 0.9.9.1
 -------
 

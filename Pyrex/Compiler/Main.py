@@ -22,7 +22,6 @@ from Pyrex.Utils import set, replace_suffix, modification_time, \
 from Filenames import cplus_suffix, pxd_suffixes, pyx_suffixes, \
 	package_init_files, pyx_to_c_suffix
 
-verbose = 0
 debug_timestamps = 0
 
 module_name_pattern = re.compile(
@@ -336,14 +335,14 @@ class Context:
 	def c_compile_link(self, options, result, timestamps = 0):
 		if result.c_file and not options.c_only and c_compile:
 			result.object_file = c_compile(result.c_file,
-				verbose_flag = options.show_version,
+				verbose_flag = options.verbose,
 				cplus = options.cplus,
 				use_timestamps = timestamps,
 				options = options)
 		if result.object_file and not options.obj_only and c_link:
 			result.extension_file = c_link(result.object_file,
 				extra_objects = options.objects,
-				verbose_flag = options.show_version,
+				verbose_flag = options.verbose,
 				cplus = options.cplus,
 				use_timestamps = timestamps,
 				options = options)
@@ -367,20 +366,28 @@ class CompilationOptions:
 	recursive         boolean   Recursively find and compile dependencies
 	timestamps        boolean   Only compile changed source files. If None,
 	                            defaults to true when recursive is true.
-	verbose           boolean   Always print source names being compiled
-	quiet             boolean   Don't print source names in recursive mode
+	verbose           boolean   Always display source names being compiled
+	quiet             boolean   Never display source names being compiled
 	
-	Following options are experimental and only used on MacOSX:
+	Following options are experimental and only used on MacOSX and Linux:
 	
 	c_only            boolean   Stop after generating C file (default)
 	obj_only          boolean   Stop after compiling to .o file
 	objects           [string]  Extra .o files to link with
 	cplus             boolean   Compile as c++ code
+	library_path      [string]  Directories to search for library files
+	libraries         [string]  Names of libraries to link with
+	framework_path    [string]  Directories to search for frameworks [MacOSX]
+	frameworks        [string]  Names of frameworks to link with [MacOSX]
 	"""
 	
 	def __init__(self, defaults = None, c_compile = 0, c_link = 0, **kw):
 		self.include_path = []
 		self.objects = []
+		self.library_path = []
+		self.libraries = []
+		self.framework_path = []
+		self.frameworks = []
 		if defaults:
 			if isinstance(defaults, CompilationOptions):
 				defaults = defaults.__dict__
@@ -477,12 +484,12 @@ def compile_multiple(sources, options):
 	timestamps = options.timestamps
 	if timestamps is None:
 		timestamps = recursive
-	verbose = options.verbose or ((recursive or timestamps) and not options.quiet)
+	display = options.verbose or ((recursive or timestamps) and not options.quiet)
 	for source in sources:
 		if source not in processed:
 			result = CompilationResult(source, options)
 			if not timestamps or context.c_file_out_of_date(source):
-				if verbose:
+				if display:
 					print >>sys.stderr, "Compiling", source
 				context.compile(source, options, result)
 			context.c_compile_link(options, result, timestamps)	
