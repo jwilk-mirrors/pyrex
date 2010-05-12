@@ -56,8 +56,7 @@ class PyrexType(BaseType):
 	#    * If dll_linkage is not None, it must be 'DL_EXPORT' or
 	#      'DL_IMPORT', and will be added to the base type part of
 	#      the declaration.
-	#    * If pyrex = 1, this is for use in a 'cdef extern'
-	#      statement of a Pyrex include file.
+	#    * If pyrex = 1, produces a Pyrex declaration rather than a C one.
 	#
 	#  assignable_from(src_type)
 	#    Tests whether a variable of this type can be
