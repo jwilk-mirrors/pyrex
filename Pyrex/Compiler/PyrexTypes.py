@@ -123,7 +123,7 @@ class PyrexType(BaseType):
 		return self.assignable_from_resolved_type(src_type.resolve())
 	
 	def assignable_from_resolved_type(self, src_type):
-		return self.same_as(src_type)
+		return self.same_as(src_type) or src_type is error_type 
 	
 	def as_argument_type(self):
 		return self
@@ -314,6 +314,10 @@ class CType(PyrexType):
 	
 	to_py_function = None
 	from_py_function = None
+	
+	def assignable_from_resolved_type(self, src_type):
+		return (src_type.is_pyobject and self.from_py_function is not None) \
+			or PyrexType.assignable_from_resolved_type(self, src_type)
 
 
 class CVoidType(CType):
@@ -385,7 +389,8 @@ class CIntType(CNumericType):
 		self.is_returncode = is_returncode
 	
 	def assignable_from_resolved_type(self, src_type):
-		return src_type.is_int or src_type.is_enum or src_type is error_type
+		return src_type.is_int or src_type.is_enum \
+			or CNumericType.assignable_from_resolved_type(self, src_type)
 
 
 class CAnonEnumType(CIntType):
@@ -433,7 +438,8 @@ class CFloatType(CNumericType):
 		CNumericType.__init__(self, rank, 1, name, pymemberdef_typecode)
 	
 	def assignable_from_resolved_type(self, src_type):
-		return src_type.is_numeric or src_type is error_type
+		return src_type.is_numeric \
+			or CNumericType.assignable_from_resolved_type(self, src_type)
 
 
 class CArrayType(CType):
