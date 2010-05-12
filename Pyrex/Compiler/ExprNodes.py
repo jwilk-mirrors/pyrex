@@ -909,7 +909,12 @@ class NameNode(AtomicExprNode):
 		entry = self.entry
 		type = entry.type
 		if type.is_struct_or_union:
-			self.type = entry.type.cplus_constructor_type
+			ctype = entry.type.cplus_constructor_type
+			if ctype:
+				self.type = ctype
+			else:
+				error(self.pos, "Type '%s' has no C++ constructor" % type)
+				self.type = error_type
 		elif type.is_pyobject:
 			self.analyse_rvalue_entry(env)
 		else:
@@ -1609,7 +1614,7 @@ class SimpleCallNode(CallNode):
 					function.obj = CloneNode(self.self)
 				elif self.is_new:
 					if not (func_entry.is_type and func_entry.type.is_struct_or_union
-							and func_entry.type.scope.is_cplus):
+							and func_entry.type.is_cplus):
 						error(self.pos, "'new' operator can only be used on a C++ struct type")
 						self.type = error_type
 						return

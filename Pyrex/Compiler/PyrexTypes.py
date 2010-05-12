@@ -721,6 +721,7 @@ class CStructOrUnionType(CType):
 	is_struct_or_union = 1
 	has_attributes = 1
 	base_types = ()
+	cplus_constructor_type = None
 	
 	def __init__(self, name, kind, scope, typedef_flag, cname, is_cplus = 0,
 			base_types = None):

@@ -17,6 +17,8 @@ Bug fixes:
 	
 	- Base types of C++ struct were not taken into account when checking
 		assignment compatibility.
+	
+	- Compiler crashes due to incomplete C++ types.
 
 
 0.9.9.1
