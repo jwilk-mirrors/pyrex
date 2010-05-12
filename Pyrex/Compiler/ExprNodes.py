@@ -1671,14 +1671,18 @@ class SimpleCallNode(CallNode):
 				signature.return_type = func_type.return_type
 				self.function_type = signature
 				return signature
-		def display_types(types):
-			return ", ".join([str(type) for type in types])
+		type_display = ", ".join(
+			[type.declaration_code("", pyrex = 1)
+				for type in arg_types])
 		error(self.pos, "No matching signature found for argument types (%s)"
-			% display_types(arg_types))
+			% type_display)
 		if signatures:
 			error(self.pos, "Candidates are:")
 			for signature in signatures:
-				error(signature.pos, "(%s)" % display_types(signature.args))
+				arg_display = ", ".join(
+					[arg.type.declaration_code(arg.name, pyrex = 1)
+						for arg in signature.args])
+				error(signature.pos, "(%s)" % arg_display)
 	
 	def analyse_c_function_call(self, env):
 		func_type = self.function_type
