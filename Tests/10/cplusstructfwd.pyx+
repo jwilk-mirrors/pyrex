@@ -1,0 +1,5 @@
+cdef+ extern from "cplusstruct.hpp":
+
+	struct Foo
+	struct Blarg
+	struct SubFoo(Foo, Blarg)

@@ -19,6 +19,8 @@ Bug fixes:
 		assignment compatibility.
 	
 	- Compiler crashes due to incomplete C++ types.
+	
+	- Forward declaration of C++ struct did not accept base types.
 
 
 0.9.9.1

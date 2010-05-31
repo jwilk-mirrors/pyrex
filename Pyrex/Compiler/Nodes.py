@@ -422,6 +422,7 @@ class CStructOrUnionDefNode(StatNode):
 		scope = None
 		base_types = []
 		base_scopes = []
+		has_body = self.attributes is not None
 		for base in self.bases:
 			base_entry = env.find_qualified_name(base, self.pos)
 			if base_entry:
@@ -430,14 +431,14 @@ class CStructOrUnionDefNode(StatNode):
 					self.base_error(base, "is not a type")
 				elif not base_type.is_struct_or_union:
 					self.base_error(base, "is not a struct")
-				elif not base_type.scope:
+				elif has_body and not base_type.scope:
 					self.base_error(base, "is incomplete")
 				elif not base_type.is_cplus:
 					self.base_error(base, "is not a C++ type")
 				else:
 					base_types.append(base_type)
 					base_scopes.append(base_entry.type.scope)
-		if self.attributes is not None:
+		if has_body:
 			scope = StructOrUnionScope(base_scopes = base_scopes, is_cplus = self.cplus_flag)
 		if self.module_path:
 			home_scope = env.find_imported_module(self.module_path, self.pos)
@@ -450,12 +451,12 @@ class CStructOrUnionDefNode(StatNode):
 				self.name, self.kind, scope, self.typedef_flag, self.pos,
 				self.cname, visibility = self.visibility, is_cplus = self.cplus_flag,
 				base_types = base_types)
-			if self.attributes is not None:
+			if has_body:
 				if self.in_pxd and not env.in_cinclude:
 					self.entry.defined_in_pxd = 1
 		if not self.typedef_flag:
 			declare()
-		if self.attributes is not None:
+		if has_body:
 			for attr in self.attributes:
 				attr.analyse_declarations(env, scope)
 		if self.typedef_flag:
