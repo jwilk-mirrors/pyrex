@@ -2054,13 +2054,13 @@ def p_c_class_options(s, ctx, options):
 		if s.sy <> 'IDENT':
 			break
 		if s.systring == 'object':
-			if ctx.visibility not in ('public', 'extern'):
-				error(s.position(), "Object name option only allowed for 'public' or 'extern' C class")
+#			if ctx.visibility not in ('public', 'extern'):
+#				error(s.position(), "Object name option only allowed for 'public' or 'extern' C class")
 			s.next()
 			options.objstruct_cname = p_ident(s)
 		elif s.systring == 'type':
-			if ctx.visibility not in ('public', 'extern'):
-				error(s.position(), "Type name option only allowed for 'public' or 'extern' C class")
+#			if ctx.visibility not in ('public', 'extern'):
+#				error(s.position(), "Type name option only allowed for 'public' or 'extern' C class")
 			s.next()
 			options.typeobj_cname = p_ident(s)
 		elif s.systring == 'nogc':
